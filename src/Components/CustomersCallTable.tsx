@@ -192,13 +192,18 @@ const CustomersCallTable = () => {
                         value={filterText}
                         onChange={(e) => setFilterText(e.target.value)}
                     />
-                    <div className="overflow-x-auto w-full">
+                    <div className="grid grid-cols-1 rounded-md">
                         <DataTable
                             columns={columns}
                             data={filteredItems}
                             pagination
                             paginationRowsPerPageOptions={[10, 15]}
                             customStyles={customStyles}
+                            noDataComponent={
+                                <div className="text-gray-500 py-4">
+                                    لا يوجد بيانات
+                                </div>
+                            }
                             striped
                             highlightOnHover
                             responsive

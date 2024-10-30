@@ -66,6 +66,9 @@ const LastDealTable = () => {
                 pagination
                 paginationPerPage={rowsPerPage}
                 paginationRowsPerPageOptions={[5, 10]}
+                noDataComponent={
+                    <div className="text-gray-500 py-4">لا يوجد بيانات</div>
+                }
                 responsive
                 customStyles={{
                     rows: {
