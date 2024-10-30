@@ -236,7 +236,7 @@ const CustomersCallTable = () => {
                                 <p className="text-gray-700 mb-4">
                                     {selectedCustomer.phone}
                                 </p>
-                                <div className="flex gap-3 justify-center md:justify-start">
+                                <div className="flex gap-3 justify-center">
                                     <button
                                         onClick={() =>
                                             handleCall(selectedCustomer.phone)
