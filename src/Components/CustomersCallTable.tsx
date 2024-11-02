@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { Phone, MessageSquare } from "lucide-react";
+import { Phone, MessageSquare, Send } from "lucide-react";
 
 interface CustomerData {
     id: string;
@@ -12,6 +12,12 @@ interface CustomerData {
 const CustomersCallTable = () => {
     // Sample data - replace with your actual data
     const initialData: CustomerData[] = [
+        {
+            id: "200",
+            name: "محمود",
+            email: "ma7moud.aelaziz@gmail.com",
+            phone: "+20 123 456 789",
+        },
         {
             id: "1",
             name: "أحمد محمد",
@@ -84,6 +90,7 @@ const CustomersCallTable = () => {
     const [data] = useState<CustomerData[]>(initialData);
     const [selectedCustomer, setSelectedCustomer] =
         useState<CustomerData | null>(initialData[0]);
+    const [selectedRows, setSelectedRows] = useState<CustomerData[]>([]);
 
     // Handle calling customer
     const handleCall = (phone: string) => {
@@ -91,8 +98,18 @@ const CustomersCallTable = () => {
     };
 
     // Handle messaging customer
-    const handleMessage = (phone: string) => {
-        window.location.href = `sms:${phone}`;
+    const handleMessage = (email: string) => {
+        window.location.href = `mailto:${email}`;
+    };
+
+    // Handle bulk messaging
+    const handleBulkMessage = () => {
+        if (selectedRows.length > 0) {
+            const emailAddresses = selectedRows
+                .map((customer) => customer.email)
+                .join(",");
+            window.location.href = `mailto:${emailAddresses}`;
+        }
     };
 
     // Handle row click
@@ -128,7 +145,7 @@ const CustomersCallTable = () => {
                         <Phone size={20} />
                     </button>
                     <button
-                        onClick={() => handleMessage(row.phone)}
+                        onClick={() => handleMessage(row.email)}
                         className="p-2 text-green-600 hover:bg-green-100 rounded-md transition-colors"
                         title="رسالة"
                     >
@@ -182,16 +199,31 @@ const CustomersCallTable = () => {
         <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 <div className="col-span-1 xl:col-span-2">
-                    <h2 className="text-lg font-bold text-gray-500 mb-4">
-                        قائمة العملاء
-                    </h2>
-                    <input
-                        type="text"
-                        placeholder="بحث..."
-                        className="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-gray-500 mb-4 duration-100"
-                        value={filterText}
-                        onChange={(e) => setFilterText(e.target.value)}
-                    />
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-bold text-gray-500">
+                            قائمة العملاء
+                        </h2>
+                    </div>
+                    <div className="flex justify-between items-center flex-col md:flex-row mb-4">
+                        <input
+                            type="text"
+                            placeholder="بحث..."
+                            className="p-2 border rounded-lg md:w-96 focus:outline-none focus:ring-2 focus:ring-gray-500  duration-100"
+                            value={filterText}
+                            onChange={(e) => setFilterText(e.target.value)}
+                        />
+
+                        {selectedRows.length > 0 && (
+                            <button
+                                onClick={handleBulkMessage}
+                                className="flex items-center gap-2 border-2 border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                            >
+                                <Send size={16} />
+                                إرسال رسالة للمحددين ({selectedRows.length})
+                            </button>
+                        )}
+                    </div>
+
                     <div className="grid grid-cols-1 rounded-md">
                         <DataTable
                             columns={columns}
@@ -208,6 +240,10 @@ const CustomersCallTable = () => {
                             highlightOnHover
                             responsive
                             onRowClicked={handleRowClick}
+                            selectableRows
+                            onSelectedRowsChange={({ selectedRows }) =>
+                                setSelectedRows(selectedRows)
+                            }
                         />
                     </div>
                 </div>

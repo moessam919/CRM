@@ -63,7 +63,7 @@ const MainKanbanView: React.FC = () => {
             description: "تفاصيل الطلب 1",
         },
         {
-            id: 55,
+            id: 66,
             title: "طلب 1",
             price: "$87k",
             date: "01 Jan, 2022",

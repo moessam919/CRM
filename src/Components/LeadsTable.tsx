@@ -135,7 +135,6 @@ const LeadsTable = () => {
                 </button>
             ),
             ignoreRowClick: true,
-            allowOverflow: true,
             button: true,
         },
     ];
