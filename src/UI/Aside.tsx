@@ -40,12 +40,12 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 </NavLink>
 
                 <NavLink
-                    to="/leads"
+                    to="/contacts"
                     onClick={onNavClick}
                     className={linkClasses}
                 >
-                    <Handshake />
-                    <span>Lead</span>
+                    <SquareUserRound />
+                    <span>الاتصال</span>
                 </NavLink>
 
                 <NavLink
@@ -56,14 +56,14 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                     <ChartPie />
                     <span>إدارة الطلبات</span>
                 </NavLink>
-
+                
                 <NavLink
-                    to="/contacts"
+                    to="/leads"
                     onClick={onNavClick}
                     className={linkClasses}
                 >
-                    <SquareUserRound />
-                    <span>الاتصال</span>
+                    <Handshake />
+                    <span>Lead</span>
                 </NavLink>
             </nav>
         </aside>
