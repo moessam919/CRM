@@ -4,6 +4,7 @@ import Customers from "../Pages/Customers";
 import Contacts from "../Pages/Contacts";
 import Leads from "../Pages/Leads";
 import Dashboard from "../Pages/Dashboard";
+import CustomerInfo from "../Pages/CustomerInfo";
 
 const Routers = createBrowserRouter([
     {
@@ -25,6 +26,10 @@ const Routers = createBrowserRouter([
             {
                 path: "/leads",
                 element: <Leads />,
+            },
+            {
+                path: "/customer",
+                element: <CustomerInfo />,
             },
         ],
     },
