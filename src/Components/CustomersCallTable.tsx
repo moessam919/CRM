@@ -4,167 +4,86 @@ import { Phone, MessageSquare, Mail } from "lucide-react";
 import MessagePopup from "./messagePopup/MessagePopup";
 import WhatsAppPopup from "./messagePopup/WhatsAppPopup";
 import EmailPopup from "./messagePopup/EmailPopup";
+import { ICustomers } from "../types/customers";
+import { useNavigate } from "react-router-dom";
 
-export interface CustomerData {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
+interface CustomersCallTableProps {
+    customers: ICustomers[];
 }
 
-const CustomersCallTable = () => {
-    // Sample data - replace with your actual data
-    const initialData: CustomerData[] = [
-        {
-            id: "200",
-            name: "محمود",
-            email: "ma7moud.aelaziz@gmail.com",
-            phone: "+20 123 456 789",
-        },
-        {
-            id: "1",
-            name: "أحمد محمد",
-            email: "ahmed@example.com",
-            phone: "+20 123 456 789",
-        },
-        {
-            id: "2",
-            name: "فاطمة علي",
-            email: "fatima@example.com",
-            phone: "+20 987 654 321",
-        },
-        {
-            id: "3",
-            name: "فاطمة علي",
-            email: "fatima@example.com",
-            phone: "+20 987 654 321",
-        },
-        {
-            id: "4",
-            name: "فاطمة علي",
-            email: "fatima@example.com",
-            phone: "+20 987 654 321",
-        },
-        {
-            id: "5",
-            name: "فاطمة علي",
-            email: "fatima@example.com",
-            phone: "+20 987 654 321",
-        },
-        {
-            id: "6",
-            name: "فاطمة علي",
-            email: "fatima@example.com",
-            phone: "+20 987 654 321",
-        },
-        {
-            id: "7",
-            name: "فاطمة علي",
-            email: "fatima@example.com",
-            phone: "+20 987 654 321",
-        },
-        {
-            id: "8",
-            name: "أحمد محمد",
-            email: "ahmed@example.com",
-            phone: "+20 123 456 789",
-        },
-        {
-            id: "9",
-            name: "أحمد محمد",
-            email: "ahmed@example.com",
-            phone: "+20 123 456 789",
-        },
-        {
-            id: "10",
-            name: "أحمد محمد",
-            email: "ahmed@example.com",
-            phone: "+20 123 456 789",
-        },
-        {
-            id: "11",
-            name: "أحمد محمد",
-            email: "ahmed@example.com",
-            phone: "+20 123 456 789",
-        },
-    ];
+const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
+    customers,
+}) => {
+    const navigate = useNavigate();
     const [filterText, setFilterText] = useState("");
-    const [data] = useState<CustomerData[]>(initialData);
-    const [selectedCustomer, setSelectedCustomer] =
-        useState<CustomerData | null>(initialData[0]);
-    const [selectedRows, setSelectedRows] = useState<CustomerData[]>([]);
+    const [selectedCustomer, setSelectedCustomer] = useState<ICustomers | null>(
+        customers[0]
+    );
+    const [selectedRows, setSelectedRows] = useState<ICustomers[]>([]);
     const [MessageOpen, setIsMessageOpen] = useState(false);
     const [WhatsOpen, setIsWhatsOpen] = useState(false);
     const [EmailOpen, setIsEmailOpen] = useState(false);
 
     // Handle calling customer
-    const handleCall = (phone: string) => {
+    const handleCall = (phone: number) => {
         window.location.href = `tel:${phone}`;
     };
 
-    // handle Bulk SMS
-    const handleBulkSMS = (customer?: CustomerData) => {
+    // Handle Bulk SMS
+    const handleBulkSMS = (customer?: ICustomers) => {
         if (customer) {
             setSelectedRows([customer]);
-        } else {
-            if (selectedRows.length > 0) {
-                setSelectedRows(selectedRows);
-            }
         }
         setIsMessageOpen(true);
     };
 
     // Handle Bulk Email
-    const handleBulkEmail = (customer?: CustomerData) => {
+    const handleBulkEmail = (customer?: ICustomers) => {
         if (customer) {
             setSelectedRows([customer]);
-        } else {
-            if (selectedRows.length > 0) {
-                setSelectedRows(selectedRows);
-            }
         }
         setIsEmailOpen(true);
     };
 
     // Handle Bulk WhatsApp
-    const handleBulkWhatsApp = (customer?: CustomerData) => {
+    const handleBulkWhatsApp = (customer?: ICustomers) => {
         if (customer) {
             setSelectedRows([customer]);
-        } else {
-            if (selectedRows.length > 0) {
-                setSelectedRows(selectedRows);
-            }
         }
         setIsWhatsOpen(true);
     };
 
     // Handle row click
-    const handleRowClick = (row: CustomerData) => {
+    const handleRowClick = (row: ICustomers) => {
         setSelectedCustomer(row);
+        navigate(`/customer/${row.id}`);
     };
 
-    const columns: TableColumn<CustomerData>[] = [
+    // Define table columns
+    const columns: TableColumn<ICustomers>[] = [
         {
             name: "الاسم",
-            selector: (row: CustomerData) => row.name,
+            selector: (row: ICustomers) => row.name,
             sortable: true,
         },
         {
             name: "البريد الإلكتروني",
-            selector: (row: CustomerData) => row.email,
+            selector: (row: ICustomers) =>
+                row.email_address || "لا يوجد بريد إلكتروني",
             sortable: true,
         },
         {
             name: "رقم الهاتف",
-            selector: (row: CustomerData) => row.phone,
+            selector: (row: ICustomers) =>
+                row.phone_number?.toString() || "لا يوجد رقم هاتف",
             sortable: true,
         },
         {
             name: "الإجراءات",
-            cell: (row: CustomerData) => (
+            cell: (row: ICustomers) => (
                 <div className="flex gap-2">
                     <button
-                        onClick={() => handleCall(row.phone)}
+                        onClick={() => handleCall(row.phone_number)}
                         className="p-2 text-blue-600 hover:bg-blue-100 rounded-md transition-colors"
                         title="اتصال"
                     >
@@ -201,21 +120,22 @@ const CustomersCallTable = () => {
         },
     ];
 
+    // Filter logic
     const filteredItems = useMemo(() => {
-        return data.filter((item) => {
+        return customers.filter((customer) => {
             return (
-                (item.name &&
-                    item.name
+                customer.name
+                    .toLowerCase()
+                    .includes(filterText.toLowerCase()) ||
+                (customer.email_address &&
+                    customer.email_address
                         .toLowerCase()
                         .includes(filterText.toLowerCase())) ||
-                (item.email &&
-                    item.email
-                        .toLowerCase()
-                        .includes(filterText.toLowerCase())) ||
-                (item.phone && item.phone.includes(filterText))
+                (customer.phone_number &&
+                    customer.phone_number.toString().includes(filterText))
             );
         });
-    }, [data, filterText]);
+    }, [customers, filterText]);
 
     const customStyles = {
         rows: {
@@ -313,8 +233,7 @@ const CustomersCallTable = () => {
                     </div>
                 </div>
 
-                {/*  */}
-
+                {/* Popups */}
                 {MessageOpen && (
                     <MessagePopup
                         isOpen={MessageOpen}
@@ -339,7 +258,7 @@ const CustomersCallTable = () => {
                     />
                 )}
 
-                {/*  */}
+                {/* Selected Customer Details */}
                 {selectedCustomer && (
                     <div className="grid grid-cols-1">
                         <div className="bg-gray-100 rounded-lg p-6 flex items-center justify-center">
@@ -357,13 +276,15 @@ const CustomersCallTable = () => {
                                     البريد الإلكتروني:
                                 </p>
                                 <p className="text-gray-700 mb-4">
-                                    {selectedCustomer.email}
+                                    {selectedCustomer.email_address ||
+                                        "لا يوجد بريد إلكتروني"}
                                 </p>
                                 <p className="text-gray-500 font-bold mb-2">
                                     رقم الهاتف:
                                 </p>
                                 <p className="text-gray-700 mb-4">
-                                    {selectedCustomer.phone}
+                                    {selectedCustomer.phone_number ||
+                                        "لا يوجد رقم هاتف"}
                                 </p>
                             </div>
                         </div>

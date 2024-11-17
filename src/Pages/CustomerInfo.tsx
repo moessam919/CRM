@@ -1,14 +1,37 @@
+import { useParams } from "react-router-dom";
 import CustomerInfoBoxes from "../Components/CustomerINCOM/CustomerInfoBoxes";
 import CustomerNotes from "../Components/CustomerINCOM/CustomerNotes";
 import RecentOrder from "../Components/CustomerINCOM/RecentOrder";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import actGetCustomer from "../store/Customer/act/actGetCustomer";
+import { useEffect } from "react";
 
 const CustomerInfo = () => {
+    const { id } = useParams();
+
+    const { customer, loading } = useAppSelector((state) => state.Customer);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (id) {
+            dispatch(actGetCustomer(Number(id)));
+        }
+    }, [dispatch, id]);
+
+    if (loading === "pending") {
+        return (
+            <div className="fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-300 border-solid border-opacity-50"></div>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-gray-200 min-h-[795px] rounded-md">
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-5">
                 <div className="col-span-1 md:col-span-2">
                     <div className="grid grid-cols-1 gap-5">
-                        <CustomerInfoBoxes />
+                        <CustomerInfoBoxes customer={customer} />
                         <CustomerNotes />
                     </div>
                 </div>

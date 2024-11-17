@@ -1,7 +1,12 @@
 import { CreditCard, Mail, Notebook, Phone, User } from "lucide-react";
 import SalesInfo from "./SalesInfo";
+import { ICustomer } from "../../types/customer";
 
-const CustomerInfoBoxes = () => {
+interface ICustomerInfo {
+    customer: ICustomer | null;
+}
+
+const CustomerInfoBoxes = ({ customer }: ICustomerInfo) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
             {/* Info */}
@@ -10,24 +15,30 @@ const CustomerInfoBoxes = () => {
                 <div className="flex flex-col gap-4">
                     <div className="flex gap-2">
                         <User className="font-bold text-gray-500" />
-                        <p className="font-bold text-gray-500">اسم العميل</p>
+                        <p className="font-bold text-gray-500">
+                            {customer?.name ?? "لا يوجد"}
+                        </p>
                     </div>
                     <div className="flex gap-2">
                         <Mail className="font-bold text-gray-500" />
                         <p className="font-bold text-gray-500">
-                            البريد الالكتروني
+                            {customer?.email_address ?? "لا يوجد"}
                         </p>
                     </div>
                     <div className="flex gap-2">
                         <Phone className="font-bold text-gray-500" />
-                        <p className="font-bold text-gray-500">رقم الهاتف</p>
+                        <p className="font-bold text-gray-500">
+                            {customer?.phone_number ?? "لا يوجد"}
+                        </p>
                     </div>
                     <div className="flex gap-2">
                         <CreditCard className="font-bold text-gray-500" />
                         <p className="font-bold text-gray-500">
                             اجمالي قيمة الطلبات :
                         </p>
-                        <span className="font-bold">200 ريال</span>
+                        <span className="font-bold">
+                            {customer?.total_sales ?? "لا يوجد"} ريال
+                        </span>
                     </div>
                     <div className="flex gap-2">
                         <Notebook className="font-bold text-gray-500" />
@@ -35,14 +46,14 @@ const CustomerInfoBoxes = () => {
                             اخر عملية شراء :
                         </p>
                         <span className="text-green-500 font-bold">
-                            10 أيام من اليوم
+                            {customer?.last_invoice_date ?? "لا يوجد"}
                         </span>
                     </div>
                 </div>
             </div>
 
             <div className="col-span-1 md:col-span-2 xl:col-span-3">
-                <SalesInfo />
+                <SalesInfo  customer={customer}/>
             </div>
         </div>
     );
