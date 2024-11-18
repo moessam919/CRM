@@ -56,26 +56,70 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     // Handle row click
     const handleRowClick = (row: ICustomers) => {
         setSelectedCustomer(row);
-        navigate(`/customer/${row.id}`);
     };
 
     // Define table columns
     const columns: TableColumn<ICustomers>[] = [
         {
             name: "الاسم",
-            selector: (row: ICustomers) => row.name,
+            cell: (row: ICustomers) => (
+                <span
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    style={{
+                        cursor: "pointer",
+                    }}
+                >
+                    {row.name}
+                </span>
+            ),
             sortable: true,
         },
         {
             name: "البريد الإلكتروني",
-            selector: (row: ICustomers) =>
-                row.email_address || "لا يوجد بريد إلكتروني",
+            cell: (row: ICustomers) =>
+                row.email_address ? (
+                    <span
+                        onClick={() => navigate(`/customer/${row.id}`)}
+                        style={{
+                            cursor: "pointer",
+                        }}
+                    >
+                        {row.email_address}
+                    </span>
+                ) : (
+                    <span
+                        onClick={() => navigate(`/customer/${row.id}`)}
+                        style={{
+                            cursor: "pointer",
+                        }}
+                    >
+                        لا يوجد بريد إلكتروني
+                    </span>
+                ),
             sortable: true,
         },
         {
             name: "رقم الهاتف",
-            selector: (row: ICustomers) =>
-                row.phone_number?.toString() || "لا يوجد رقم هاتف",
+            cell: (row: ICustomers) =>
+                row.phone_number ? (
+                    <span
+                        onClick={() => navigate(`/customer/${row.id}`)}
+                        style={{
+                            cursor: "pointer",
+                        }}
+                    >
+                        {row.phone_number.toString()}
+                    </span>
+                ) : (
+                    <span
+                        onClick={() => navigate(`/customer/${row.id}`)}
+                        style={{
+                            cursor: "pointer",
+                        }}
+                    >
+                        لا يوجد رقم هاتف
+                    </span>
+                ),
             sortable: true,
         },
         {
@@ -119,7 +163,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             width: "200px",
         },
     ];
-
     // Filter logic
     const filteredItems = useMemo(() => {
         return customers.filter((customer) => {

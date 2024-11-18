@@ -33,7 +33,7 @@ const CustomerInfo = () => {
                     <div className="grid grid-cols-1 gap-5">
                         <CustomerInfoBoxes customer={customer} />
                         <CustomerNotes />
-                    </div>
+                    </div>  
                 </div>
                 <div className="col-span-1 md:col-span-2 xl:col-span-2 2xl:col-span-1 hover:translate-y-1 duration-200">
                     <div className="bg-white rounded-lg shadow-lg p-6">
