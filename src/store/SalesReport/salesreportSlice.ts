@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ISalesReport } from "../../types/salesreport";
-import actGetSalesReport from "./act/actgetSalesReport";
+import actGetSalesReport from "./act/actGetSalesReport";
 
 interface ISalesreportState {
     salesreport: ISalesReport | null;
