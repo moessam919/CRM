@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { CustomerData } from "../CustomersCallTable";
 import ReactQuill from "react-quill";
+import { ICustomers } from "../../types/customers";
 
 interface MessagePopupProps {
     isOpen: boolean;
     onClose: () => void;
-    customers: CustomerData[];
+    customers: ICustomers[];
 }
 
 const MessagePopup: React.FC<MessagePopupProps> = ({
