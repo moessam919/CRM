@@ -7,5 +7,7 @@ export interface ICustomers {
     email_address: string;
     created_at: string;
     total_sales: number;
-    last_invoice_date: string;
+    last_invoice_date: null;
+    invoices_count: number;
+    average_invoice_value: number;
 }

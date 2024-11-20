@@ -1,37 +1,46 @@
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { actCreateCustomerNote } from "../../store/Customer/act/actGetCustomer";
+import { ICustomer } from "../../types/customer";
 
-const AddNoteTab: React.FC = () => {
-    const [communicationType, setCommunicationType] = useState("whatsapp");
+interface AddNoteTabProps {
+    customer: ICustomer | null;
+}
+
+const AddNoteTab: React.FC<AddNoteTabProps> = ({ customer }) => {
     const [note, setNote] = useState("");
+    const { loading, error } = useAppSelector(
+        (state) => state.createCustomerNote
+    );
+    const dispatch = useAppDispatch();
+
+    const id = customer?.id;
+    const handleAddNote = () => {
+        if (!note.trim()) {
+            return;
+        }
+
+        dispatch(actCreateCustomerNote({ id, note }))
+            .unwrap()
+            .then(() => {
+                setNote("");
+            });
+    };
+
+    const errorMessage = error
+        ? typeof error === "string"
+            ? error
+            : (error as { message: string }).message ||
+              "هناك خطأ في ارسال الملاحظة الرجاء المحاولة في وقت لاحق."
+        : null;
 
     return (
-        <div className="pt-[1.6rem] md:px-4 space-y-4">
-            {/* Select Box */}
-            <div className="flex flex-col">
-                <label
-                    htmlFor="communicationType"
-                    className="text-gray-700 font-medium mb-2"
-                >
-                    طريقة التواصل
-                </label>
-                <select
-                    id="communicationType"
-                    value={communicationType}
-                    onChange={(e) => setCommunicationType(e.target.value)}
-                    className="border rounded-lg md:w-[30%] focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100 p-3"
-                >
-                    <option value="phone">الهاتف</option>
-                    <option value="whatsapp">WhatsApp</option>
-                    <option value="email">الريد الالكتروني</option>
-                    <option value="sms">SMS</option>
-                </select>
-            </div>
-
+        <div className="pt-2 md:px-4 space-y-4 md:min-h-[348px]">
             {/* Note Input */}
             <div className="flex flex-col">
                 <label
                     htmlFor="note"
-                    className="text-gray-700 font-medium mb-2"
+                    className="text-gray-700 font-medium text-xl mb-2"
                 >
                     كتابة ملاحظة
                 </label>
@@ -40,19 +49,27 @@ const AddNoteTab: React.FC = () => {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     placeholder="قم باضافة ملاحظاتك هنا"
-                    className="w-full h-32 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                    className="col-span-8 w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                    rows={errorMessage ? 7 : 8}
                 ></textarea>
             </div>
+
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
             {/* Submit Button */}
             <div className="flex justify-end">
                 <button
-                    onClick={() =>
-                        alert(`Note saved: ${note} via ${communicationType}`)
-                    }
-                    className="px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 duration-150"
+                    onClick={handleAddNote}
+                    disabled={loading === "pending"}
+                    className={`px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg shadow-md ${
+                        loading === "pending"
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:bg-gray-600"
+                    } duration-150`}
                 >
-                    اضافة الملاحظة
+                    {loading === "pending"
+                        ? "جاري الإضافة..."
+                        : "اضافة الملاحظة"}
                 </button>
             </div>
         </div>

@@ -1,38 +1,46 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import DataTable from "react-data-table-component";
+import { ICustomer } from "../../types/customer";
 
 interface Product {
-    id: number;
-    name: string;
-    price: number;
-    stock: number;
+    customer: ICustomer | null;
 }
 
-const ProductTable: React.FC = () => {
-    const products: Product[] = [
-        { id: 1, name: "منتج 1", price: 50, stock: 20 },
-        { id: 2, name: "منتج 2", price: 75, stock: 15 },
-        { id: 3, name: "منتج 3", price: 100, stock: 10 },
-    ];
+interface PurchasedProduct {
+    product__arabic_name: string;
+    product__sku: string;
+    product__ref_number: string;
+    count: number;
+}
 
-    const columns: TableColumn<Product>[] = [
-        {
-            name: "رقم المنتج",
-            selector: (row) => row.id,
-            sortable: true,
-        },
+const ProductTable: React.FC<Product> = ({ customer }) => {
+    if (!customer) {
+        return (
+            <div className="text-center text-2xl text-gray-500 py-10">
+                لا يوجد بيانات
+            </div>
+        );
+    }
+
+    const products = customer.purchased_products;
+
+    const columns = [
         {
             name: "اسم المنتج",
-            selector: (row) => row.name,
+            selector: (row: PurchasedProduct) => row.product__arabic_name,
+        },
+        {
+            name: "رقم المنتج",
+            selector: (row: PurchasedProduct) => row.product__sku,
             sortable: true,
         },
         {
-            name: "السعر",
-            selector: (row) => `${row.price} ريال`,
+            name: "رقم المرجعي",
+            selector: (row: PurchasedProduct) => row.product__ref_number,
             sortable: true,
         },
         {
             name: "الكمية المطلوبة",
-            selector: (row) => row.stock,
+            selector: (row: PurchasedProduct) => row.count,
             sortable: true,
         },
     ];
@@ -62,19 +70,23 @@ const ProductTable: React.FC = () => {
     return (
         <div className="pt-4 md:px-6 bg-white rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">جدول المنتجات</h2>
-            <DataTable
-                columns={columns}
-                data={products}
-                pagination
-                paginationRowsPerPageOptions={[3]}
-                customStyles={customStyles}
-                noDataComponent={
-                    <div className="text-gray-500 py-4">لا يوجد بيانات</div>
-                }
-                striped
-                highlightOnHover
-                responsive
-            />
+            <div className="md:min-h-[288px]">
+                <DataTable
+                    columns={columns}
+                    data={products}
+                    pagination
+                    paginationRowsPerPageOptions={[3]}
+                    customStyles={customStyles}
+                    noDataComponent={
+                        <div className="text-center text-2xl text-gray-500 py-10">
+                            لا يوجد بيانات
+                        </div>
+                    }
+                    striped
+                    highlightOnHover
+                    responsive
+                />
+            </div>
         </div>
     );
 };

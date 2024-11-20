@@ -9,7 +9,14 @@ export interface ICustomer {
     total_sales: number;
     last_invoice_date: string;
     invoices_count: number;
-    purchased_products: [];
+    purchased_products: [
+        {
+            product__arabic_name: string;
+            product__sku: string;
+            product__ref_number: string;
+            count: number;
+        },
+    ];
     invoices: [];
     purchased_categories: [];
 }

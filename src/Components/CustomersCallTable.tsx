@@ -1,11 +1,12 @@
 import { useState, useMemo } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { Phone, MessageSquare, Mail } from "lucide-react";
+import { ICustomers } from "../types/customers";
 import MessagePopup from "./messagePopup/MessagePopup";
 import WhatsAppPopup from "./messagePopup/WhatsAppPopup";
 import EmailPopup from "./messagePopup/EmailPopup";
-import { ICustomers } from "../types/customers";
+import { Phone, MessageSquare, Mail, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import EditCustomerPopup from "./EditCustomerModal/EditCustomerPopup";
 
 interface CustomersCallTableProps {
     customers: ICustomers[];
@@ -23,6 +24,19 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const [MessageOpen, setIsMessageOpen] = useState(false);
     const [WhatsOpen, setIsWhatsOpen] = useState(false);
     const [EmailOpen, setIsEmailOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false); // State for opening the edit popup
+
+    const handleEdit = (customer: ICustomers) => {
+        setSelectedCustomer(customer);
+        setIsEditOpen(true); // Open the popup
+    };
+
+    const handleSaveCustomer = (updatedCustomer: ICustomers) => {
+        // Logic to update the customer in the data (e.g., send API request)
+        console.log("Updated customer: ", updatedCustomer);
+        // You can update the customers list here
+        setIsEditOpen(false); // Close the popup after saving
+    };
 
     // Handle calling customer
     const handleCall = (phone: number) => {
@@ -65,9 +79,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             cell: (row: ICustomers) => (
                 <span
                     onClick={() => navigate(`/customer/${row.id}`)}
-                    style={{
-                        cursor: "pointer",
-                    }}
+                    style={{ cursor: "pointer" }}
                 >
                     {row.name}
                 </span>
@@ -76,50 +88,28 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
         },
         {
             name: "البريد الإلكتروني",
-            cell: (row: ICustomers) =>
-                row.email_address ? (
-                    <span
-                        onClick={() => navigate(`/customer/${row.id}`)}
-                        style={{
-                            cursor: "pointer",
-                        }}
-                    >
-                        {row.email_address}
-                    </span>
-                ) : (
-                    <span
-                        onClick={() => navigate(`/customer/${row.id}`)}
-                        style={{
-                            cursor: "pointer",
-                        }}
-                    >
-                        لا يوجد بريد إلكتروني
-                    </span>
-                ),
+            cell: (row: ICustomers) => (
+                <span
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    style={{ cursor: "pointer" }}
+                >
+                    {row.email_address || "لا يوجد بريد إلكتروني"}
+                </span>
+            ),
             sortable: true,
         },
         {
             name: "رقم الهاتف",
-            cell: (row: ICustomers) =>
-                row.phone_number ? (
-                    <span
-                        onClick={() => navigate(`/customer/${row.id}`)}
-                        style={{
-                            cursor: "pointer",
-                        }}
-                    >
-                        {row.phone_number.toString()}
-                    </span>
-                ) : (
-                    <span
-                        onClick={() => navigate(`/customer/${row.id}`)}
-                        style={{
-                            cursor: "pointer",
-                        }}
-                    >
-                        لا يوجد رقم هاتف
-                    </span>
-                ),
+            cell: (row: ICustomers) => (
+                <span
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    style={{ cursor: "pointer" }}
+                >
+                    {row.phone_number
+                        ? row.phone_number.toString()
+                        : "لا يوجد رقم هاتف"}
+                </span>
+            ),
             sortable: true,
         },
         {
@@ -158,11 +148,22 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     >
                         <MessageSquare size={20} />
                     </button>
+
+                    <button
+                        onClick={() => handleEdit(row)}
+                        className="p-2 text-yellow-600 hover:bg-yellow-100 rounded-md transition-colors"
+                        title="تعديل"
+                    >
+                        <span>
+                            <Pencil />
+                        </span>
+                    </button>
                 </div>
             ),
-            width: "200px",
+            width: "250px",
         },
     ];
+
     // Filter logic
     const filteredItems = useMemo(() => {
         return customers.filter((customer) => {
@@ -219,38 +220,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                             value={filterText}
                             onChange={(e) => setFilterText(e.target.value)}
                         />
-
-                        {selectedRows.length > 1 && (
-                            <div className="flex gap-2 mt-4 md:mt-0">
-                                <button
-                                    onClick={() => handleBulkEmail()}
-                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
-                                    title="إرسال بريد إلكتروني للمحددين"
-                                >
-                                    <Mail size={16} />({selectedRows.length})
-                                </button>
-                                <button
-                                    onClick={() => handleBulkWhatsApp()}
-                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
-                                    title="إرسال واتساب للمحددين"
-                                >
-                                    <img
-                                        src="/src/assets/whatsapp.png"
-                                        alt="whatsappIcon"
-                                        className="w-5"
-                                    />
-                                    ({selectedRows.length})
-                                </button>
-                                <button
-                                    onClick={() => handleBulkSMS()}
-                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
-                                    title="إرسال رسالة نصية للمحددين"
-                                >
-                                    <MessageSquare size={16} />(
-                                    {selectedRows.length})
-                                </button>
-                            </div>
-                        )}
                     </div>
                     <div className="grid grid-cols-1 rounded-md">
                         <DataTable
@@ -275,6 +244,16 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         />
                     </div>
                 </div>
+
+                {/* Edit Customer Popup */}
+                {isEditOpen && selectedCustomer && (
+                    <EditCustomerPopup
+                        isOpen={isEditOpen}
+                        onClose={() => setIsEditOpen(false)}
+                        customer={selectedCustomer}
+                        onSave={handleSaveCustomer}
+                    />
+                )}
 
                 {/* Popups */}
                 {MessageOpen && (

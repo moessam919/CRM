@@ -5,6 +5,16 @@ interface ICustomerInfo {
     customer: ICustomer | null;
 }
 
+const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ar-EG", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+};
+
 const SalesInfo = ({ customer }: ICustomerInfo) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2  gap-2">
@@ -47,13 +57,12 @@ const SalesInfo = ({ customer }: ICustomerInfo) => {
                         <Calendar size={20} />
                     </div>
                 </div>
-                <div className="mt-3">
-                    <p className="text-2xl font-bold mb-1">
-                        {customer?.last_invoice_date ?? "لا يوجد"}
+                <div className="mt-8">
+                    <p className="text-2xl font-bold mb-1 text-green-500">
+                        {customer?.last_invoice_date
+                            ? formatDate(customer.last_invoice_date)
+                            : "لا يوجد"}
                     </p>
-                    <span className="text-green-500 text-xs font-bold">
-                        +20% من الشهر السابق
-                    </span>
                 </div>
             </div>
             <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">

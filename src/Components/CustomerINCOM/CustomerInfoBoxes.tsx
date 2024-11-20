@@ -6,6 +6,15 @@ interface ICustomerInfo {
     customer: ICustomer | null;
 }
 
+const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ar-EG", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+};
 const CustomerInfoBoxes = ({ customer }: ICustomerInfo) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
@@ -46,14 +55,16 @@ const CustomerInfoBoxes = ({ customer }: ICustomerInfo) => {
                             اخر عملية شراء :
                         </p>
                         <span className="text-green-500 font-bold">
-                            {customer?.last_invoice_date ?? "لا يوجد"}
+                            {customer?.last_invoice_date
+                                ? formatDate(customer.last_invoice_date)
+                                : "لا يوجد"}
                         </span>
                     </div>
                 </div>
             </div>
 
             <div className="col-span-1 md:col-span-2 xl:col-span-3">
-                <SalesInfo  customer={customer}/>
+                <SalesInfo customer={customer} />
             </div>
         </div>
     );

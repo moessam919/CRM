@@ -3,7 +3,7 @@ import CustomerInfoBoxes from "../Components/CustomerINCOM/CustomerInfoBoxes";
 import CustomerNotes from "../Components/CustomerINCOM/CustomerNotes";
 import RecentOrder from "../Components/CustomerINCOM/RecentOrder";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import actGetCustomer from "../store/Customer/act/actGetCustomer";
+import { actGetCustomer } from "../store/Customer/act/actGetCustomer";
 import { useEffect } from "react";
 
 const CustomerInfo = () => {
@@ -32,8 +32,8 @@ const CustomerInfo = () => {
                 <div className="col-span-1 md:col-span-2">
                     <div className="grid grid-cols-1 gap-5">
                         <CustomerInfoBoxes customer={customer} />
-                        <CustomerNotes />
-                    </div>  
+                        <CustomerNotes customer={customer} />
+                    </div>
                 </div>
                 <div className="col-span-1 md:col-span-2 xl:col-span-2 2xl:col-span-1 hover:translate-y-1 duration-200">
                     <div className="bg-white rounded-lg shadow-lg p-6">

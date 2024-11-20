@@ -2,18 +2,23 @@ import { useState } from "react";
 import AddNoteTab from "./AddNoteTab";
 import ProductTable from "./ProductTable";
 import NotesHistory from "./NotesHistory";
+import { ICustomer } from "../../types/customer";
 
-const CustomerNotes = () => {
+interface CustomerNotesProps {
+    customer: ICustomer | null;
+}
+
+const CustomerNotes: React.FC<CustomerNotesProps> = ({ customer }) => {
     const [activeTab, setActiveTab] = useState("addNote");
 
     const renderContent = () => {
         switch (activeTab) {
             case "addNote":
-                return <AddNoteTab />;
+                return <AddNoteTab customer={customer} />;
             case "noteHistory":
-                return <NotesHistory />;
+                return <NotesHistory customer={customer} />;
             case "other":
-                return <ProductTable />;
+                return <ProductTable customer={customer} />;
             default:
                 return null;
         }
