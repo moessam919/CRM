@@ -32,10 +32,9 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     };
 
     const handleSaveCustomer = (updatedCustomer: ICustomers) => {
-        // Logic to update the customer in the data (e.g., send API request)
+        // Logic to update the customer
         console.log("Updated customer: ", updatedCustomer);
-        // You can update the customers list here
-        setIsEditOpen(false); // Close the popup after saving
+        setIsEditOpen(false);
     };
 
     // Handle calling customer
