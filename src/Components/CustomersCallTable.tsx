@@ -24,11 +24,11 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const [MessageOpen, setIsMessageOpen] = useState(false);
     const [WhatsOpen, setIsWhatsOpen] = useState(false);
     const [EmailOpen, setIsEmailOpen] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false); // State for opening the edit popup
+    const [isEditOpen, setIsEditOpen] = useState(false);
 
     const handleEdit = (customer: ICustomers) => {
         setSelectedCustomer(customer);
-        setIsEditOpen(true); // Open the popup
+        setIsEditOpen(true);
     };
 
     const handleSaveCustomer = (updatedCustomer: ICustomers) => {
@@ -220,6 +220,38 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                             value={filterText}
                             onChange={(e) => setFilterText(e.target.value)}
                         />
+
+                        {selectedRows.length > 1 && (
+                            <div className="flex gap-2 mt-4 md:mt-0">
+                                <button
+                                    onClick={() => handleBulkEmail()}
+                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                    title="إرسال بريد إلكتروني للمحددين"
+                                >
+                                    <Mail size={16} />({selectedRows.length})
+                                </button>
+                                <button
+                                    onClick={() => handleBulkWhatsApp()}
+                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                    title="إرسال واتساب للمحددين"
+                                >
+                                    <img
+                                        src="/src/assets/whatsapp.png"
+                                        alt="whatsappIcon"
+                                        className="w-5"
+                                    />
+                                    ({selectedRows.length})
+                                </button>
+                                <button
+                                    onClick={() => handleBulkSMS()}
+                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                    title="إرسال رسالة نصية للمحددين"
+                                >
+                                    <MessageSquare size={16} />(
+                                    {selectedRows.length})
+                                </button>
+                            </div>
+                        )}
                     </div>
                     <div className="grid grid-cols-1 rounded-md">
                         <DataTable
