@@ -81,7 +81,7 @@ const TopBuyersTable = () => {
     const [rowsPerPage] = useState<number>(5);
 
     return (
-        <div className="p-4 bg-white rounded-md shadow-md">
+        <div className="p-4 bg-white rounded-md shadow-md min-h-[484px] overflow-auto">
             <h2 className="text-lg font-bold text-gray-500 mb-4">
                 العملاء ذو أعلى قيمة طلبات
             </h2>

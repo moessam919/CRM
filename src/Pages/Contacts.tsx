@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import {actGetCustomers} from "../store/Customers/act/actGetCustomers";
+import { actGetCustomers } from "../store/Customers/act/actGetCustomers";
 
 import CustomersCallTable from "../Components/CustomersCallTable";
 import { useEffect } from "react";
@@ -10,7 +10,7 @@ const Contacts = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(actGetCustomers());
+        dispatch(actGetCustomers(1));
     }, [dispatch]);
 
     if (loading === "pending") {

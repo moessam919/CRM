@@ -1,3 +1,12 @@
+export interface IRes {
+    links: {
+        next: string | null;
+        previous: string | null;
+    };
+    total_pages: number;
+    current_page: number;
+    results: ICustomers[];
+}
 export interface ICustomers {
     id: number;
     customer_type: string;

@@ -1,8 +1,7 @@
 import { Search, User2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import {actGetCustomers} from "../store/Customers/act/actGetCustomers";
-import { ICustomers } from "../types/customers";
+import { actGetSearchCustomers } from "../store/Customers/act/actGetCustomers";
 import { useNavigate } from "react-router-dom";
 
 const SearchComponent = () => {
@@ -12,26 +11,20 @@ const SearchComponent = () => {
 
     const [open, setOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filteredCustomers, setFilteredCustomers] = useState<ICustomers[]>(
-        []
-    );
-
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        dispatch(actGetCustomers());
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (searchTerm) {
-            const results = customers.filter((customer) =>
-                customer.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setFilteredCustomers(results);
-        } else {
-            setFilteredCustomers([]);
-        }
-    }, [searchTerm, customers]);
+        const x = setTimeout(() => {
+            if (searchTerm.includes("@")) {
+                dispatch(actGetSearchCustomers(`email=${searchTerm}`));
+            } else if (Number(searchTerm)) {
+                dispatch(actGetSearchCustomers(`phone=${searchTerm}`));
+            } else {
+                dispatch(actGetSearchCustomers(`name=${searchTerm}`));
+            }
+        }, 1000);
+        return () => clearTimeout(x);
+    }, [searchTerm, dispatch]);
 
     useEffect(() => {
         if (open && inputRef.current) {
@@ -91,9 +84,10 @@ const SearchComponent = () => {
                                     <div className="flex justify-center items-center py-8">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                                     </div>
-                                ) : filteredCustomers.length > 0 ? (
+                                ) : customers.length > 0 &&
+                                  searchTerm.length > 0 ? (
                                     <ul className="space-y-1 ">
-                                        {filteredCustomers.map((customer) => (
+                                        {customers.map((customer) => (
                                             <li
                                                 key={customer.id}
                                                 onClick={() =>

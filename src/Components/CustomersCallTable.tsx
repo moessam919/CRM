@@ -1,12 +1,14 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { ICustomers } from "../types/customers";
 import MessagePopup from "./messagePopup/MessagePopup";
 import WhatsAppPopup from "./messagePopup/WhatsAppPopup";
 import EmailPopup from "./messagePopup/EmailPopup";
-import { Phone, MessageSquare, Mail, Pencil } from "lucide-react";
+import { Phone, MessageSquare, Mail, Pencil, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EditCustomerPopup from "./EditCustomerModal/EditCustomerPopup";
+import { useAppDispatch } from "../store/hooks";
+import { actGetSearchCustomers } from "../store/Customers/act/actGetCustomers";
 
 interface CustomersCallTableProps {
     customers: ICustomers[];
@@ -15,6 +17,7 @@ interface CustomersCallTableProps {
 const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     customers,
 }) => {
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [filterText, setFilterText] = useState("");
     const [selectedCustomer, setSelectedCustomer] = useState<ICustomers | null>(
@@ -25,6 +28,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const [WhatsOpen, setIsWhatsOpen] = useState(false);
     const [EmailOpen, setIsEmailOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const handleEdit = (customer: ICustomers) => {
         setSelectedCustomer(customer);
@@ -70,6 +74,20 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const handleRowClick = (row: ICustomers) => {
         setSelectedCustomer(row);
     };
+
+    // search
+    useEffect(() => {
+        const x = setTimeout(() => {
+            if (filterText.includes("@")) {
+                dispatch(actGetSearchCustomers(`email=${filterText}`));
+            } else if (Number(filterText)) {
+                dispatch(actGetSearchCustomers(`phone=${filterText}`));
+            } else {
+                dispatch(actGetSearchCustomers(`name=${filterText}`));
+            }
+        }, 1000);
+        return () => clearTimeout(x);
+    }, [filterText, dispatch]);
 
     // Define table columns
     const columns: TableColumn<ICustomers>[] = [
@@ -164,21 +182,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     ];
 
     // Filter logic
-    const filteredItems = useMemo(() => {
-        return customers.filter((customer) => {
-            return (
-                customer.name
-                    .toLowerCase()
-                    .includes(filterText.toLowerCase()) ||
-                (customer.email_address &&
-                    customer.email_address
-                        .toLowerCase()
-                        .includes(filterText.toLowerCase())) ||
-                (customer.phone_number &&
-                    customer.phone_number.toString().includes(filterText))
-            );
-        });
-    }, [customers, filterText]);
 
     const customStyles = {
         rows: {
@@ -202,7 +205,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
         },
         table: {
             style: {
-                height: "60vh",
+                height: "58vh",
                 overflow: "auto",
             },
         },
@@ -224,6 +227,13 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                             value={filterText}
                             onChange={(e) => setFilterText(e.target.value)}
                         />
+                        <button
+                            onClick={() => setIsFilterOpen(!isFilterOpen)}
+                            className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                            title="فلترة"
+                        >
+                            <Filter size={16} />
+                        </button>
 
                         {selectedRows.length > 1 && (
                             <div className="flex gap-2 mt-4 md:mt-0">
@@ -260,7 +270,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     <div className="grid grid-cols-1 rounded-md">
                         <DataTable
                             columns={columns}
-                            data={filteredItems}
+                            data={customers}
                             pagination
                             paginationRowsPerPageOptions={[10, 15]}
                             customStyles={customStyles}
@@ -281,6 +291,15 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     </div>
                 </div>
 
+                {/* Filter Customer Popup */}
+
+                {/* {isFilterOpen && (
+                    <FilterModal
+                        isOpen={isFilterOpen}
+                        onClose={() => setIsFilterOpen(false)}
+                        customers={customers}
+                    />
+                )} */}
                 {/* Edit Customer Popup */}
                 {isEditOpen && selectedCustomer && (
                     <EditCustomerPopup

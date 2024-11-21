@@ -50,7 +50,7 @@ const LastDealTable = () => {
     ];
 
     return (
-        <div className="p-4 bg-white rounded-md shadow-md">
+        <div className="p-4 bg-white rounded-md shadow-md min-h-[484px] overflow-auto">
             <h2 className="text-lg font-bold text-gray-500 mb-4">
                 آخر عمليات البيع
             </h2>
