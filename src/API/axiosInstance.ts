@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: "//192.168.1.180:8000",
+    baseURL: "https://erp.rashodi.online", // Base URL
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 // axiosInstance.interceptors.response.use(
 //     (response) => response,
-//     async (error) => {
+//     async (error) => {ّ
 //         if (error.response?.status === 401) {
 //             const refreshToken = localStorage.getItem("refresh_token");
 //             if (refreshToken) {

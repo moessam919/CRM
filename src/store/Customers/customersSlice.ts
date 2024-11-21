@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICustomers } from "../../types/customers";
-import { actGetCustomers } from "./act/actGetCustomers";
+import {actGetCustomers} from "./act/actGetCustomers";
 
 interface ICostomerState {
     customers: ICustomers[];
