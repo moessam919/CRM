@@ -162,7 +162,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             width: "250px",
         },
     ];
-    console.log(customers);
 
     // Filter logic
     const filteredItems = useMemo(() => {
@@ -201,8 +200,13 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                 paddingRight: "16px",
             },
         },
+        table: {
+            style: {
+                height: "60vh",
+                overflow: "auto",
+            },
+        },
     };
-
     return (
         <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
