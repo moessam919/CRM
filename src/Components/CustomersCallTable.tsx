@@ -201,6 +201,12 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                 paddingRight: "16px",
             },
         },
+        table: {
+            style: {
+                height: "60vh",
+                overflow: "auto",
+            },
+        },
     };
 
     return (

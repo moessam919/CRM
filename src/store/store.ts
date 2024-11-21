@@ -5,6 +5,7 @@ import Customer from "./Customer/customerSlice";
 import cutsomerNote from "./Customer/customerNoteSlice";
 import createCustomerNote from "./Customer/createCustomerNote";
 import TopCustomers from "./Customers/topSellingCustomer";
+import Invoice from "./Invoice/InvoiceSlice";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         cutsomerNote,
         createCustomerNote,
         TopCustomers,
+        Invoice,
     },
 });
 
@@ -21,3 +23,4 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
+

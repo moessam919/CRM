@@ -1,68 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { actGetLatestInvoices } from "../store/Invoice/act/actGetInvoices";
+import { Invoice } from "../types/invoice";
+import { Link } from "react-router-dom";
 
-interface Deal {
-    name: string;
-    amount: number;
-    vat: number;
-    status: string;
-}
 
-const deals: Deal[] = [
-    { name: "الصفحة أ", amount: 2500, vat: 125, status: "مكتمل" },
-    { name: "الصفحة ب", amount: 4000, vat: 200, status: "قيد الانتظار" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-];
+const LastDealTable = () => {
+    const {invoices  } = useAppSelector((state) => state.Invoice)
+    const dispatch = useAppDispatch() 
+    useEffect(() => {
+        dispatch(actGetLatestInvoices())
 
-// Define table columns
-const columns: TableColumn<Deal>[] = [
+    },[dispatch])
+    const [rowsPerPage] = useState<number>(5);
+    console.log(invoices);
+
+
+    // Define table columns
+const columns: TableColumn<Invoice>[] = [
     {
-        name: "اسم العميل",
-        selector: (row) => row.name,
+        name: "رقم الفاتورة",
+        selector: (row) => row.ref_number,
         sortable: true,
     },
     {
-        name: "المبلغ",
-        selector: (row) => row.amount,
+        name: "العميل",
+        selector: (row) => row.customer,
         sortable: true,
     },
     {
-        name: "الضريبة",
-        selector: (row) => row.vat,
+        name: "الفرع",
+        selector: (row) => row.branch,
         sortable: true,
     },
     {
-        name: "حالة الطلب",
-        selector: (row) => row.status,
+        name: "القيمة",
+        selector: (row) => row.value,
         sortable: true,
     },
     {
         name: "تفاصيل",
-        cell: () => (
-            <div className="border-gray-300 hover:bg-gray-200 duration-200 cursor-pointer text-xs py-3 text-center rounded font-semibold  p-1">
+        cell: (row) => (
+          
+            <Link  to={`${row.url}`}  
+            target="_blank"
+            className="border-gray-300 hover:bg-gray-200 duration-200 cursor-pointer text-xs py-3 text-center rounded font-semibold  p-1">
                 عرض التفاصيل
-            </div>
+            </Link>
         ),
     },
 ];
 
-const LastDealTable = () => {
-    const [rowsPerPage] = useState<number>(5);
-
+    
     return (
         <div className="p-4 bg-white rounded-md shadow-md">
             <h2 className="text-lg font-bold text-gray-500 mb-4">
-                آخر الصفقات
+                آخر عمليات البيع
             </h2>
             <DataTable
                 columns={columns}
-                data={deals}
+                data={invoices}
                 pagination
                 paginationPerPage={rowsPerPage}
                 paginationRowsPerPageOptions={[5, 10]}
