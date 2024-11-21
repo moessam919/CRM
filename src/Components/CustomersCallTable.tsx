@@ -162,6 +162,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             width: "250px",
         },
     ];
+    console.log(customers);
 
     // Filter logic
     const filteredItems = useMemo(() => {

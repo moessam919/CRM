@@ -1,33 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ICustomers } from "../../types/customers";
-import { actGetCustomers } from "./act/actGetCustomers";
+import { actGetTopCustomers } from "./act/actGetCustomers";
+import { ITopCustomer } from "../../types/TopCustomer";
 
 interface ICostomerState {
-    customers: ICustomers[];
+    TopCustomers: ITopCustomer[];
     loading: "idle" | "pending" | "succeeded" | "failed";
     error: string | null;
 }
 
 const initialState: ICostomerState = {
-    customers: [],
+    TopCustomers: [],
     loading: "idle",
     error: null,
 };
 
 const customersSlice = createSlice({
-    name: "Customer",
+    name: "TopCustomer",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(actGetCustomers.pending, (state) => {
+        builder.addCase(actGetTopCustomers.pending, (state) => {
             state.loading = "pending";
             state.error = null;
         });
-        builder.addCase(actGetCustomers.fulfilled, (state, action) => {
+        builder.addCase(actGetTopCustomers.fulfilled, (state, action) => {
             state.loading = "succeeded";
-            state.customers = action.payload;
+            state.TopCustomers = action.payload;
         });
-        builder.addCase(actGetCustomers.rejected, (state, action) => {
+        builder.addCase(actGetTopCustomers.rejected, (state, action) => {
             state.loading = "failed";
             state.error = action.error as string;
         });

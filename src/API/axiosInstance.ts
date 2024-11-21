@@ -1,15 +1,16 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: "https://erp.rashodi.online", // Base URL
+    baseURL: "//192.168.1.180:8000",
 });
 
 axiosInstance.interceptors.request.use((config) => {
     // const token = localStorage.getItem("access_token");
     const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNDQ3NzQxLCJpYXQiOjE3MzE4NDI5NDEsImp0aSI6IjFlYTkxMWZkMTUwYTQ0N2JiNTIwODMxNDk0MGU4ZjY0IiwidXNlcl9pZCI6MX0.X4QJzUG2jeyrSeDXoQHoFiL8n2fEftZQnbhE7Hh2WWA";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzg3Mzg1LCJpYXQiOjE3MzIxODI1ODUsImp0aSI6ImM4NWYxOTVlZGI1ZjQ1NGE5YzhjOGVhZmQ1MGI5MThlIiwidXNlcl9pZCI6MX0.yStrxEgS8TTLNJROArVwQhg8b4BnboprNtuTwV_cS3E";
+
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`; // Add Authorization header
+        config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
 });

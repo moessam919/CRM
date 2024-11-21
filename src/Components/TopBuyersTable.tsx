@@ -1,58 +1,83 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-
-interface Deal {
-    name: string;
-    amount: number;
-    vat: number;
-    status: string;
-}
-
-const deals: Deal[] = [
-    { name: "الصفحة أ", amount: 2500, vat: 125, status: "مكتمل" },
-    { name: "الصفحة ب", amount: 4000, vat: 200, status: "قيد الانتظار" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-    { name: "الصفحة ج", amount: 1500, vat: 75, status: "ملغي" },
-];
-
-// Define table columns
-const columns: TableColumn<Deal>[] = [
-    {
-        name: "اسم العميل",
-        selector: (row) => row.name,
-        sortable: true,
-    },
-    {
-        name: "المبلغ",
-        selector: (row) => row.amount,
-        sortable: true,
-    },
-    {
-        name: "الضريبة",
-        selector: (row) => row.vat,
-        sortable: true,
-    },
-    {
-        name: "حالة الطلب",
-        selector: (row) => row.status,
-        sortable: true,
-    },
-    {
-        name: "تفاصيل",
-        cell: () => (
-            <div className="border-gray-300 hover:bg-gray-200 duration-200 cursor-pointer text-xs py-3 text-center rounded font-semibold  p-1">
-                عرض التفاصيل
-            </div>
-        ),
-    },
-];
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { actGetTopCustomers } from "../store/Customers/act/actGetCustomers";
+import { ITopCustomer } from "../types/TopCustomer";
+import { useNavigate } from "react-router-dom";
 
 const TopBuyersTable = () => {
+    const { TopCustomers, loading } = useAppSelector(
+        (state) => state.TopCustomers
+    );
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(actGetTopCustomers());
+    }, [dispatch]);
+
+    const navigate = useNavigate();
+
+    // Define table columns
+    const columns: TableColumn<ITopCustomer>[] = [
+        {
+            name: "اسم العميل",
+            selector: (row) => row.name,
+            sortable: true,
+        },
+        {
+            name: "رقم الهاتف",
+            selector: (row) => row.phone_number,
+            sortable: true,
+        },
+        {
+            name: "البريد الإلكتروني",
+            selector: (row) => row.email_address || "",
+            sortable: true,
+        },
+        {
+            name: "نوع العميل",
+            selector: (row) =>
+                row.customer_type === "b2c"
+                    ? "عميل فردي"
+                    : row.customer_type === "b2b"
+                      ? "عميل تجاري"
+                      : "غير معروف",
+            sortable: true,
+        },
+        {
+            name: "إجمالي المبيعات",
+            selector: (row) => row.total_sales.toLocaleString(),
+            sortable: true,
+        },
+        {
+            name: "آخر فاتورة",
+            selector: (row) =>
+                row.last_invoice_date === "No invoices yet" ||
+                !row.last_invoice_date
+                    ? "لم يتم الطلب"
+                    : new Date(row.last_invoice_date).toLocaleDateString(
+                          "ar-EG",
+                          {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                          }
+                      ),
+            sortable: true,
+        },
+        {
+            name: "تفاصيل",
+            cell: (row) => (
+                <div
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    className="border-gray-300 hover:bg-gray-200 duration-200 cursor-pointer text-xs py-3 text-center rounded font-semibold  p-1"
+                >
+                    عرض التفاصيل
+                </div>
+            ),
+        },
+    ];
+
     const [rowsPerPage] = useState<number>(5);
 
     return (
@@ -62,10 +87,11 @@ const TopBuyersTable = () => {
             </h2>
             <DataTable
                 columns={columns}
-                data={deals}
+                data={TopCustomers}
                 pagination
                 paginationPerPage={rowsPerPage}
                 paginationRowsPerPageOptions={[5, 10]}
+                progressPending={loading === "pending"} // Show loading indicator
                 noDataComponent={
                     <div className="text-gray-500 py-4">لا يوجد بيانات</div>
                 }

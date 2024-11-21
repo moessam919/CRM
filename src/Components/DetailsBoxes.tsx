@@ -40,7 +40,9 @@ const DetailsBoxes = ({ salesreport }: DetailsBoxesProps) => {
                     </div>
                 </div>
                 <div className="mt-3">
-                    <p className="text-2xl font-bold mb-1">500</p>
+                    <p className="text-2xl font-bold mb-1">
+                        {salesreport?.customers_count}
+                    </p>
                     <span className="text-green-500 text-xs font-bold">
                         +12% من الشهر السابق
                     </span>
