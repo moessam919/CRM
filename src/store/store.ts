@@ -6,6 +6,7 @@ import cutsomerNote from "./Customer/customerNoteSlice";
 import createCustomerNote from "./Customer/createCustomerNote";
 import TopCustomers from "./Customers/topSellingCustomer";
 import Invoice from "./Invoice/InvoiceSlice";
+import SalesChart from "./SalesChartData/SalesChart"
 
 export const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
         createCustomerNote,
         TopCustomers,
         Invoice,
+        SalesChart
     },
 });
 
