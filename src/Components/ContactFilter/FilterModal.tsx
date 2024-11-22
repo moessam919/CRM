@@ -16,10 +16,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
     initialFilters = {},
 }) => {
     const [filters, setFilters] = useState<CustomerFilters>({
-        name: initialFilters.name || "",
-        email: initialFilters.email || "",
-        phone: initialFilters.phone || "",
-        address: initialFilters.address || "",
         customer_type: initialFilters.customer_type || "",
         min_sales_value: initialFilters.min_sales_value || undefined,
         max_sales_value: initialFilters.max_sales_value || undefined,
@@ -49,10 +45,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
     const resetFilters = () => {
         setFilters({
-            name: "",
-            email: "",
-            phone: "",
-            address: "",
             customer_type: "",
             min_sales_value: undefined,
             max_sales_value: undefined,
@@ -93,48 +85,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
 
                 <div className="p-4 space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            الاسم
-                        </label>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="ابحث بالاسم"
-                            value={filters.name || ""}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            البريد الإلكتروني
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="ابحث بالبريد الإلكتروني"
-                            value={filters.email || ""}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            الهاتف
-                        </label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            placeholder="ابحث برقم الهاتف"
-                            value={filters.phone || ""}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
-                        />
-                    </div>
-
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             نوع العميل
