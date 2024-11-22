@@ -82,7 +82,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
             <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto shadow-xl">
                 <div className="flex justify-between items-center p-4 border-b">
                     <h2 className="text-xl font-bold text-gray-700">
-                        Filter Customers
+                        تصفية العملاء
                     </h2>
                     <button
                         onClick={onClose}
@@ -95,114 +95,87 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 <div className="p-4 space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Name
+                            الاسم
                         </label>
                         <input
                             type="text"
                             name="name"
-                            placeholder="Search by name"
+                            placeholder="ابحث بالاسم"
                             value={filters.name || ""}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-green-300"
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                         />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Email
+                            البريد الإلكتروني
                         </label>
                         <input
                             type="email"
                             name="email"
-                            placeholder="Search by email"
+                            placeholder="ابحث بالبريد الإلكتروني"
                             value={filters.email || ""}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-green-300"
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                         />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Phone
+                            الهاتف
                         </label>
                         <input
                             type="tel"
                             name="phone"
-                            placeholder="Search by phone number"
+                            placeholder="ابحث برقم الهاتف"
                             value={filters.phone || ""}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-green-300"
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                         />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Customer Type
+                            نوع العميل
                         </label>
                         <select
                             name="customer_type"
                             value={filters.customer_type || ""}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-green-300"
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                         >
-                            <option value="">All Types</option>
-                            <option value="b2b">B2B</option>
-                            <option value="b2c">B2C</option>
+                            <option value="">جميع الأنواع</option>
+                            <option value="b2b">شركات</option>
+                            <option value="b2c">أفراد</option>
                         </select>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Min Sales Value
+                                الحد الأدنى للمبيعات
                             </label>
                             <input
                                 type="number"
                                 name="min_sales_value"
-                                placeholder="Minimum sales"
+                                placeholder="الحد الأدنى"
                                 value={filters.min_sales_value || ""}
                                 onChange={handleInputChange}
-                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-green-300"
+                                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Max Sales Value
+                                الحد الأقصى للمبيعات
                             </label>
                             <input
                                 type="number"
                                 name="max_sales_value"
-                                placeholder="Maximum sales"
+                                placeholder="الحد الأقصى"
                                 value={filters.max_sales_value || ""}
                                 onChange={handleInputChange}
-                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-green-300"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Created After
-                            </label>
-                            <input
-                                type="date"
-                                name="created_at_after"
-                                value={filters.created_at_after || ""}
-                                onChange={handleInputChange}
-                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-green-300"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Created Before
-                            </label>
-                            <input
-                                type="date"
-                                name="created_at_before"
-                                value={filters.created_at_before || ""}
-                                onChange={handleInputChange}
-                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-green-300"
+                                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                             />
                         </div>
                     </div>
@@ -214,26 +187,26 @@ const FilterModal: React.FC<FilterModalProps> = ({
                                 name="no_purchases"
                                 checked={filters.no_purchases || false}
                                 onChange={handleInputChange}
-                                className="mr-2 rounded text-green-600 focus:ring-green-300"
+                                className="ml-2 rounded focus:outline-none  "
                             />
                             <span className="text-sm text-gray-700">
-                                Customers with No Purchases
+                                العملاء الذين لم يشتروا
                             </span>
                         </label>
                     </div>
 
-                    <div className="flex justify-between space-x-4 pt-4">
+                    <div className="flex justify-end gap-4 pt-4">
                         <button
                             onClick={resetFilters}
-                            className="flex-1 p-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+                            className="px-4 py-2 border hover:bg-gray-300 rounded-md duration-150"
                         >
-                            Reset Filters
+                            إعادة ضبط التصفية
                         </button>
                         <button
                             onClick={handleSubmit}
-                            className="flex-1 p-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                            className="px-4 py-2 border hover:bg-gray-500 hover:text-white rounded-md duration-150"
                         >
-                            Apply Filters
+                            تطبيق التصفية
                         </button>
                     </div>
                 </div>

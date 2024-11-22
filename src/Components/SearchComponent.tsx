@@ -1,11 +1,14 @@
 import { Search, User2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { actGetSearchCustomers } from "../store/Customers/act/actGetCustomers";
 import { useNavigate } from "react-router-dom";
+import { CustomerFilters } from "../types/customers";
+import { actGetSearchCustomers } from "../store/Customers/act/actGetCustomers";
 
 const SearchComponent = () => {
-    const { customers, loading } = useAppSelector((state) => state.Customers);
+    const { customers, loading } = useAppSelector(
+        (state) => state.searchCustomer
+    );
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -15,16 +18,23 @@ const SearchComponent = () => {
 
     useEffect(() => {
         const x = setTimeout(() => {
+            let searchParams: CustomerFilters = {};
             if (searchTerm.includes("@")) {
-                dispatch(actGetSearchCustomers(`email=${searchTerm}`));
+                searchParams = { email: searchTerm };
             } else if (Number(searchTerm)) {
-                dispatch(actGetSearchCustomers(`phone=${searchTerm}`));
+                searchParams = { phone: searchTerm };
             } else {
-                dispatch(actGetSearchCustomers(`name=${searchTerm}`));
+                searchParams = { name: searchTerm };
             }
+
+            dispatch(
+                actGetSearchCustomers({
+                    filters: searchParams,
+                })
+            );
         }, 1000);
         return () => clearTimeout(x);
-    }, [searchTerm, dispatch]);
+    }, [dispatch, searchTerm]);
 
     useEffect(() => {
         if (open && inputRef.current) {

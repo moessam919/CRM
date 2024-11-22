@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { ICustomers } from "../types/customers";
+import { CustomerFilters, ICustomers } from "../types/customers";
 import MessagePopup from "./messagePopup/MessagePopup";
 import WhatsAppPopup from "./messagePopup/WhatsAppPopup";
 import EmailPopup from "./messagePopup/EmailPopup";
 import { Phone, MessageSquare, Mail, Pencil, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EditCustomerPopup from "./EditCustomerModal/EditCustomerPopup";
-import { useAppDispatch } from "../store/hooks";
-import { actGetSearchCustomers } from "../store/Customers/act/actGetCustomers";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { actGetFilteredCustomers } from "../store/Customers/act/actGetCustomers";
+import FilterModal from "./ContactFilter/FilterModal";
 
 interface CustomersCallTableProps {
     customers: ICustomers[];
@@ -29,6 +30,20 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const [EmailOpen, setIsEmailOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const { currentFilters, currentPage } = useAppSelector(
+        (state) => state.Customers
+    );
+
+    // Filter Modal
+    const handleApplyFilters = (filters: CustomerFilters) => {
+        dispatch(
+            actGetFilteredCustomers({
+                filters,
+                pageNumber: currentPage,
+            })
+        );
+        setIsFilterOpen(false);
+    };
 
     const handleEdit = (customer: ICustomers) => {
         setSelectedCustomer(customer);
@@ -78,16 +93,24 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     // search
     useEffect(() => {
         const x = setTimeout(() => {
+            let searchParams: CustomerFilters = {};
             if (filterText.includes("@")) {
-                dispatch(actGetSearchCustomers(`email=${filterText}`));
+                searchParams = { email: filterText };
             } else if (Number(filterText)) {
-                dispatch(actGetSearchCustomers(`phone=${filterText}`));
+                searchParams = { phone: filterText };
             } else {
-                dispatch(actGetSearchCustomers(`name=${filterText}`));
+                searchParams = { name: filterText };
             }
+
+            dispatch(
+                actGetFilteredCustomers({
+                    filters: searchParams,
+                    pageNumber: currentPage,
+                })
+            );
         }, 1000);
         return () => clearTimeout(x);
-    }, [filterText, dispatch]);
+    }, [filterText, dispatch, currentPage]);
 
     // Define table columns
     const columns: TableColumn<ICustomers>[] = [
@@ -223,13 +246,13 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         <input
                             type="text"
                             placeholder="بحث..."
-                            className="p-2 border rounded-lg md:w-96 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                            className="p-2 border rounded-lg md:w-96 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100 mb-4 md:mb-0"
                             value={filterText}
                             onChange={(e) => setFilterText(e.target.value)}
                         />
                         <button
-                            onClick={() => setIsFilterOpen(!isFilterOpen)}
-                            className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                            onClick={() => setIsFilterOpen(true)}
+                            className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86] hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
                             title="فلترة"
                         >
                             <Filter size={16} />
@@ -293,13 +316,15 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
 
                 {/* Filter Customer Popup */}
 
-                {/* {isFilterOpen && (
+                {isFilterOpen && (
                     <FilterModal
                         isOpen={isFilterOpen}
                         onClose={() => setIsFilterOpen(false)}
-                        customers={customers}
+                        onSubmit={handleApplyFilters}
+                        initialFilters={currentFilters}
                     />
-                )} */}
+                )}
+
                 {/* Edit Customer Popup */}
                 {isEditOpen && selectedCustomer && (
                     <EditCustomerPopup
