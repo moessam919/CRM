@@ -3,7 +3,6 @@ import { ICustomers, CustomerFilters } from "../../types/customers";
 import {
     actGetCustomers,
     actGetFilteredCustomers,
-    actGetSearchCustomers,
 } from "./act/actGetCustomers";
 
 interface ICostomerState {
