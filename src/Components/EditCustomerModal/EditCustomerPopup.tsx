@@ -1,22 +1,25 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useAppDispatch } from "../../store/hooks";
 import { ICustomers } from "../../types/customers";
+import { actEditCustomers } from "../../store/Customers/act/actGetCustomers";
+import toast from "react-hot-toast";
 
 interface EditCustomerPopupProps {
     isOpen: boolean;
     onClose: () => void;
     customer: ICustomers;
-    onSave: (updatedCustomer: ICustomers) => void;
 }
 
 const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
     isOpen,
     onClose,
     customer,
-    onSave,
 }) => {
+    const dispatch = useAppDispatch();
     const [name, setName] = useState(customer.name);
     const [phoneNumber, setPhoneNumber] = useState(customer.phone_number);
     const [email, setEmail] = useState(customer.email_address);
+    const [addres, setAddres] = useState(customer.billing_address);
 
     const handleSave = () => {
         const updatedCustomer = {
@@ -24,8 +27,11 @@ const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
             name,
             phone_number: phoneNumber,
             email_address: email,
+            billing_address: addres,
         };
-        onSave(updatedCustomer);
+        dispatch(actEditCustomers({ id: customer.id, updatedCustomer }));
+        toast.success("تم تحديث بيانات العميل بنجاح!");
+
         onClose();
     };
 
@@ -66,6 +72,17 @@ const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
                         className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">
+                        العنوان:
+                    </label>
+                    <input
+                        type="text"
+                        className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                        value={addres}
+                        onChange={(e) => setAddres(e.target.value)}
                     />
                 </div>
                 <div className="flex justify-end gap-4">

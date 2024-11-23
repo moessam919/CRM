@@ -18,6 +18,9 @@ interface CustomersCallTableProps {
 const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     customers,
 }) => {
+    const { currentFilters, currentPage } = useAppSelector(
+        (state) => state.Customers
+    );
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [filterText, setFilterText] = useState("");
@@ -30,9 +33,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const [EmailOpen, setIsEmailOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const { currentFilters, currentPage } = useAppSelector(
-        (state) => state.Customers
-    );
 
     // Filter Modal
     const handleApplyFilters = (filters: CustomerFilters) => {
@@ -48,12 +48,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const handleEdit = (customer: ICustomers) => {
         setSelectedCustomer(customer);
         setIsEditOpen(true);
-    };
-
-    const handleSaveCustomer = (updatedCustomer: ICustomers) => {
-        // Logic to update the customer
-        console.log("Updated customer: ", updatedCustomer);
-        setIsEditOpen(false);
     };
 
     // Handle calling customer
@@ -112,8 +106,34 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
         return () => clearTimeout(x);
     }, [filterText, dispatch, currentPage]);
 
+    // date Handle
+    const formatArabicDate = (isoDate: string): string => {
+        const date = new Date(isoDate);
+        const formatter = new Intl.DateTimeFormat("ar-EG", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+        });
+        return formatter.format(date);
+    };
+
     // Define table columns
     const columns: TableColumn<ICustomers>[] = [
+        {
+            name: "نوع العميل",
+            cell: (row: ICustomers) => (
+                <span
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    style={{ cursor: "pointer" }}
+                >
+                    {row.customer_type === "b2b" ? "شركات" : "افراد"}
+                </span>
+            ),
+            sortable: true,
+        },
+
         {
             name: "الاسم",
             cell: (row: ICustomers) => (
@@ -133,7 +153,19 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     onClick={() => navigate(`/customer/${row.id}`)}
                     style={{ cursor: "pointer" }}
                 >
-                    {row.email_address || "لا يوجد بريد إلكتروني"}
+                    {row.email_address || ""}
+                </span>
+            ),
+            sortable: true,
+        },
+        {
+            name: "العنوان",
+            cell: (row: ICustomers) => (
+                <span
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    style={{ cursor: "pointer" }}
+                >
+                    {row.billing_address || ""}
                 </span>
             ),
             sortable: true,
@@ -145,9 +177,46 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     onClick={() => navigate(`/customer/${row.id}`)}
                     style={{ cursor: "pointer" }}
                 >
-                    {row.phone_number
-                        ? row.phone_number.toString()
-                        : "لا يوجد رقم هاتف"}
+                    {row.phone_number ? row.phone_number.toString() : ""}
+                </span>
+            ),
+            sortable: true,
+        },
+        {
+            name: "اجمالي المشتريات",
+            cell: (row) => (
+                <span
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    style={{ cursor: "pointer" }}
+                >
+                    {row.total_sales}
+                </span>
+            ),
+            sortable: true,
+        },
+
+        {
+            name: "تاريخ الاضاافة",
+            cell: (row) => (
+                <span
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    style={{ cursor: "pointer" }}
+                >
+                    {formatArabicDate(row.created_at)}
+                </span>
+            ),
+            sortable: true,
+        },
+        {
+            name: "اخر عملية شراء",
+            cell: (row) => (
+                <span
+                    onClick={() => navigate(`/customer/${row.id}`)}
+                    style={{ cursor: "pointer" }}
+                >
+                    {row.last_invoice_date === null
+                        ? ""
+                        : formatArabicDate(row.last_invoice_date)}
                 </span>
             ),
             sortable: true,
@@ -235,83 +304,81 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     };
     return (
         <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <div className="col-span-1 xl:col-span-2">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-bold text-gray-500">
-                            قائمة العملاء
-                        </h2>
-                    </div>
-                    <div className="flex justify-between items-center flex-col md:flex-row mb-4">
-                        <input
-                            type="text"
-                            placeholder="بحث..."
-                            className="p-2 border rounded-lg md:w-96 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100 mb-4 md:mb-0"
-                            value={filterText}
-                            onChange={(e) => setFilterText(e.target.value)}
-                        />
-                        <button
-                            onClick={() => setIsFilterOpen(true)}
-                            className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86] hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
-                            title="فلترة"
-                        >
-                            <Filter size={16} />
-                        </button>
+            <div className="col-span-1 xl:col-span-2">
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-bold text-gray-500">
+                        قائمة العملاء
+                    </h2>
+                </div>
+                <div className="flex justify-between items-center flex-col md:flex-row mb-4">
+                    <input
+                        type="text"
+                        placeholder="بحث..."
+                        className="p-2 border rounded-lg md:w-96 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100 mb-4 md:mb-0"
+                        value={filterText}
+                        onChange={(e) => setFilterText(e.target.value)}
+                    />
+                    <button
+                        onClick={() => setIsFilterOpen(true)}
+                        className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86] hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                        title="فلترة"
+                    >
+                        <Filter size={16} />
+                    </button>
 
-                        {selectedRows.length > 1 && (
-                            <div className="flex gap-2 mt-4 md:mt-0">
-                                <button
-                                    onClick={() => handleBulkEmail()}
-                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
-                                    title="إرسال بريد إلكتروني للمحددين"
-                                >
-                                    <Mail size={16} />({selectedRows.length})
-                                </button>
-                                <button
-                                    onClick={() => handleBulkWhatsApp()}
-                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
-                                    title="إرسال واتساب للمحددين"
-                                >
-                                    <img
-                                        src="/src/assets/whatsapp.png"
-                                        alt="whatsappIcon"
-                                        className="w-5"
-                                    />
-                                    ({selectedRows.length})
-                                </button>
-                                <button
-                                    onClick={() => handleBulkSMS()}
-                                    className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
-                                    title="إرسال رسالة نصية للمحددين"
-                                >
-                                    <MessageSquare size={16} />(
-                                    {selectedRows.length})
-                                </button>
+                    {selectedRows.length > 1 && (
+                        <div className="flex gap-2 mt-4 md:mt-0">
+                            <button
+                                onClick={() => handleBulkEmail()}
+                                className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                title="إرسال بريد إلكتروني للمحددين"
+                            >
+                                <Mail size={16} />({selectedRows.length})
+                            </button>
+                            <button
+                                onClick={() => handleBulkWhatsApp()}
+                                className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                title="إرسال واتساب للمحددين"
+                            >
+                                <img
+                                    src="/src/assets/whatsapp.png"
+                                    alt="whatsappIcon"
+                                    className="w-5"
+                                />
+                                ({selectedRows.length})
+                            </button>
+                            <button
+                                onClick={() => handleBulkSMS()}
+                                className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                title="إرسال رسالة نصية للمحددين"
+                            >
+                                <MessageSquare size={16} />(
+                                {selectedRows.length})
+                            </button>
+                        </div>
+                    )}
+                </div>
+                <div className="grid grid-cols-1 rounded-md">
+                    <DataTable
+                        columns={columns}
+                        data={customers}
+                        pagination
+                        paginationRowsPerPageOptions={[10, 15]}
+                        customStyles={customStyles}
+                        noDataComponent={
+                            <div className="text-gray-500 py-4">
+                                لا يوجد بيانات
                             </div>
-                        )}
-                    </div>
-                    <div className="grid grid-cols-1 rounded-md">
-                        <DataTable
-                            columns={columns}
-                            data={customers}
-                            pagination
-                            paginationRowsPerPageOptions={[10, 15]}
-                            customStyles={customStyles}
-                            noDataComponent={
-                                <div className="text-gray-500 py-4">
-                                    لا يوجد بيانات
-                                </div>
-                            }
-                            striped
-                            highlightOnHover
-                            responsive
-                            onRowClicked={handleRowClick}
-                            selectableRows
-                            onSelectedRowsChange={({ selectedRows }) =>
-                                setSelectedRows(selectedRows)
-                            }
-                        />
-                    </div>
+                        }
+                        striped
+                        highlightOnHover
+                        responsive
+                        onRowClicked={handleRowClick}
+                        selectableRows
+                        onSelectedRowsChange={({ selectedRows }) =>
+                            setSelectedRows(selectedRows)
+                        }
+                    />
                 </div>
 
                 {/* Filter Customer Popup */}
@@ -331,7 +398,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         isOpen={isEditOpen}
                         onClose={() => setIsEditOpen(false)}
                         customer={selectedCustomer}
-                        onSave={handleSaveCustomer}
                     />
                 )}
 
@@ -361,37 +427,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                 )}
 
                 {/* Selected Customer Details */}
-                {selectedCustomer && (
-                    <div className="grid grid-cols-1">
-                        <div className="bg-gray-100 rounded-lg p-6 flex items-center justify-center">
-                            <div className="bg-white px-10 md:py-10 md:px-[20%] rounded-md text-right">
-                                <h2 className="text-lg md:text-2xl font-bold text-gray-500 bg-white p-2 rounded-md mb-4">
-                                    تفاصيل العميل
-                                </h2>
-                                <p className="text-gray-500 font-bold mb-2">
-                                    الاسم:
-                                </p>
-                                <p className="text-gray-700 mb-4">
-                                    {selectedCustomer.name}
-                                </p>
-                                <p className="text-gray-500 font-bold mb-2">
-                                    البريد الإلكتروني:
-                                </p>
-                                <p className="text-gray-700 mb-4">
-                                    {selectedCustomer.email_address ||
-                                        "لا يوجد بريد إلكتروني"}
-                                </p>
-                                <p className="text-gray-500 font-bold mb-2">
-                                    رقم الهاتف:
-                                </p>
-                                <p className="text-gray-700 mb-4">
-                                    {selectedCustomer.phone_number ||
-                                        "لا يوجد رقم هاتف"}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../../API/axiosInstance";
 import axios from "axios";
-import { CustomerFilters } from "../../../types/customers";
+import { CustomerFilters, ICustomers } from "../../../types/customers";
 
 export const actGetCustomers = createAsyncThunk(
     "Customer/actGetCustomers",
@@ -51,7 +51,7 @@ export const actGetFilteredCustomers = createAsyncThunk(
             );
             return {
                 ...res.data,
-                filters, 
+                filters,
             };
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -117,6 +117,37 @@ export const actGetTopCustomers = createAsyncThunk(
             } else {
                 return rejectWithValue(
                     "An error occurred while fetching data."
+                );
+            }
+        }
+    }
+);
+
+export const actEditCustomers = createAsyncThunk(
+    "Customer/actEditCustomers",
+    async (
+        {
+            id,
+            updatedCustomer,
+        }: {
+            id: number;
+            updatedCustomer: ICustomers;
+        },
+        thunkAPI
+    ) => {
+        const { rejectWithValue } = thunkAPI;
+        try {
+            const res = await axiosInstance.put(
+                `crm/customers/${id}/update`,
+                updatedCustomer
+            );
+            return res.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(error.response?.data);
+            } else {
+                return rejectWithValue(
+                    "An error occurred while updating the customer."
                 );
             }
         }

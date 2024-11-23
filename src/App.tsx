@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import Aside from "./UI/Aside";
 import Header from "./UI/Header";
+import { Toaster } from "react-hot-toast";
 
 function App() {
     // Initialize mobile state based on window width
@@ -68,6 +69,21 @@ function App() {
                     <Outlet />
                 </main>
             </div>
+            <Toaster
+                position="bottom-left"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                toastOptions={{
+                    style: {
+                        background: "#363636",
+                        color: "#fff",
+                        padding: "16px",
+                        fontSize: "18px",
+                        minWidth: "300px",
+                    },
+                }}
+            />
         </div>
     );
 }

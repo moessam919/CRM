@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICustomers, CustomerFilters } from "../../types/customers";
 import {
+    actEditCustomers,
     actGetCustomers,
     actGetFilteredCustomers,
 } from "./act/actGetCustomers";
@@ -61,6 +62,23 @@ const customersSlice = createSlice({
                 state.loading = "failed";
                 state.error = action.payload as string;
             })
+            .addCase(actEditCustomers.pending, (state) => {
+                state.loading = "pending";
+                state.error = null;
+            })
+            .addCase(actEditCustomers.fulfilled, (state, action) => {
+                state.loading = "succeeded";
+                const updatedCustomer = action.payload;
+                state.customers = state.customers.map((customer) =>
+                    customer.id === updatedCustomer.id
+                        ? updatedCustomer
+                        : customer
+                );
+            })
+            .addCase(actEditCustomers.rejected, (state, action) => {
+                state.loading = "failed";
+                state.error = action.payload as string;
+            });
     },
 });
 

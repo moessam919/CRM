@@ -44,7 +44,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
     };
 
     const resetFilters = () => {
-        setFilters({
+        const setFilters = {
             customer_type: "",
             min_sales_value: undefined,
             max_sales_value: undefined,
@@ -54,7 +54,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
             created_at_before: "",
             last_invoice_date: "",
             no_purchases: false,
-        });
+        };
+        onSubmit(setFilters);
+        onClose();
     };
 
     const handleSubmit = () => {
