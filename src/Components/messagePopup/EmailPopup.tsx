@@ -27,16 +27,13 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
         setLoading(true);
         const recipients = customers.map((customer) => customer.id);
         const messageData = {
-            type: "Email",
+            type: "email",
             content: message,
             recipients: recipients,
         };
-
         dispatch(sendMessage(messageData));
-        console.log(messageData);
         setLoading(false);
         onClose();
-
         toast.success("!تم أرسال الرسالة بنجاح");
     };
 

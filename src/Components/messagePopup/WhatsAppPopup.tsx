@@ -26,13 +26,12 @@ const WhatsAppPopup: React.FC<MessagePopupProps> = ({
         setLoading(true);
         const recipients = customers.map((customer) => customer.id);
         const messageData = {
-            type: "WhatsApp",
+            type: "whatsapp",
             content: message,
             recipients: recipients,
         };
 
         dispatch(sendMessage(messageData));
-        console.log(messageData);
         setLoading(false);
         onClose();
 

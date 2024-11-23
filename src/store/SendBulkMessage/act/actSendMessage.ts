@@ -11,7 +11,7 @@ export const sendMessage = createAsyncThunk(
         const { rejectWithValue } = thunkAPI;
         try {
             const response = await axiosInstance.post(
-                "/crm/messages",
+                "/crm/messages/",
                 messageData
             );
             return response.data;
