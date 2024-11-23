@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import { sendMessage } from "../../store/SendBulkMessage/act/actSendMessage";
 import { ICustomers } from "../../types/customers";
-import ReactQuill from "react-quill"; // Import Quill editor
-import "react-quill/dist/quill.snow.css"; // Import Quill styles
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import toast from "react-hot-toast";
 
 interface MessagePopupProps {
