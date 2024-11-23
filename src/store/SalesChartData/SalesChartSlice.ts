@@ -3,16 +3,15 @@ import { ISalesChartData } from "../../types/salesChartData";
 import { actGetChartData } from "./act/actGetSalesChartData";
 
 interface ISalesChart {
-    data: ISalesChartData[];
+    data: ISalesChartData | null;
     loading: "idle" | "pending" | "succeeded" | "failed";
     error: string | null;
 }
 const iniyialState: ISalesChart = {
-    data: [],
+    data: null,
     loading: "idle",
     error: null,
 };
-
 
 const SalesChart = createSlice({
     name: "SalesChartData",

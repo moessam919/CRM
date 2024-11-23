@@ -7,7 +7,9 @@ export const actGetChartData = createAsyncThunk(
     async (period: string, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
         try {
-            const res = await axiosInstance.get(`/crm/sales/charts?${new URLSearchParams({ period: `${period}` })}`);
+            const res = await axiosInstance.get(
+                `/crm/sales/charts?${new URLSearchParams({ period: `${period}` })}`
+            );
             return res.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {

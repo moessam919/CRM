@@ -27,7 +27,7 @@ const SalesInfo = ({ customer }: ICustomerInfo) => {
                 </div>
                 <div className="mt-3">
                     <p className="text-2xl font-bold mb-1">
-                        {customer?.total_sales ?? "لا يوجد"} ريال
+                        {customer?.total_sales.toFixed(2) ?? "لا يوجد"} ريال
                     </p>
                     <span className="text-green-500 text-xs font-bold">
                         +20% من الشهر السابق
@@ -75,7 +75,10 @@ const SalesInfo = ({ customer }: ICustomerInfo) => {
                     </div>
                 </div>
                 <div className="mt-3">
-                    <p className="text-2xl font-bold mb-1">84.00 ريال</p>
+                    <p className="text-2xl font-bold mb-1">
+                        {customer?.last_month_sales.toFixed(2) ?? "لا يوجد"}{" "}
+                        ريال
+                    </p>
                     <span className="text-green-500 text-xs font-bold">
                         +20% من الشهر السابق
                     </span>

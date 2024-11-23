@@ -38,7 +38,7 @@ const CustomerInfo = () => {
                 <div className="col-span-1 md:col-span-2 xl:col-span-2 2xl:col-span-1 hover:translate-y-1 duration-200">
                     <div className="bg-white rounded-lg shadow-lg p-6">
                         <h1 className="md:text-2xl font-bold">جميع الطلبات</h1>
-                        <RecentOrder />
+                        <RecentOrder customer={customer} />
                     </div>
                 </div>
             </div>

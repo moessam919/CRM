@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { actCreateCustomerNote } from "../../store/Customer/act/actGetCustomer";
 import { ICustomer } from "../../types/customer";
+import toast from "react-hot-toast";
 
 interface AddNoteTabProps {
     customer: ICustomer | null;
@@ -25,6 +26,8 @@ const AddNoteTab: React.FC<AddNoteTabProps> = ({ customer }) => {
             .then(() => {
                 setNote("");
             });
+
+        toast.success("تم اضافة الملاحظة بنجاح!");
     };
 
     const errorMessage = error

@@ -8,7 +8,7 @@ import TopCustomers from "./Customers/topSellingCustomer";
 import Invoice from "./Invoice/InvoiceSlice";
 import SalesChart from "./SalesChartData/SalesChartSlice";
 import searchCustomer from "./Customers/searchCustomemrSlice";
-
+import Mesasge from "./SendBulkMessage/messageSlice";
 export const store = configureStore({
     reducer: {
         salesreport,
@@ -20,6 +20,7 @@ export const store = configureStore({
         Invoice,
         SalesChart,
         searchCustomer,
+        Mesasge,
     },
 });
 

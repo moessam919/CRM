@@ -11,36 +11,48 @@ import {
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { actGetChartData } from "../store/SalesChartData/act/actGetSalesChartData";
 
+// Define types
+type TimeRange = "day" | "week" | "month" | "year";
 
 const SalesOverview = () => {
-    const [sortType, setSortType] = useState<string>("W1");
+    const [sortType, setSortType] = useState<TimeRange>("week");
+    const { data } = useAppSelector((state) => state.SalesChart);
 
-    const handleSort = (type: string) => {
+    const dispatch = useAppDispatch();
+
+    // Fetch data whenever sortType changes
+    useEffect(() => {
+        dispatch(actGetChartData(sortType));
+    }, [sortType, dispatch]);
+
+    const handleSort = (type: TimeRange) => {
         setSortType(type);
     };
 
-    // Filter data based on `sortType`
-    const getFilteredData = () => {
-        switch (sortType) {
-            case "1D":
-                return data
-            case "W1":
-                return data
-            case "WY":
-                return data;
-            default:
-                return data;
-        }
+    // Helper function to determine button style
+    const getButtonStyle = (type: TimeRange): string => {
+        return `px-2 py-1 border border-gray-500 rounded ${
+            sortType === type
+                ? "bg-gray-500 text-white"
+                : "hover:bg-gray-500 hover:text-white"
+        } duration-200`;
     };
 
-    const {data} = useAppSelector((state) => state.SalesChart);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(actGetChartData("week"));
-    }, [dispatch]);
-
-    
+    // Get period label based on sortType
+    const getPeriodLabel = () => {
+        switch (sortType) {
+            case "day":
+                return "اليوم";
+            case "week":
+                return "الأسبوع";
+            case "month":
+                return "الشهر";
+            case "year":
+                return "السنة";
+            default:
+                return "";
+        }
+    };
 
     return (
         <div className="p-5 bg-white rounded-md shadow-md">
@@ -49,29 +61,37 @@ const SalesOverview = () => {
             </p>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
                 <div className="">
-                    <h4 className="text-2xl font-bold">250.00 ريال</h4>
+                    <h4 className="text-2xl font-bold">
+                        {data?.total_sales ?? 0} ريال
+                    </h4>
                     <span className="text-green-500 font-bold text-sm">
-                        مبيعات اليوم 8.5%
+                        مبيعات {getPeriodLabel()}
                     </span>
                 </div>
                 <div className="flex gap-2 items-center justify-end mb-4">
                     <button
-                        onClick={() => handleSort("1D")}
-                        className="btn px-2 py-1 border border-gray-500 hover:bg-gray-500 hover:text-white duration-200 rounded"
+                        onClick={() => handleSort("day")}
+                        className={getButtonStyle("day")}
                     >
-                        1D
+                        يوم
                     </button>
                     <button
-                        onClick={() => handleSort("W1")}
-                        className="btn px-2 py-1 border border-gray-500 hover:bg-gray-500 hover:text-white duration-200 rounded"
+                        onClick={() => handleSort("week")}
+                        className={getButtonStyle("week")}
                     >
-                        W1
+                        أسبوع
                     </button>
                     <button
-                        onClick={() => handleSort("WY")}
-                        className="btn px-2 py-1 border border-gray-500 hover:bg-gray-500 hover:text-white duration-200 rounded"
+                        onClick={() => handleSort("month")}
+                        className={getButtonStyle("month")}
                     >
-                        WY
+                        شهر
+                    </button>
+                    <button
+                        onClick={() => handleSort("year")}
+                        className={getButtonStyle("year")}
+                    >
+                        سنة
                     </button>
                 </div>
             </div>
@@ -80,7 +100,7 @@ const SalesOverview = () => {
                     <AreaChart
                         width={500}
                         height={400}
-                        data={getFilteredData()}
+                        data={data?.chart_data ?? []}
                         margin={{
                             top: 10,
                             right: 30,
@@ -94,7 +114,7 @@ const SalesOverview = () => {
                         <Tooltip />
                         <Area
                             type="monotone"
-                            dataKey="uv"
+                            dataKey="value"
                             stroke="#8884d8"
                             fill="#8884d8"
                             fillOpacity={0.3}

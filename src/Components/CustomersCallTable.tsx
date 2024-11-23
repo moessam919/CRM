@@ -159,18 +159,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             sortable: true,
         },
         {
-            name: "العنوان",
-            cell: (row: ICustomers) => (
-                <span
-                    onClick={() => navigate(`/customer/${row.id}`)}
-                    style={{ cursor: "pointer" }}
-                >
-                    {row.billing_address || ""}
-                </span>
-            ),
-            sortable: true,
-        },
-        {
             name: "رقم الهاتف",
             cell: (row: ICustomers) => (
                 <span
@@ -283,7 +271,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
         },
         headCells: {
             style: {
-                fontSize: "14px",
+                fontSize: "16px",
                 fontWeight: "bold",
                 backgroundColor: "#2d3748",
                 color: "#fff",
@@ -291,6 +279,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
         },
         cells: {
             style: {
+                fontSize: "15px",
                 paddingLeft: "16px",
                 paddingRight: "16px",
             },

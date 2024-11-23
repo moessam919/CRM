@@ -1,7 +1,4 @@
 export interface ISalesChartData {
-    labels: string[];
-    datasets: {
-        label: string;
-        data: number[];
-    }[];
+    total_sales: number;
+    chart_data: { name: string; value: number }[];
 }

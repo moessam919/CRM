@@ -4,10 +4,12 @@ export interface ICustomer {
     number: number;
     name: string;
     phone_number: number;
+    billing_address: string;
     email_address: string;
     created_at: string;
     total_sales: number;
     last_invoice_date: string;
+    last_month_sales: number;
     invoices_count: number;
     purchased_products: [
         {
@@ -17,6 +19,13 @@ export interface ICustomer {
             count: number;
         },
     ];
-    invoices: [];
+    invoices: [
+        {
+            created_at: string;
+            id: number;
+            value: string;
+            url: string;
+        },
+    ];
     purchased_categories: [];
 }

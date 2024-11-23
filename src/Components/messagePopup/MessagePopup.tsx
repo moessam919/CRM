@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useAppDispatch } from "../../store/hooks";
+import { sendMessage } from "../../store/SendBulkMessage/act/actSendMessage";
 import ReactQuill from "react-quill";
 import { ICustomers } from "../../types/customers";
+import toast from "react-hot-toast";
 
 interface MessagePopupProps {
     isOpen: boolean;
@@ -13,6 +16,7 @@ const MessagePopup: React.FC<MessagePopupProps> = ({
     onClose,
     customers,
 }) => {
+    const dispatch = useAppDispatch();
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -20,16 +24,19 @@ const MessagePopup: React.FC<MessagePopupProps> = ({
 
     const handleSend = () => {
         setLoading(true);
-        setTimeout(() => {
-            console.log(
-                "Sending message:",
-                message,
-                "to customers:",
-                customers
-            );
-            setLoading(false);
-            onClose();
-        }, 1000);
+        const recipients = customers.map((customer) => customer.id);
+        const messageData = {
+            type: "Text",
+            content: message,
+            recipients: recipients,
+        };
+
+        dispatch(sendMessage(messageData));
+        console.log(messageData);
+        setLoading(false);
+        onClose();
+
+        toast.success("!تم أرسال الرسالة بنجاح");
     };
 
     const modules = {
