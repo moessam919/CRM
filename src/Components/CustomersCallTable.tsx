@@ -233,7 +233,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         title="واتساب"
                     >
                         <img
-                            src="/src/assets/whatsapp.png"
+                            src="/imgs/whatsapp.png"
                             alt="whatsappIcon"
                             className="w-5"
                         />
@@ -330,7 +330,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                                 title="إرسال واتساب للمحددين"
                             >
                                 <img
-                                    src="/src/assets/whatsapp.png"
+                                    src="/imgs/whatsapp.png"
                                     alt="whatsappIcon"
                                     className="w-5"
                                 />

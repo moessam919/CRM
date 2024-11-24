@@ -54,7 +54,7 @@ const Header = ({ isAsideVisible, toggleAside }: HeaderProps) => {
                         <p className="">مرحبا محمود</p>
                         <div className="hidden md:block  md:w-8">
                             <img
-                                src="/src/assets/wave.png"
+                                src="/imgs/wave.png"
                                 alt="welcome wave"
                                 className="w-6 md:w-8"
                             />
@@ -69,7 +69,7 @@ const Header = ({ isAsideVisible, toggleAside }: HeaderProps) => {
                         onClick={toggleDropdown}
                     >
                         <img
-                            src="/src/assets/userImg.jpg"
+                            src="/imgs/userImg.jpg"
                             alt="userImg"
                             className="w-10 rounded-full"
                         />
