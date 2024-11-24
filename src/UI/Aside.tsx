@@ -2,6 +2,7 @@ import {
     ChartPie,
     Handshake,
     LayoutDashboard,
+    Mails,
     SquareUserRound,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
@@ -49,6 +50,15 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 </NavLink>
 
                 <NavLink
+                    to="/messages"
+                    onClick={onNavClick}
+                    className={linkClasses}
+                >
+                    <Mails />
+                    <span>الرسائل</span>
+                </NavLink>
+
+                <NavLink
                     to="/customers"
                     onClick={onNavClick}
                     className={linkClasses}
@@ -56,7 +66,7 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                     <ChartPie />
                     <span>إدارة الطلبات</span>
                 </NavLink>
-                
+
                 <NavLink
                     to="/leads"
                     onClick={onNavClick}
