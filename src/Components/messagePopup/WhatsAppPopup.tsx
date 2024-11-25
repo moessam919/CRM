@@ -22,12 +22,23 @@ const WhatsAppPopup: React.FC<MessagePopupProps> = ({
 
     if (!isOpen) return null;
 
+    // Function to strip HTML tags from the message
+    const stripHtmlTags = (html: string) => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        return doc.body.textContent || "";
+    };
+
     const handleSend = () => {
         setLoading(true);
         const recipients = customers.map((customer) => customer.id);
+
+        // Strip HTML tags to get plain text
+        const plainTextMessage = stripHtmlTags(message);
+
+        // Send the plain text message
         const messageData = {
             type: "whatsapp",
-            content: message,
+            content: plainTextMessage,
             recipients: recipients,
         };
 
@@ -51,7 +62,7 @@ const WhatsAppPopup: React.FC<MessagePopupProps> = ({
 
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg  shadow-lg w-[350px] md:w-[500px] xl:w-[600px]">
+            <div className="bg-white p-4 rounded-lg shadow-lg w-[350px] md:w-[500px] xl:w-[600px]">
                 <h2 className="text-lg font-bold mb-4">
                     إرسال رسالة عبر الWhatsApp
                 </h2>
@@ -60,6 +71,7 @@ const WhatsAppPopup: React.FC<MessagePopupProps> = ({
                 ) : (
                     <p className="mb-2">إلى عدد {customers.length} من عملاء</p>
                 )}
+
                 <ReactQuill
                     value={message}
                     onChange={setMessage}
@@ -67,6 +79,7 @@ const WhatsAppPopup: React.FC<MessagePopupProps> = ({
                     placeholder="اكتب الرسالة هنا..."
                     modules={modules}
                 />
+
                 <div className="flex gap-2 justify-end">
                     <button
                         onClick={onClose}

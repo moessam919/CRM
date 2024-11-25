@@ -30,7 +30,7 @@ const Routers = createBrowserRouter([
                 element: <Messages />,
             },
             {
-                path: "/message",
+                path: "/message/:id",
                 element: <MessageDetails />,
             },
             {

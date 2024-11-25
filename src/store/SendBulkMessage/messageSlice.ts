@@ -1,16 +1,24 @@
 // src/redux/messageSlice.ts
 
 import { createSlice } from "@reduxjs/toolkit";
-import { sendMessage } from "./act/actSendMessage";
-import { MessageData } from "../../types/MessageData";
+import {
+    getMessage,
+    getMessageDetails,
+    sendMessage,
+} from "./act/actSendMessage";
+import { Message, MessageData } from "../../types/MessageData";
 
 interface MessageState {
+    messages: Message[];
+    messageDetails: Message | null;
     success: MessageData | null;
     loading: "idle" | "pending" | "succeeded" | "failed";
     error: string | null;
 }
 
 const initialState: MessageState = {
+    messages: [],
+    messageDetails: null,
     success: null,
     loading: "idle",
     error: null,
@@ -30,6 +38,29 @@ const messageSlice = createSlice({
                 state.success = action.payload;
             })
             .addCase(sendMessage.rejected, (state, action) => {
+                state.loading = "failed";
+                state.error = action.payload as string;
+            });
+        builder
+            .addCase(getMessage.pending, (state) => {
+                state.loading = "pending";
+            })
+            .addCase(getMessage.fulfilled, (state, action) => {
+                state.loading = "succeeded";
+                state.messages = action.payload;
+            })
+            .addCase(getMessage.rejected, (state, action) => {
+                state.loading = "failed";
+                state.error = action.payload as string;
+            })
+            .addCase(getMessageDetails.pending, (state) => {
+                state.loading = "pending";
+            })
+            .addCase(getMessageDetails.fulfilled, (state, action) => {
+                state.messageDetails = action.payload;
+                state.loading = "succeeded";
+            })
+            .addCase(getMessageDetails.rejected, (state, action) => {
                 state.loading = "failed";
                 state.error = action.payload as string;
             });

@@ -111,7 +111,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
         const date = new Date(isoDate);
         const formatter = new Intl.DateTimeFormat("ar-EG", {
             year: "numeric",
-            month: "long",
+            month: "2-digit",
             day: "numeric",
             hour: "numeric",
             minute: "numeric",

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 // component
 import DetailsBoxes from "../Components/DetailsBoxes";
 import LastDealTable from "../Components/LastDealTable";
-// import SalesForecastChart from "../Components/SalesForecastChart";
+import SalesForecastChart from "../Components/SalesForecastChart";
 import SalesOverview from "../Components/SalesOverview";
 import TopBuyersTable from "../Components/TopBuyersTable";
 
@@ -45,13 +45,11 @@ const Dashboard = () => {
                         <LastDealTable />
                     </div>
                 </div>
-                {/* <div className="grid grid-cols-1 xl:grid-cols-4 gap-5 "> */}
-                <div className="grid  gap-5 ">
-                    {/* <div className="col-span-1 md:col-span-2">
+                <div className="grid grid-cols-1 xl:grid-cols-4 gap-5 ">
+                    <div className="col-span-1 md:col-span-2">
                         <SalesForecastChart />
-                    </div> */}
-                    {/* <div className="col-span-1 md:col-span-2"> */}
-                    <div className="">
+                    </div>
+                    <div className="col-span-1 md:col-span-2">
                         <TopBuyersTable />
                     </div>
                 </div>

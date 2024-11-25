@@ -26,11 +26,15 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
     const handleSend = () => {
         setLoading(true);
         const recipients = customers.map((customer) => customer.id);
+
+        const plainTextMessage = message.replace(/<\/?[^>]+(>|$)/g, "");
+
         const messageData = {
             type: "email",
-            content: message,
+            content: plainTextMessage,
             recipients: recipients,
         };
+
         dispatch(sendMessage(messageData));
         setLoading(false);
         onClose();
