@@ -22,17 +22,25 @@ const MessagePopup: React.FC<MessagePopupProps> = ({
 
     if (!isOpen) return null;
 
+    const stripHtmlTags = (html: string) => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        return doc.body.textContent || "";
+    };
+
     const handleSend = () => {
         setLoading(true);
         const recipients = customers.map((customer) => customer.id);
 
-        const plainTextMessage = message.replace(/<\/?[^>]+(>|$)/g, "");
+        // Strip HTML tags to get plain text
+        const plainTextMessage = stripHtmlTags(message);
 
+        // Send the plain text message
         const messageData = {
-            type: "email",
+            type: "whatsapp",
             content: plainTextMessage,
             recipients: recipients,
         };
+
         dispatch(sendMessage(messageData));
         setLoading(false);
         onClose();
