@@ -4,7 +4,14 @@ import { CustomerFilters, ICustomers } from "../types/customers";
 import MessagePopup from "./messagePopup/MessagePopup";
 import WhatsAppPopup from "./messagePopup/WhatsAppPopup";
 import EmailPopup from "./messagePopup/EmailPopup";
-import { Phone, MessageSquare, Mail, Pencil, Filter } from "lucide-react";
+import {
+    Phone,
+    MessageSquare,
+    Mail,
+    Pencil,
+    Filter,
+    MessageCircle,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EditCustomerPopup from "./EditCustomerModal/EditCustomerPopup";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
@@ -159,7 +166,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             sortable: true,
         },
         {
-            name: "رقم الهاتف",
+            name: "رقم الجوال",
             cell: (row: ICustomers) => (
                 <span
                     onClick={() => navigate(`/customer/${row.id}`)}
@@ -177,7 +184,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     onClick={() => navigate(`/customer/${row.id}`)}
                     style={{ cursor: "pointer" }}
                 >
-                    {row.total_sales}
+                    {row.total_sales.toFixed(2)}
                 </span>
             ),
             sortable: true,
@@ -215,14 +222,14 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                 <div className="flex gap-2">
                     <button
                         onClick={() => handleCall(row.phone_number)}
-                        className="p-2 text-blue-600 hover:bg-blue-100 rounded-md transition-colors"
+                        className="p-2 text-orange-600 hover:bg-orange-100 rounded-md transition-colors"
                         title="اتصال"
                     >
                         <Phone size={20} />
                     </button>
                     <button
                         onClick={() => handleBulkEmail(row)}
-                        className="p-2 text-green-600 hover:bg-green-100 rounded-md transition-colors"
+                        className="p-2 text-blue-600 hover:bg-blue-100 rounded-md transition-colors"
                         title="بريد إلكتروني"
                     >
                         <Mail size={20} />
@@ -232,11 +239,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         className="p-2 text-green-500 hover:bg-green-100 rounded-md transition-colors"
                         title="واتساب"
                     >
-                        <img
-                            src="/imgs/whatsapp.png"
-                            alt="whatsappIcon"
-                            className="w-5"
-                        />
+                        <MessageCircle size={20} />
                     </button>
                     <button
                         onClick={() => handleBulkSMS(row)}
@@ -300,45 +303,49 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     </h2>
                 </div>
                 <div className="flex justify-between items-center flex-col md:flex-row mb-4">
-                    <input
-                        type="text"
-                        placeholder="بحث..."
-                        className="p-2 border rounded-lg md:w-96 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100 mb-4 md:mb-0"
-                        value={filterText}
-                        onChange={(e) => setFilterText(e.target.value)}
-                    />
-                    <button
-                        onClick={() => setIsFilterOpen(true)}
-                        className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86] hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
-                        title="فلترة"
+                    <div
+                        className={`flex gap-2  ${
+                            selectedRows.length > 1
+                                ? "flex-col xl:flex-row"
+                                : "flex-col xl:flex-row"
+                        }`}
                     >
-                        <Filter size={16} />
-                    </button>
-
+                        <input
+                            type="text"
+                            placeholder="بحث..."
+                            className="p-2 border rounded-lg md:w-96 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100 mb-4 md:mb-0"
+                            value={filterText}
+                            onChange={(e) => setFilterText(e.target.value)}
+                        />
+                        <button
+                            onClick={() => setIsFilterOpen(true)}
+                            className="flex items-center gap-2 border border-gray-600  hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
+                            title="تصفية العملاء"
+                        >
+                            <span>تصفية العملاء</span>
+                            <Filter size={16} />
+                        </button>
+                    </div>
                     {selectedRows.length > 1 && (
                         <div className="flex gap-2 mt-4 md:mt-0">
                             <button
                                 onClick={() => handleBulkEmail()}
-                                className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
                                 title="إرسال بريد إلكتروني للمحددين"
                             >
                                 <Mail size={16} />({selectedRows.length})
                             </button>
                             <button
                                 onClick={() => handleBulkWhatsApp()}
-                                className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
                                 title="إرسال واتساب للمحددين"
                             >
-                                <img
-                                    src="/imgs/whatsapp.png"
-                                    alt="whatsappIcon"
-                                    className="w-5"
-                                />
-                                ({selectedRows.length})
+                                <MessageCircle size={16} />(
+                                {selectedRows.length})
                             </button>
                             <button
                                 onClick={() => handleBulkSMS()}
-                                className="flex items-center gap-2 border border-gray-500 hover:border-[#0d9a86]  hover:text-white px-4 py-2 rounded-lg hover:bg-[#0d9a86] duration-150"
+                                className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
                                 title="إرسال رسالة نصية للمحددين"
                             >
                                 <MessageSquare size={16} />(
@@ -352,7 +359,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         columns={columns}
                         data={customers}
                         pagination
-                        paginationRowsPerPageOptions={[10, 15]}
+                        paginationRowsPerPageOptions={[10, 25, 50]}
                         customStyles={customStyles}
                         noDataComponent={
                             <div className="text-gray-500 py-4">

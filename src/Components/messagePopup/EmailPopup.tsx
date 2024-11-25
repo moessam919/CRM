@@ -5,6 +5,7 @@ import { ICustomers } from "../../types/customers";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import toast from "react-hot-toast";
+import ReactHtmlParser from "html-react-parser"; // Importing the HTML parser
 
 interface MessagePopupProps {
     isOpen: boolean;
@@ -78,6 +79,14 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
                     placeholder="اكتب الرسالة هنا..."
                     modules={modules}
                 />
+
+                <div className="message-preview mt-4">
+                    <h3 className="font-semibold text-lg">معاينة الرسالة</h3>
+                    <div className="preview-content text-gray-600">
+                        {ReactHtmlParser(message)} {/* Parse and render HTML */}
+                    </div>
+                </div>
+
                 <div className="flex gap-2 justify-end">
                     <button
                         onClick={onClose}

@@ -25,6 +25,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
         created_at_before: initialFilters.created_at_before || "",
         last_invoice_date: initialFilters.last_invoice_date || "",
         no_purchases: initialFilters.no_purchases || false,
+        no_purchases_last_month:
+            initialFilters.no_purchases_last_month || false,
+        address: initialFilters.address || "",
     });
 
     const handleInputChange = (
@@ -44,7 +47,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
     };
 
     const resetFilters = () => {
-        const setFilters = {
+        const defaultFilters = {
             customer_type: "",
             min_sales_value: undefined,
             max_sales_value: undefined,
@@ -54,8 +57,10 @@ const FilterModal: React.FC<FilterModalProps> = ({
             created_at_before: "",
             last_invoice_date: "",
             no_purchases: false,
+            no_purchases_last_month: false,
+            address: "",
         };
-        onSubmit(setFilters);
+        onSubmit(defaultFilters);
         onClose();
     };
 
@@ -87,6 +92,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
 
                 <div className="p-4 space-y-4">
+                    {/* Customer Type */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             نوع العميل
@@ -103,10 +109,26 @@ const FilterModal: React.FC<FilterModalProps> = ({
                         </select>
                     </div>
 
+                    {/* address */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            عنوان العميل
+                        </label>
+                        <input
+                            type="text"
+                            name="address"
+                            placeholder="أدخل عنوان العميل"
+                            value={filters.address || ""}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                        />
+                    </div>
+
+                    {/* Sales Value */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                الحد الأدنى للمبيعات
+                                الحد الأدنى لقيمة المشتريات
                             </label>
                             <input
                                 type="number"
@@ -119,7 +141,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                الحد الأقصى للمبيعات
+                                الحد الأقصى لقيمة المشتريات
                             </label>
                             <input
                                 type="number"
@@ -132,6 +154,97 @@ const FilterModal: React.FC<FilterModalProps> = ({
                         </div>
                     </div>
 
+                    {/* Sales Count */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                الحد الأدنى لعدد عمليات الشراء
+                            </label>
+                            <input
+                                type="number"
+                                name="min_sales_count"
+                                placeholder="الحد الأدنى"
+                                value={filters.min_sales_count || ""}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                الحد الأقصى لعدد عمليات الشراء
+                            </label>
+                            <input
+                                type="number"
+                                name="max_sales_count"
+                                placeholder="الحد الأقصى"
+                                value={filters.max_sales_count || ""}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Dates */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                تاريخ اضافة العميل من
+                            </label>
+                            <input
+                                type="date"
+                                name="created_at_after"
+                                value={filters.created_at_after || ""}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                تاريخ اضافة العميل إلى
+                            </label>
+                            <input
+                                type="date"
+                                name="created_at_before"
+                                value={filters.created_at_before || ""}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Last Invoice Date */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            تاريخ آخر عملية شراء
+                        </label>
+                        <input
+                            type="date"
+                            name="last_invoice_date"
+                            value={filters.last_invoice_date || ""}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
+                        />
+                    </div>
+
+                    {/* No Purchases last month */}
+                    <div>
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="no_purchases_last_month"
+                                checked={
+                                    filters.no_purchases_last_month || false
+                                }
+                                onChange={handleInputChange}
+                                className="ml-2 rounded focus:outline-none"
+                            />
+                            <span className="text-sm text-gray-700">
+                                العملاء الذين لم يشتروا خلال هذا الشهر
+                            </span>
+                        </label>
+                    </div>
+
+                    {/* No Purchases */}
                     <div>
                         <label className="flex items-center">
                             <input
@@ -139,7 +252,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                                 name="no_purchases"
                                 checked={filters.no_purchases || false}
                                 onChange={handleInputChange}
-                                className="ml-2 rounded focus:outline-none  "
+                                className="ml-2 rounded focus:outline-none"
                             />
                             <span className="text-sm text-gray-700">
                                 العملاء الذين لم يشتروا
@@ -147,7 +260,8 @@ const FilterModal: React.FC<FilterModalProps> = ({
                         </label>
                     </div>
 
-                    <div className="flex justify-end gap-4 pt-4">
+                    {/* Buttons */}
+                    <div className="flex justify-end gap-4 ">
                         <button
                             onClick={resetFilters}
                             className="px-4 py-2 border hover:bg-gray-300 rounded-md duration-150"

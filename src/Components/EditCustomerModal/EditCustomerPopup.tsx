@@ -54,7 +54,7 @@ const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
                 </div>
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-2">
-                        رقم الهاتف:
+                        رقم الجوال:
                     </label>
                     <input
                         type="tel"

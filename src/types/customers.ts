@@ -37,4 +37,5 @@ export interface CustomerFilters {
     created_at_before?: string;
     last_invoice_date?: string;
     no_purchases?: boolean;
+    no_purchases_last_month?: boolean;
 }

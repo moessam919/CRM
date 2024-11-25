@@ -25,7 +25,7 @@ const TopBuyersTable = () => {
             sortable: true,
         },
         {
-            name: "رقم الهاتف",
+            name: "رقم الجوال",
             selector: (row) => row.phone_number,
             sortable: true,
         },

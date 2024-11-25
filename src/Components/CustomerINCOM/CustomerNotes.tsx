@@ -3,6 +3,7 @@ import AddNoteTab from "./AddNoteTab";
 import ProductTable from "./ProductTable";
 import NotesHistory from "./NotesHistory";
 import { ICustomer } from "../../types/customer";
+import MessageHistory from "./MessageHistory";
 
 interface CustomerNotesProps {
     customer: ICustomer | null;
@@ -17,6 +18,8 @@ const CustomerNotes: React.FC<CustomerNotesProps> = ({ customer }) => {
                 return <AddNoteTab customer={customer} />;
             case "noteHistory":
                 return <NotesHistory customer={customer} />;
+            case "messageHistory":
+                return <MessageHistory />;
             case "other":
                 return <ProductTable customer={customer} />;
             default:
@@ -46,6 +49,16 @@ const CustomerNotes: React.FC<CustomerNotesProps> = ({ customer }) => {
                     onClick={() => setActiveTab("noteHistory")}
                 >
                     سجل الملاحظات
+                </button>
+                <button
+                    className={`w-1/3 p-2 text-center ${
+                        activeTab === "messageHistory"
+                            ? "border-b-2 border-gray-500"
+                            : ""
+                    }`}
+                    onClick={() => setActiveTab("messageHistory")}
+                >
+                    سجل الرسائل
                 </button>
                 <button
                     className={`w-1/3 p-2 text-center ${
