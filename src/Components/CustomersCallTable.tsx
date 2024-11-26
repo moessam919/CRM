@@ -11,11 +11,15 @@ import {
     Pencil,
     Filter,
     MessageCircle,
+    Download,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EditCustomerPopup from "./EditCustomerModal/EditCustomerPopup";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { actGetFilteredCustomers } from "../store/Customers/act/actGetCustomers";
+import {
+    actExportCustomers,
+    actGetFilteredCustomers,
+} from "../store/Customers/act/actGetCustomers";
 import FilterModal from "./ContactFilter/FilterModal";
 
 interface CustomersCallTableProps {
@@ -124,6 +128,15 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             minute: "numeric",
         });
         return formatter.format(date);
+    };
+
+    // Add this method
+    const handleExport = () => {
+        dispatch(
+            actExportCustomers({
+                filters: currentFilters,
+            })
+        );
     };
 
     // Define table columns
@@ -324,6 +337,16 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         >
                             <span>تصفية العملاء</span>
                             <Filter size={16} />
+                        </button>
+
+                        {/* Export Button */}
+                        <button
+                            onClick={handleExport}
+                            className="flex items-center gap-2 border border-gray-600 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
+                            title="تصدير العملاء"
+                        >
+                            <span>تحميل اكسيل</span>
+                            <Download size={16} />
                         </button>
                     </div>
                     {selectedRows.length > 1 && (

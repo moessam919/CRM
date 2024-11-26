@@ -153,3 +153,50 @@ export const actEditCustomers = createAsyncThunk(
         }
     }
 );
+
+export const actExportCustomers = createAsyncThunk(
+    "Customer/actExportCustomers",
+    async (
+        {
+            filters,
+        }: {
+            filters?: CustomerFilters;
+        } = {},
+        thunkAPI
+    ) => {
+        const { rejectWithValue } = thunkAPI;
+        try {
+            // Convert filters to query string
+            const queryParams = new URLSearchParams();
+            if (filters) {
+                Object.entries(filters).forEach(([key, value]) => {
+                    if (value !== undefined && value !== "") {
+                        queryParams.append(key, value.toString());
+                    }
+                });
+            }
+            const url = `crm/customers?export=excel&${queryParams.toString()}`;
+            const res = await axiosInstance.get(url, {
+                responseType: "blob",
+            });
+
+            // Create a file download link
+            const downloadLink = document.createElement("a");
+            downloadLink.href = window.URL.createObjectURL(res.data);
+            downloadLink.setAttribute("download", "customers_export.xlsx");
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+
+            return { message: "Export successful" };
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(error.response?.data);
+            } else {
+                return rejectWithValue(
+                    "An error occurred while exporting data."
+                );
+            }
+        }
+    }
+);
