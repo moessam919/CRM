@@ -1,4 +1,11 @@
-import { ArrowLeft, Mail, Clock, User } from "lucide-react";
+import {
+    ArrowLeft,
+    Mail,
+    Clock,
+    User,
+    MessageCircle,
+    MessageSquare,
+} from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getMessageDetails } from "../store/SendBulkMessage/act/actSendMessage";
@@ -36,6 +43,29 @@ const MessageDetails = () => {
         });
     };
 
+    const getIconAndBg = (type: string | undefined) => {
+        switch (type) {
+            case "whatsapp":
+                return {
+                    icon: <MessageCircle className="h-5 w-5 text-green-600" />,
+                    bgClass: "bg-green-100",
+                };
+            case "text":
+                return {
+                    icon: <MessageSquare className="h-5 w-5 text-purple-600" />,
+                    bgClass: "bg-purple-100",
+                };
+            case "email":
+            default:
+                return {
+                    icon: <Mail className="h-5 w-5 text-blue-600" />,
+                    bgClass: "bg-blue-100",
+                };
+        }
+    };
+
+    const iconAndBg = getIconAndBg(messageDetails?.type);
+
     return (
         <div className="bg-gray-200 rounded-md p-6">
             <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-sm">
@@ -61,8 +91,10 @@ const MessageDetails = () => {
                     {/* Sender Info */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-3">
-                            <div className="bg-purple-100 p-2 rounded-lg">
-                                <Mail className="h-5 w-5 text-purple-600" />
+                            <div
+                                className={`${iconAndBg?.bgClass} p-2 rounded-lg`}
+                            >
+                                {iconAndBg?.icon}
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">المرسل</p>

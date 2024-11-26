@@ -1,4 +1,11 @@
-import { Clock, Mail, Send, Users, MessageCircle, MessageSquare } from "lucide-react"; // Add relevant icons
+import {
+    Clock,
+    Mail,
+    Send,
+    Users,
+    MessageCircle,
+    MessageSquare,
+} from "lucide-react"; // Add relevant icons
 import { Message } from "../../types/MessageData";
 import { Link } from "react-router-dom";
 
@@ -50,7 +57,7 @@ const MessageList = ({ messages, loading }: MessageProp) => {
     return (
         <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
             {messages.map((message: Message) => {
-                const { icon, bgClass } = getMessageIcon(message.type); // Determine icon and styles
+                const { icon, bgClass } = getMessageIcon(message.type); 
                 return (
                     <Link
                         key={message.id}
