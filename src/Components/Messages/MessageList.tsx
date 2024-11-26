@@ -82,7 +82,7 @@ const MessageList = ({ messages, loading }: MessageProp) => {
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <Send className="h-4 w-4 ml-1" />
-                                        <span>{message.sent_by}</span>
+                                        <span>{message.sent_by.username}</span>
                                     </div>
                                 </div>
                             </div>

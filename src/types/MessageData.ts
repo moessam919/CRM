@@ -21,6 +21,9 @@ export interface Message {
     sent_at: string;
     status: "sent" | "failed" | "pending"; 
     additional_data: string | null; 
-    sent_by: number;
+    sent_by: {
+        id: number;
+        username: string;
+    };
     recipients: Recipient[];
 }

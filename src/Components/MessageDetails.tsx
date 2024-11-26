@@ -67,7 +67,7 @@ const MessageDetails = () => {
                             <div>
                                 <p className="text-sm text-gray-500">المرسل</p>
                                 <p className="font-medium">
-                                    {messageDetails?.sent_by}
+                                    {messageDetails?.sent_by.username}
                                 </p>
                                 <p className="text-sm text-gray-500"></p>
                             </div>
