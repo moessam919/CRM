@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, Filter, ChevronDown } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getMessage } from "../store/SendBulkMessage/act/actSendMessage";
@@ -9,18 +9,33 @@ const Messages = () => {
     const { messages, loading } = useAppSelector((state) => state.Message);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [selectedFilter, setSelectedFilter] = useState("الكل");
-    const [showFilterMenu, setShowFilterMenu] = useState(false);
+    console.log(messages);
+    
+    // Filters and states
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedType, setSelectedType] = useState("الكل");
+    const [selectedDate, setSelectedDate] = useState("");
+    const [showFilterMenu, setShowFilterMenu] = useState(false);
 
     useEffect(() => {
         dispatch(getMessage());
     }, [dispatch]);
 
-    // Filter messages based on search term
-    const filteredMessages = messages.filter((message) =>
-        message.title?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredMessages = messages.filter((message) => {
+        const matchesTitle = message.title
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        const matchesCustomer = message.recipients.some((recipient) =>
+            recipient.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        const matchesType =
+            selectedType === "الكل" ||
+            message.type === selectedType.toLowerCase();
+        const matchesDate =
+            !selectedDate || message.sent_at.startsWith(selectedDate);
+
+        return matchesTitle || (matchesCustomer && matchesType && matchesDate);
+    });
 
     return (
         <div className="bg-gray-200 rounded-md p-6">
@@ -47,6 +62,7 @@ const Messages = () => {
 
                 {/* Search and Filter Section */}
                 <div className="flex flex-col md:flex-row gap-4 mb-6">
+                    {/* Search by title or customer name */}
                     <div className="flex-1 relative">
                         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <input
@@ -57,33 +73,50 @@ const Messages = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
+
+                    {/* Filter by type */}
                     <div className="relative">
                         <button
-                            className="flex items-center gap-2 px-4 py-3 border rounded-lg hover:bg-gray-50 w-full md:w-auto justify-center"
+                            className="flex items-center gap-2 px-10 py-3 border rounded-lg hover:bg-gray-50 w-full md:w-auto justify-center"
                             onClick={() => setShowFilterMenu(!showFilterMenu)}
                         >
-                            <Filter className="h-4 w-4" />
-                            {selectedFilter}
+                            {selectedType}
                             <ChevronDown className="h-4 w-4" />
                         </button>
                         {showFilterMenu && (
                             <div className="absolute left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
-                                {["الكل", "الشركات", "الافراد"].map(
-                                    (filter) => (
-                                        <button
-                                            key={filter}
-                                            className="w-full text-right px-4 py-2 hover:bg-gray-50"
-                                            onClick={() => {
-                                                setSelectedFilter(filter);
-                                                setShowFilterMenu(false);
-                                            }}
-                                        >
-                                            {filter}
-                                        </button>
-                                    )
-                                )}
+                                {[
+                                    { value: "الكل", type: "الكل" },
+                                    { value: "واتساب", type: "whatsapp" },
+                                    {
+                                        value: "البريد الإلكتروني",
+                                        type: "email",
+                                    },
+                                    { value: "رسائل نصية", type: "text" },
+                                ].map((filter) => (
+                                    <button
+                                        key={filter.type}
+                                        className="w-full text-right px-4 py-2 hover:bg-gray-50"
+                                        onClick={() => {
+                                            setSelectedType(filter.type);
+                                            setShowFilterMenu(false);
+                                        }}
+                                    >
+                                        {filter.value}
+                                    </button>
+                                ))}
                             </div>
                         )}
+                    </div>
+
+                    {/* Filter by date */}
+                    <div>
+                        <input
+                            type="date"
+                            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 duration-150"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                        />
                     </div>
                 </div>
 

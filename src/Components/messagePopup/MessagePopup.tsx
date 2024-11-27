@@ -57,7 +57,7 @@ const MessagePopup: React.FC<MessagePopupProps> = ({
 
         // Send the plain text message
         const messageData = {
-            type: "whatsapp",
+            type: "text",
             title: title,
             content: plainTextMessage,
             recipients: recipients,

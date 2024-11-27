@@ -55,11 +55,12 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
         const recipients = customers.map((customer) => customer.id);
         const plainTextMessage = stripHtmlTags(message);
         const messageData = {
-            type: "whatsapp",
+            type: "email",
             title: title,
             content: plainTextMessage,
             recipients: recipients,
         };
+        console.log(messageData);
 
         dispatch(sendMessage(messageData));
         setLoading(false);
