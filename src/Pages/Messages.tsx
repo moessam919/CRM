@@ -9,8 +9,6 @@ const Messages = () => {
     const { messages, loading } = useAppSelector((state) => state.Message);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    console.log(messages);
-    
     // Filters and states
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedType, setSelectedType] = useState("الكل");

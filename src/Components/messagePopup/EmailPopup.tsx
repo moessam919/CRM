@@ -60,8 +60,6 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
             content: plainTextMessage,
             recipients: recipients,
         };
-        console.log(messageData);
-
         dispatch(sendMessage(messageData));
         setLoading(false);
         onClose();
