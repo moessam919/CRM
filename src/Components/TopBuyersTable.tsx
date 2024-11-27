@@ -26,7 +26,7 @@ const TopBuyersTable = () => {
         },
         {
             name: "رقم الجوال",
-            selector: (row) => row.phone_number,
+            cell: (row) => <bdi>{row.phone_number}</bdi>,
             sortable: true,
         },
         {

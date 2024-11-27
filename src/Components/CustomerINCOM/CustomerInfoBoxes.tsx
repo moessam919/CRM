@@ -28,7 +28,7 @@ const CustomerInfoBoxes = ({ customer }: ICustomerInfo) => {
                     <div className="flex gap-2">
                         <Phone className="font-bold text-gray-500" />
                         <p className="font-bold text-gray-500">
-                            {customer?.phone_number ?? "لا يوجد"}
+                            <bdi>{customer?.phone_number ?? "لا يوجد"}</bdi>
                         </p>
                     </div>
                     <div className="flex gap-2">

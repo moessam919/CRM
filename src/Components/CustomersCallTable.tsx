@@ -185,7 +185,9 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     onClick={() => navigate(`/customer/${row.id}`)}
                     style={{ cursor: "pointer" }}
                 >
-                    {row.phone_number ? row.phone_number.toString() : ""}
+                    <bdi>
+                        {row.phone_number ? row.phone_number.toString() : ""}
+                    </bdi>
                 </span>
             ),
             sortable: true,
