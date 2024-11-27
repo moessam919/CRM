@@ -4,7 +4,7 @@ import { sendMessage } from "../../store/SendBulkMessage/act/actSendMessage";
 import { ICustomers } from "../../types/customers";
 import ReactQuill from "react-quill";
 import toast from "react-hot-toast";
-import ReactHtmlParser from "html-react-parser"; // Importing the HTML parser
+import ReactHtmlParser from "html-react-parser";
 
 interface MessagePopupProps {
     isOpen: boolean;
@@ -19,26 +19,45 @@ const WhatsAppPopup: React.FC<MessagePopupProps> = ({
 }) => {
     const dispatch = useAppDispatch();
     const [message, setMessage] = useState("");
+    const [title, setTitle] = useState("");
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({ title: "", message: "" }); // Validation errors
 
     if (!isOpen) return null;
 
-    // Function to strip HTML tags from the message
     const stripHtmlTags = (html: string) => {
         const doc = new DOMParser().parseFromString(html, "text/html");
         return doc.body.textContent || "";
     };
 
+    const validateFields = () => {
+        let hasError = false;
+        const newErrors = { title: "", message: "" };
+
+        if (!title.trim()) {
+            newErrors.title = "يرجى إدخال عنوان الرسالة";
+            hasError = true;
+        }
+        if (!stripHtmlTags(message).trim()) {
+            newErrors.message = "يرجى إدخال نص الرسالة";
+            hasError = true;
+        }
+
+        setErrors(newErrors);
+        return !hasError;
+    };
+
     const handleSend = () => {
+        if (!validateFields()) return;
+
         setLoading(true);
         const recipients = customers.map((customer) => customer.id);
 
-        // Strip HTML tags to get plain text
         const plainTextMessage = stripHtmlTags(message);
 
-        // Send the plain text message
         const messageData = {
             type: "whatsapp",
+            title: title,
             content: plainTextMessage,
             recipients: recipients,
         };
@@ -46,8 +65,10 @@ const WhatsAppPopup: React.FC<MessagePopupProps> = ({
         dispatch(sendMessage(messageData));
         setLoading(false);
         onClose();
-
         toast.success("!تم أرسال الرسالة بنجاح");
+        setTitle("");
+        setMessage("");
+        setErrors({ title: "", message: "" });
     };
 
     const modules = {
@@ -73,18 +94,49 @@ const WhatsAppPopup: React.FC<MessagePopupProps> = ({
                     <p className="mb-2">إلى عدد {customers.length} من عملاء</p>
                 )}
 
-                <ReactQuill
-                    value={message}
-                    onChange={setMessage}
-                    className="w-full mb-4"
-                    placeholder="اكتب الرسالة هنا..."
-                    modules={modules}
-                />
+                {/* Title input field */}
+                <div className="mb-4">
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className={`w-full px-3 py-2 border-2 rounded-md ${
+                            errors.title ? "border-red-500" : "border-gray-300"
+                        }`}
+                        placeholder="عنوان الرسالة..."
+                    />
+                    {errors.title && (
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.title}
+                        </p>
+                    )}
+                </div>
+
+                {/* Message input field */}
+                <div className="mb-4">
+                    <ReactQuill
+                        value={message}
+                        onChange={setMessage}
+                        className={`w-full ${
+                            errors.message
+                                ? "border-red-500"
+                                : "border-gray-300"
+                        }`}
+                        placeholder="اكتب الرسالة هنا..."
+                        modules={modules}
+                    />
+                    {errors.message && (
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.message}
+                        </p>
+                    )}
+                </div>
 
                 <div className="message-preview mt-4">
                     <h3 className="font-semibold text-lg">معاينة الرسالة</h3>
                     <div className="preview-content text-gray-600">
-                        {ReactHtmlParser(message)} {/* Parse and render HTML */}
+                        <p className="font-bold">{title}</p>
+                        {ReactHtmlParser(message)}
                     </div>
                 </div>
 

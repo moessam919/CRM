@@ -72,7 +72,7 @@ const MessageDetails = () => {
                 <div className="mb-8">
                     <div className="flex items-center justify-between md:mb-2">
                         <h1 className="text-xl md:text-2xl font-semibold">
-                            مرحباً بك في خدمتنا
+                            {messageDetails?.title}
                         </h1>
                         <div
                             className="flex justify-end items-center gap-2 md:mb-6 text-gray-600 cursor-pointer"

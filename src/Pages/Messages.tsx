@@ -6,9 +6,7 @@ import { getMessage } from "../store/SendBulkMessage/act/actSendMessage";
 import MessageList from "../Components/Messages/MessageList";
 
 const Messages = () => {
-    const { messages, loading } = useAppSelector(
-        (state) => state.Message
-    );
+    const { messages, loading } = useAppSelector((state) => state.Message);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [selectedFilter, setSelectedFilter] = useState("الكل");
@@ -19,6 +17,10 @@ const Messages = () => {
         dispatch(getMessage());
     }, [dispatch]);
 
+    // Filter messages based on search term
+    const filteredMessages = messages.filter((message) =>
+        message.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="bg-gray-200 rounded-md p-6">
@@ -87,7 +89,10 @@ const Messages = () => {
 
                 {/* Messages List */}
                 <div className="space-y-3 min-h-[520px] max-h-[520px] overflow-auto">
-                    <MessageList messages={messages} loading={loading} />
+                    <MessageList
+                        messages={filteredMessages}
+                        loading={loading}
+                    />
                 </div>
             </div>
         </div>

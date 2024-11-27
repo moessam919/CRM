@@ -57,7 +57,7 @@ const MessageList = ({ messages, loading }: MessageProp) => {
     return (
         <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
             {messages.map((message: Message) => {
-                const { icon, bgClass } = getMessageIcon(message.type); 
+                const { icon, bgClass } = getMessageIcon(message.type);
                 return (
                     <Link
                         key={message.id}
@@ -72,12 +72,11 @@ const MessageList = ({ messages, loading }: MessageProp) => {
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <h3 className="font-medium md:text-lg line-clamp-1">
-                                        {message.content}
+                                        {message?.title}
                                     </h3>
                                 </div>
-                                <p className="text-gray-600 mb-2 line-clamp-1">
-                                    {message.content}
-                                </p>
+                                {message.content.slice(0, 50)}
+                                {message.content.length > 50 && "..."}
                                 <div className="flex flex-col items-start md:flex-row md:items-center gap-4 text-sm text-gray-500">
                                     <div className="flex items-center gap-1">
                                         <Users className="h-4 w-4 ml-1" />
