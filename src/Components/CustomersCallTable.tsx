@@ -62,7 +62,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     };
 
     // Handle calling customer
-    const handleCall = (phone: number) => {
+    const handleCall = (phone: string) => {
         window.location.href = `tel:${phone}`;
     };
 

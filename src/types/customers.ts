@@ -12,7 +12,7 @@ export interface ICustomers {
     customer_type: string;
     number: number;
     name: string;
-    phone_number: number;
+    phone_number: string;
     email_address: string;
     billing_address?: string;
     created_at: string;

@@ -5,20 +5,42 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getMessage } from "../store/SendBulkMessage/act/actSendMessage";
 import MessageList from "../Components/Messages/MessageList";
 
+interface FilterOption {
+    value: string;
+    type: string;
+}
+
 const Messages = () => {
     const { messages, loading } = useAppSelector((state) => state.Message);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
     // Filters and states
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedType, setSelectedType] = useState("الكل");
     const [selectedDate, setSelectedDate] = useState("");
     const [showFilterMenu, setShowFilterMenu] = useState(false);
 
+
     useEffect(() => {
         dispatch(getMessage());
     }, [dispatch]);
 
+    const filterOptions: FilterOption[] = [
+        { value: "الكل", type: "all" },
+        { value: "واتساب", type: "whatsapp" },
+        { value: "البريد الإلكتروني", type: "email" },
+        { value: "رسائل نصية", type: "text" },
+    ];
+
+
+    // Handle filter type selection
+    const handleSelectType = (filter: FilterOption) => {
+        setSelectedType(filter.value);
+        setShowFilterMenu(false);
+    };
+
+    // Filter messages
     const filteredMessages = messages.filter((message) => {
         const matchesTitle = message.title
             ?.toLowerCase()
@@ -28,7 +50,9 @@ const Messages = () => {
         );
         const matchesType =
             selectedType === "الكل" ||
-            message.type === selectedType.toLowerCase();
+            message.type ===
+                filterOptions.find((option) => option.value === selectedType)
+                    ?.type;
         const matchesDate =
             !selectedDate || message.sent_at.startsWith(selectedDate);
 
@@ -83,22 +107,11 @@ const Messages = () => {
                         </button>
                         {showFilterMenu && (
                             <div className="absolute left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
-                                {[
-                                    { value: "الكل", type: "الكل" },
-                                    { value: "واتساب", type: "whatsapp" },
-                                    {
-                                        value: "البريد الإلكتروني",
-                                        type: "email",
-                                    },
-                                    { value: "رسائل نصية", type: "text" },
-                                ].map((filter) => (
+                                {filterOptions.map((filter) => (
                                     <button
                                         key={filter.type}
                                         className="w-full text-right px-4 py-2 hover:bg-gray-50"
-                                        onClick={() => {
-                                            setSelectedType(filter.type);
-                                            setShowFilterMenu(false);
-                                        }}
+                                        onClick={() => handleSelectType(filter)}
                                     >
                                         {filter.value}
                                     </button>

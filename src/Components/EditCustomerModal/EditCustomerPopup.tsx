@@ -19,15 +19,32 @@ const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
     const [name, setName] = useState(customer.name);
     const [phoneNumber, setPhoneNumber] = useState(customer.phone_number);
     const [email, setEmail] = useState(customer.email_address);
-    const [addres, setAddres] = useState(customer.billing_address);
+    const [address, setAddress] = useState(customer.billing_address);
+    const [phoneError, setPhoneError] = useState<string>("");
+
+    const phoneRegex = /^05\d{8}$/;
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setPhoneNumber(value);
+
+        // Validate phone number format
+        if (!phoneRegex.test(value)) {
+            setPhoneError("يرجى إدخال رقم جوال صحيح يبدأ بـ 05");
+        } else {
+            setPhoneError("");
+        }
+    };
 
     const handleSave = () => {
+        if (phoneError) return;
+
         const updatedCustomer = {
             ...customer,
             name,
             phone_number: phoneNumber,
             email_address: email,
-            billing_address: addres,
+            billing_address: address,
         };
         dispatch(actEditCustomers({ id: customer.id, updatedCustomer }));
         toast.success("تم تحديث بيانات العميل بنجاح!");
@@ -35,11 +52,13 @@ const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
         onClose();
     };
 
+    const isFormValid = phoneRegex.test(phoneNumber) && !phoneError;
+
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-md w-96">
+            <div className="bg-white p-6 rounded-md w-full max-w-lg">
                 <h2 className="text-xl font-bold mb-4">تعديل العميل</h2>
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-2">
@@ -57,11 +76,16 @@ const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
                         رقم الجوال:
                     </label>
                     <input
-                        type="tel"
+                        type="text"
                         className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                         value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(Number(e.target.value))}
+                        onChange={handlePhoneChange}
                     />
+                    {phoneError && (
+                        <p className="text-red-500 text-sm mt-1">
+                            {phoneError}
+                        </p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-2">
@@ -81,8 +105,8 @@ const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
                     <input
                         type="text"
                         className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
-                        value={addres}
-                        onChange={(e) => setAddres(e.target.value)}
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                     />
                 </div>
                 <div className="flex justify-end gap-4">
@@ -95,6 +119,7 @@ const EditCustomerPopup: React.FC<EditCustomerPopupProps> = ({
                     <button
                         onClick={handleSave}
                         className="px-4 py-2 border hover:bg-gray-500 hover:text-white rounded-md duration-150"
+                        disabled={!isFormValid}
                     >
                         حفظ
                     </button>
