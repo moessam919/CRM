@@ -1,16 +1,16 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: "https://erp.rashodi.online", 
-    // baseURL: "http://localhost:8000",
+    // baseURL: "https://erp.rashodi.online", 
+    baseURL: "http://localhost:8000",
 });
 
 axiosInstance.interceptors.request.use((config) => {
     // const token = localStorage.getItem("access_token");
     const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzg3Mzg1LCJpYXQiOjE3MzIxODI1ODUsImp0aSI6ImM4NWYxOTVlZGI1ZjQ1NGE5YzhjOGVhZmQ1MGI5MThlIiwidXNlcl9pZCI6MX0.yStrxEgS8TTLNJROArVwQhg8b4BnboprNtuTwV_cS3E";
-
-    if (token) {
+            // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNDA1NjYzLCJpYXQiOjE3MzI4MDA4NjMsImp0aSI6IjBhZWRkNjdkYmM1YjQwMTRiZWU2MzVlNjNiZWE1NGQ4IiwidXNlcl9pZCI6MX0.VQ28dq3HjgRFp3YjT7-SX2FkohWXL5Ko8iD94_QdXzo";
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNDEwOTEyLCJpYXQiOjE3MzI4MDYxMTIsImp0aSI6IjAxZTViNDYxZmYxMTQ3ZTBiOTM1MjVkYjcyOTc5NTAxIiwidXNlcl9pZCI6MX0.PDef9lxQm-OpsEis8otNh8RcE3CNUmVs3Hq7um40Kys";
+            if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
