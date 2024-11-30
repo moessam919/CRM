@@ -199,12 +199,13 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     onClick={() => navigate(`/customer/${row.id}`)}
                     style={{ cursor: "pointer" }}
                 >
-                    {row.total_sales.toFixed(2)}
+                    {Number(
+                        Number(row.total_sales).toFixed(2)
+                    ).toLocaleString()}
                 </span>
             ),
             sortable: true,
         },
-
         {
             name: "تاريخ الاضاافة",
             cell: (row) => (

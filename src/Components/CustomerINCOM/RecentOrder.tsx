@@ -25,14 +25,18 @@ const RecentOrder = ({ customer }: ICustomerInfo) => {
                     <div className="flex justify-center " key={order.id}>
                         <div className="flex justify-between w-[80%] border-b-2 pb-4 border-gray-300">
                             <div className="flex flex-col justify-center items-start gap-2">
-                                <h4 className="font-bold">طلب {order.id}</h4>
+                                <h4 className="font-bold">
+                                    طلب {order.ref_number}
+                                </h4>
                                 <span className="text-gray-500">
                                     {formatDate(order.created_at)}
                                 </span>
                             </div>
                             <div className="flex flex-col justify-center items-center gap-2 ">
                                 <p className="font-bold text-green-500">
-                                    {Number(order.value).toFixed(2)} ريال
+                                    {order.value
+                                        ? `${Number(Number(order.value).toFixed(2)).toLocaleString()} ريال`
+                                        : "لا يوجد"}
                                 </p>
                                 <p className="p-1 bg-green-500 text-white rounded">
                                     <Link to={order.url} target="_blank">

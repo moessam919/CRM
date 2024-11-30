@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: "https://erp.rashodi.online", 
+    baseURL: "https://erp.rashodi.online",
     // baseURL: "http://localhost:8000",
 });
 
 axiosInstance.interceptors.request.use((config) => {
     // const token = localStorage.getItem("access_token");
     const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzg3Mzg1LCJpYXQiOjE3MzIxODI1ODUsImp0aSI6ImM4NWYxOTVlZGI1ZjQ1NGE5YzhjOGVhZmQ1MGI5MThlIiwidXNlcl9pZCI6MX0.yStrxEgS8TTLNJROArVwQhg8b4BnboprNtuTwV_cS3E";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzkyNjYyLCJpYXQiOjE3MzI3ODc4NjIsImp0aSI6ImQyMGNlNzA3MTNhODRmODRiZWZjMzhjM2ZiN2I5Nzg4IiwidXNlcl9pZCI6MX0.JedmDSKkZ1hzfrvPC6LBaLUeGf-Qd0_jtoJjqAcL8LM";
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;

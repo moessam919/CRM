@@ -22,6 +22,7 @@ export interface ICustomer {
     invoices: [
         {
             created_at: string;
+            ref_number: string;
             id: number;
             value: string;
             url: string;

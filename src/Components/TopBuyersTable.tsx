@@ -46,7 +46,7 @@ const TopBuyersTable = () => {
         },
         {
             name: "إجمالي المبيعات",
-            selector: (row) => row.total_sales.toLocaleString(),
+            selector: (row) => row.total_sales.toFixed(2).toLocaleString(),
             sortable: true,
         },
         {

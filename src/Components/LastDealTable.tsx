@@ -32,7 +32,7 @@ const LastDealTable = () => {
         },
         {
             name: "القيمة",
-            selector: (row) => row.value,
+            selector: (row) => Number(row.value).toFixed(2).toLocaleString(),
             sortable: true,
         },
         {
