@@ -44,6 +44,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const [EmailOpen, setIsEmailOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [totalRows, setTotalRows] = useState(0);
 
     // Filter Modal
     const handleApplyFilters = (filters: CustomerFilters) => {
@@ -52,7 +53,12 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                 filters,
                 pageNumber: currentPage,
             })
-        );
+        ).then((action) => {
+            if (actGetFilteredCustomers.fulfilled.match(action)) {
+                
+                setTotalRows(action.payload.totalRows);
+            }
+        });
         setIsFilterOpen(false);
     };
 
@@ -112,7 +118,11 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     filters: searchParams,
                     pageNumber: currentPage,
                 })
-            );
+            ).then((action) => {
+                if (actGetFilteredCustomers.fulfilled.match(action)) {
+                    setTotalRows(action.payload.total_results);
+                }
+            });
         }, 1000);
         return () => clearTimeout(x);
     }, [filterText, dispatch, currentPage]);
@@ -139,6 +149,24 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
         );
     };
 
+    const handlePageChange = (page: number) => {
+        dispatch(
+            actGetFilteredCustomers({
+                filters: currentFilters,
+                pageNumber: page,
+            })
+        );
+    };
+
+    const handleRowsPerPageChange = (page: number) => {
+        dispatch(
+            actGetFilteredCustomers({
+                filters: currentFilters,
+                pageNumber: page,
+                
+            })
+        );
+    };
     // Define table columns
     const columns: TableColumn<ICustomers>[] = [
         {
@@ -281,7 +309,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     ];
 
     // Filter logic
-
     const customStyles = {
         rows: {
             style: {
@@ -385,7 +412,11 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         columns={columns}
                         data={customers}
                         pagination
-                        paginationRowsPerPageOptions={[10, 25, 50]}
+                        paginationServer
+                        paginationTotalRows={totalRows}
+                        onChangePage={handlePageChange}
+                        onChangeRowsPerPage={handleRowsPerPageChange}
+                        paginationRowsPerPageOptions={[50]}
                         customStyles={customStyles}
                         noDataComponent={
                             <div className="text-gray-500 py-4">
@@ -400,6 +431,14 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         onSelectedRowsChange={({ selectedRows }) =>
                             setSelectedRows(selectedRows)
                         }
+                        paginationDefaultPage={1}
+                        paginationPerPage={50} 
+                        paginationComponentOptions={{
+                            rowsPerPageText: 'عدد العملاء لكل صفحة:',
+                            rangeSeparatorText: 'من',
+                            noRowsPerPage: false,
+                            selectAllRowsItem: false,
+                        }}
                     />
                 </div>
 

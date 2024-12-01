@@ -24,9 +24,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
         created_at_after: initialFilters.created_at_after || "",
         created_at_before: initialFilters.created_at_before || "",
         last_invoice_date: initialFilters.last_invoice_date || "",
-        no_purchases: initialFilters.no_purchases || false,
+        no_purchases: initialFilters.no_purchases ,
         no_purchases_last_month:
-            initialFilters.no_purchases_last_month || false,
+            initialFilters.no_purchases_last_month ,
         address: initialFilters.address || "",
     });
 
@@ -56,8 +56,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
             created_at_after: "",
             created_at_before: "",
             last_invoice_date: "",
-            no_purchases: false,
-            no_purchases_last_month: false,
+
             address: "",
         };
         onSubmit(defaultFilters);
