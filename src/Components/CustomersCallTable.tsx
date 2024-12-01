@@ -12,6 +12,7 @@ import {
     Filter,
     MessageCircle,
     Download,
+    EllipsisVertical,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EditCustomerPopup from "./EditCustomerModal/EditCustomerPopup";
@@ -21,6 +22,9 @@ import {
     actGetFilteredCustomers,
 } from "../store/Customers/act/actGetCustomers";
 import FilterModal from "./ContactFilter/FilterModal";
+import BulkMessagePopup from "./BulkMessagesPopup/BulkMessagePopup";
+import BulkEmailPopup from "./BulkMessagesPopup/BulkEmailPopup";
+import BulkWhatsAppPopup from "./BulkMessagesPopup/BulkWhatsAppPopup";
 
 interface CustomersCallTableProps {
     customers: ICustomers[];
@@ -45,6 +49,11 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [totalRows, setTotalRows] = useState(0);
+
+    const [BulkMessagesOpen, setBulkMessagesOpen] = useState(false);
+    const [bulkMessageOpen, setIsBulkMessageOpen] = useState(false);
+    const [bulkEmailOpen, setIsBulkEmailOpen] = useState(false);
+    const [bulkWhatsOpen, setIsBulkWhatsOpen] = useState(false);
 
     // Filter Modal
     const handleApplyFilters = (filters: CustomerFilters) => {
@@ -98,6 +107,22 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     // Handle row click
     const handleRowClick = (row: ICustomers) => {
         setSelectedCustomer(row);
+    };
+
+    // open bulk message modal
+    const handleOpenEmail = () => {
+        setIsBulkEmailOpen(!bulkEmailOpen);
+        setBulkMessagesOpen(false);
+    };
+
+    const handleOpenwhatsapp = () => {
+        setIsBulkWhatsOpen(!bulkWhatsOpen);
+        setBulkMessagesOpen(false);
+    };
+
+    const handleOpenmessage = () => {
+        setIsBulkMessageOpen(!bulkMessageOpen);
+        setBulkMessagesOpen(false);
     };
 
     // search
@@ -344,24 +369,22 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         قائمة العملاء
                     </h2>
                 </div>
-                <div className="flex justify-between items-center flex-col md:flex-row mb-4">
-                    <div
-                        className={`flex gap-2  ${
-                            selectedRows.length > 1
-                                ? "flex-col xl:flex-row"
-                                : "flex-col xl:flex-row"
-                        }`}
-                    >
+                <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
+                    {/* Left Section: Search and Action Buttons */}
+                    <div className="flex flex-wrap gap-4">
+                        {/* Search Input */}
                         <input
                             type="text"
                             placeholder="بحث..."
-                            className="p-2 border rounded-lg md:w-96 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100 mb-4 md:mb-0"
+                            className="p-2 border rounded-lg md:w-80 focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
                             value={filterText}
                             onChange={(e) => setFilterText(e.target.value)}
                         />
+
+                        {/* Filter Button */}
                         <button
                             onClick={() => setIsFilterOpen(true)}
-                            className="flex items-center gap-2 border border-gray-600  hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
+                            className="flex items-center gap-2 border border-gray-600 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
                             title="تصفية العملاء"
                         >
                             <span>تصفية العملاء</span>
@@ -378,33 +401,82 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                             <Download size={16} />
                         </button>
                     </div>
-                    {selectedRows.length > 1 && (
-                        <div className="flex gap-2 mt-4 md:mt-0">
+
+                    {/* Right Section: Bulk Messaging */}
+                    <div className="flex flex-wrap items-end gap-4">
+                        {/* Bulk Messages Button */}
+                        <div className="relative">
                             <button
-                                onClick={() => handleBulkEmail()}
-                                className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
-                                title="إرسال بريد إلكتروني للمحددين"
+                                onClick={() =>
+                                    setBulkMessagesOpen(!BulkMessagesOpen)
+                                }
+                                className="flex items-center gap-2 border border-gray-600 hover:text-white py-2 px-4 rounded-lg hover:bg-gray-600 duration-150"
+                                title="ارسال رسالة للجميع"
                             >
-                                <Mail size={16} />({selectedRows.length})
+                                <span>ارسال لجميع العملاء</span>
+                                <EllipsisVertical size={16} />
                             </button>
-                            <button
-                                onClick={() => handleBulkWhatsApp()}
-                                className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
-                                title="إرسال واتساب للمحددين"
-                            >
-                                <MessageCircle size={16} />(
-                                {selectedRows.length})
-                            </button>
-                            <button
-                                onClick={() => handleBulkSMS()}
-                                className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
-                                title="إرسال رسالة نصية للمحددين"
-                            >
-                                <MessageSquare size={16} />(
-                                {selectedRows.length})
-                            </button>
+
+                            {/* Bulk Message Options */}
+                            {BulkMessagesOpen && (
+                                <div className="absolute top-full left-0 mt-2 bg-white shadow-lg z-50 border rounded-lg">
+                                    <button
+                                        onClick={() => handleOpenEmail()}
+                                        className="flex items-center gap-2 w-full border-b px-4 py-2 text-left hover:bg-gray-100"
+                                        title="إرسال بريد إلكتروني للمحددين"
+                                    >
+                                        <Mail size={16} />
+                                        إرسال بريد إلكتروني
+                                    </button>
+                                    <button
+                                        onClick={() => handleOpenwhatsapp()}
+                                        className="flex items-center gap-2 w-full border-b px-4 py-2 text-left hover:bg-gray-100"
+                                        title="إرسال واتساب للمحددين"
+                                    >
+                                        <MessageCircle size={16} />
+                                        إرسال واتساب
+                                    </button>
+                                    <button
+                                        onClick={() => handleOpenmessage()}
+                                        className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-gray-100"
+                                        title="إرسال رسالة نصية للمحددين"
+                                    >
+                                        <MessageSquare size={16} />
+                                        إرسال رسالة نصية
+                                    </button>
+                                </div>
+                            )}
                         </div>
-                    )}
+
+                        {/* Selected Rows Actions */}
+                        {selectedRows.length > 1 && (
+                            <div className="flex flex-wrap gap-4">
+                                <button
+                                    onClick={() => handleBulkEmail()}
+                                    className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
+                                    title="إرسال بريد إلكتروني للمحددين"
+                                >
+                                    <Mail size={16} />({selectedRows.length})
+                                </button>
+                                <button
+                                    onClick={() => handleBulkWhatsApp()}
+                                    className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
+                                    title="إرسال واتساب للمحددين"
+                                >
+                                    <MessageCircle size={16} />(
+                                    {selectedRows.length})
+                                </button>
+                                <button
+                                    onClick={() => handleBulkSMS()}
+                                    className="flex items-center gap-2 border border-gray-500 hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 duration-150"
+                                    title="إرسال رسالة نصية للمحددين"
+                                >
+                                    <MessageSquare size={16} />(
+                                    {selectedRows.length})
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 <div className="grid grid-cols-1 rounded-md">
                     <DataTable
@@ -482,6 +554,32 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     <EmailPopup
                         isOpen={EmailOpen}
                         onClose={() => setIsEmailOpen(false)}
+                        customers={selectedRows}
+                    />
+                )}
+
+                {/* bulk popup */}
+
+                {bulkMessageOpen && (
+                    <BulkMessagePopup
+                        isOpen={bulkMessageOpen}
+                        onClose={() => setIsBulkMessageOpen(false)}
+                        customers={selectedRows}
+                    />
+                )}
+
+                {bulkEmailOpen && (
+                    <BulkEmailPopup
+                        isOpen={bulkEmailOpen}
+                        onClose={() => setIsBulkEmailOpen(false)}
+                        customers={selectedRows}
+                    />
+                )}
+
+                {bulkWhatsOpen && (
+                    <BulkWhatsAppPopup
+                        isOpen={bulkWhatsOpen}
+                        onClose={() => setIsBulkWhatsOpen(false)}
                         customers={selectedRows}
                     />
                 )}

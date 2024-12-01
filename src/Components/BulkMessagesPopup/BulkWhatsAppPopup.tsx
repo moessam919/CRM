@@ -3,7 +3,6 @@ import { useAppDispatch } from "../../store/hooks";
 import { sendMessage } from "../../store/SendBulkMessage/act/actSendMessage";
 import { ICustomers } from "../../types/customers";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import toast from "react-hot-toast";
 import ReactHtmlParser from "html-react-parser";
 
@@ -13,7 +12,7 @@ interface MessagePopupProps {
     customers: ICustomers[];
 }
 
-const EmailPopup: React.FC<MessagePopupProps> = ({
+const BulkWhatsAppPopup: React.FC<MessagePopupProps> = ({
     isOpen,
     onClose,
     customers,
@@ -22,7 +21,7 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
     const [message, setMessage] = useState("");
     const [title, setTitle] = useState("");
     const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState({ title: "", message: "" }); // Validation errors
+    const [errors, setErrors] = useState({ title: "", message: "" });
 
     if (!isOpen) return null;
 
@@ -53,13 +52,16 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
 
         setLoading(true);
         const recipients = customers.map((customer) => customer.id);
+
         const plainTextMessage = stripHtmlTags(message);
+
         const messageData = {
-            type: "email",
+            type: "whatsapp",
             title: title,
             content: plainTextMessage,
             recipients: recipients,
         };
+
         dispatch(sendMessage(messageData));
         setLoading(false);
         onClose();
@@ -82,16 +84,13 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
 
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg  shadow-lg w-[350px] md:w-[500px] xl:w-[600px]">
+            <div className="bg-white p-4 rounded-lg shadow-lg w-[350px] md:w-[500px] xl:w-[600px]">
                 <h2 className="text-lg font-bold mb-4">
-                    إرسال رسالة عبر الEmail
+                    إرسال رسالة عبر الWhatsApp
                 </h2>
-                {customers.length === 1 ? (
-                    <p className="mb-2">إلى: {customers[0].name}</p>
-                ) : (
-                    <p className="mb-2">إلى عدد {customers.length} من عملاء</p>
-                )}
+                <p className="mb-2">الي الحميع</p>
 
+                {/* Title input field */}
                 <div className="mb-4">
                     <input
                         type="text"
@@ -109,6 +108,7 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
                     )}
                 </div>
 
+                {/* Message input field */}
                 <div className="mb-4">
                     <ReactQuill
                         value={message}
@@ -156,4 +156,4 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
     );
 };
 
-export default EmailPopup;
+export default BulkWhatsAppPopup;

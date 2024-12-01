@@ -4,8 +4,7 @@ import { sendMessage } from "../../store/SendBulkMessage/act/actSendMessage";
 import ReactQuill from "react-quill";
 import { ICustomers } from "../../types/customers";
 import toast from "react-hot-toast";
-import ReactHtmlParser from "html-react-parser"; // Importing the HTML parser
-
+import ReactHtmlParser from "html-react-parser";
 interface MessagePopupProps {
     isOpen: boolean;
     onClose: () => void;

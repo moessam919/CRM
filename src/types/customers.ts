@@ -37,5 +37,13 @@ export interface CustomerFilters {
     created_at_before?: string;
     last_invoice_date?: string;
     no_purchases?: boolean;
-    no_purchases_last_month?: boolean;
+    no_purchases_1_month?: boolean;
+    no_purchases_2_month?: boolean;
+    no_purchases_3_month?: boolean;
+    purchases_within_period_after?: string;
+    purchases_within_period_before?: string;
+    min_purchase_value_within_period?: number;
+    max_purchase_value_within_period?: number;
+    min_invoice_count_within_period?: number;
+    max_invoice_count_within_period?: number;
 }

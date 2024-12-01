@@ -13,7 +13,7 @@ interface MessagePopupProps {
     customers: ICustomers[];
 }
 
-const EmailPopup: React.FC<MessagePopupProps> = ({
+const BulkEmailPopup: React.FC<MessagePopupProps> = ({
     isOpen,
     onClose,
     customers,
@@ -86,11 +86,7 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
                 <h2 className="text-lg font-bold mb-4">
                     إرسال رسالة عبر الEmail
                 </h2>
-                {customers.length === 1 ? (
-                    <p className="mb-2">إلى: {customers[0].name}</p>
-                ) : (
-                    <p className="mb-2">إلى عدد {customers.length} من عملاء</p>
-                )}
+                <p className="mb-2">الي الحميع</p>
 
                 <div className="mb-4">
                     <input
@@ -156,4 +152,4 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
     );
 };
 
-export default EmailPopup;
+export default BulkEmailPopup;

@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import { sendMessage } from "../../store/SendBulkMessage/act/actSendMessage";
-import { ICustomers } from "../../types/customers";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import { ICustomers } from "../../types/customers";
 import toast from "react-hot-toast";
 import ReactHtmlParser from "html-react-parser";
-
 interface MessagePopupProps {
     isOpen: boolean;
     onClose: () => void;
     customers: ICustomers[];
 }
 
-const EmailPopup: React.FC<MessagePopupProps> = ({
+const BulkMessagePopup: React.FC<MessagePopupProps> = ({
     isOpen,
     onClose,
     customers,
@@ -53,13 +51,17 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
 
         setLoading(true);
         const recipients = customers.map((customer) => customer.id);
+
         const plainTextMessage = stripHtmlTags(message);
+
+        // Send the plain text message
         const messageData = {
-            type: "email",
+            type: "text",
             title: title,
             content: plainTextMessage,
             recipients: recipients,
         };
+
         dispatch(sendMessage(messageData));
         setLoading(false);
         onClose();
@@ -84,14 +86,11 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
             <div className="bg-white p-4 rounded-lg  shadow-lg w-[350px] md:w-[500px] xl:w-[600px]">
                 <h2 className="text-lg font-bold mb-4">
-                    إرسال رسالة عبر الEmail
+                    إرسال رسالة عبر ال SMS
                 </h2>
-                {customers.length === 1 ? (
-                    <p className="mb-2">إلى: {customers[0].name}</p>
-                ) : (
-                    <p className="mb-2">إلى عدد {customers.length} من عملاء</p>
-                )}
+                <p className="mb-2">الي الحميع</p>
 
+                {/* Title input field */}
                 <div className="mb-4">
                     <input
                         type="text"
@@ -109,6 +108,7 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
                     )}
                 </div>
 
+                {/* Message input field */}
                 <div className="mb-4">
                     <ReactQuill
                         value={message}
@@ -156,4 +156,4 @@ const EmailPopup: React.FC<MessagePopupProps> = ({
     );
 };
 
-export default EmailPopup;
+export default BulkMessagePopup;
