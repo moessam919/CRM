@@ -29,7 +29,7 @@ export const actGetFilteredCustomers = createAsyncThunk(
     async (
         {
             filters,
-            pageNumber = 1,
+            pageNumber,
         }: {
             filters: CustomerFilters;
             pageNumber?: number;

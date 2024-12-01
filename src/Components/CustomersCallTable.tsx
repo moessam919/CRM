@@ -55,8 +55,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             })
         ).then((action) => {
             if (actGetFilteredCustomers.fulfilled.match(action)) {
-                
-                setTotalRows(action.payload.totalRows);
+                setTotalRows(action.payload.total_results);
             }
         });
         setIsFilterOpen(false);
@@ -163,10 +162,10 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             actGetFilteredCustomers({
                 filters: currentFilters,
                 pageNumber: page,
-                
             })
         );
     };
+
     // Define table columns
     const columns: TableColumn<ICustomers>[] = [
         {
@@ -432,10 +431,10 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                             setSelectedRows(selectedRows)
                         }
                         paginationDefaultPage={1}
-                        paginationPerPage={50} 
+                        paginationPerPage={50}
                         paginationComponentOptions={{
-                            rowsPerPageText: 'عدد العملاء لكل صفحة:',
-                            rangeSeparatorText: 'من',
+                            rowsPerPageText: "عدد العملاء لكل صفحة:",
+                            rangeSeparatorText: "من",
                             noRowsPerPage: false,
                             selectAllRowsItem: false,
                         }}

@@ -5,11 +5,6 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getMessage } from "../store/SendBulkMessage/act/actSendMessage";
 import MessageList from "../Components/Messages/MessageList";
 
-interface FilterOption {
-    value: string;
-    type: string;
-}
-
 const Messages = () => {
     const { messages, loading } = useAppSelector((state) => state.Message);
     const dispatch = useAppDispatch();
@@ -17,28 +12,20 @@ const Messages = () => {
 
     // Filters and states
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedType, setSelectedType] = useState("الكل");
+    const [selectedType, setSelectedType] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
     const [showFilterMenu, setShowFilterMenu] = useState(false);
 
+    const messageTypes = [
+        { value: "", label: "الكل" },
+        { value: "whatsapp", label: "واتساب" },
+        { value: "email", label: "بريد الكتروني" },
+        { value: "text", label: "رسالة نصية" },
+    ];
 
     useEffect(() => {
         dispatch(getMessage());
     }, [dispatch]);
-
-    const filterOptions: FilterOption[] = [
-        { value: "الكل", type: "all" },
-        { value: "واتساب", type: "whatsapp" },
-        { value: "البريد الإلكتروني", type: "email" },
-        { value: "رسائل نصية", type: "text" },
-    ];
-
-
-    // Handle filter type selection
-    const handleSelectType = (filter: FilterOption) => {
-        setSelectedType(filter.value);
-        setShowFilterMenu(false);
-    };
 
     // Filter messages
     const filteredMessages = messages.filter((message) => {
@@ -48,15 +35,12 @@ const Messages = () => {
         const matchesCustomer = message.recipients.some((recipient) =>
             recipient.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-        const matchesType =
-            selectedType === "الكل" ||
-            message.type ===
-                filterOptions.find((option) => option.value === selectedType)
-                    ?.type;
+        const matchesType = !selectedType || message.type === selectedType;
+
         const matchesDate =
             !selectedDate || message.sent_at.startsWith(selectedDate);
 
-        return matchesTitle || (matchesCustomer && matchesType && matchesDate);
+        return (matchesTitle || matchesCustomer) && matchesDate && matchesType;
     });
 
     return (
@@ -102,18 +86,25 @@ const Messages = () => {
                             className="flex items-center gap-2 px-10 py-3 border rounded-lg hover:bg-gray-50 w-full md:w-auto justify-center"
                             onClick={() => setShowFilterMenu(!showFilterMenu)}
                         >
-                            {selectedType}
+                            {selectedType
+                                ? messageTypes.find(
+                                      (type) => type.value === selectedType
+                                  )?.label
+                                : "الكل"}
                             <ChevronDown className="h-4 w-4" />
                         </button>
                         {showFilterMenu && (
                             <div className="absolute left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
-                                {filterOptions.map((filter) => (
+                                {messageTypes.map((type) => (
                                     <button
-                                        key={filter.type}
+                                        key={type.value}
                                         className="w-full text-right px-4 py-2 hover:bg-gray-50"
-                                        onClick={() => handleSelectType(filter)}
+                                        onClick={() => {
+                                            setSelectedType(type.value);
+                                            setShowFilterMenu(false);
+                                        }}
                                     >
-                                        {filter.value}
+                                        {type.label}
                                     </button>
                                 ))}
                             </div>
