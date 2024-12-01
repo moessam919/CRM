@@ -119,7 +119,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     pageNumber: currentPage,
                 })
             ).then((action) => {
-                console.log("Action", action);
                 if (actGetFilteredCustomers.fulfilled.match(action)) {
                     setTotalRows(action.payload.total_results);
                 }
@@ -151,7 +150,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     };
 
     const handlePageChange = (page: number) => {
-        console.log("Page Change", page);
         dispatch(
             actGetFilteredCustomers({
                 filters: currentFilters,
@@ -434,6 +432,12 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                         }
                         paginationDefaultPage={1}
                         paginationPerPage={50} 
+                        paginationComponentOptions={{
+                            rowsPerPageText: 'عدد العملاء لكل صفحة:',
+                            rangeSeparatorText: 'من',
+                            noRowsPerPage: false,
+                            selectAllRowsItem: false,
+                        }}
                     />
                 </div>
 
