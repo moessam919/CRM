@@ -9,7 +9,7 @@ export const actGetCustomers = createAsyncThunk(
         const { rejectWithValue } = thunkAPI;
         try {
             const res = await axiosInstance.get(
-                `crm/customers/?page=${pageNumber || 1}`
+                `crm/customers?page=${pageNumber || 1}`
             );
             return res.data;
         } catch (error) {
@@ -47,7 +47,7 @@ export const actGetFilteredCustomers = createAsyncThunk(
             });
 
             const res = await axiosInstance.get(
-                `crm/customers/?${queryParams.toString()}&page=${pageNumber}`
+                `crm/customers?${queryParams.toString()}&page=${pageNumber}`
             );
             return {
                 ...res.data,
@@ -86,7 +86,7 @@ export const actGetSearchCustomers = createAsyncThunk(
             });
 
             const res = await axiosInstance.get(
-                `crm/customers/?${queryParams.toString()}`
+                `crm/customers?${queryParams.toString()}`
             );
             return {
                 ...res.data,

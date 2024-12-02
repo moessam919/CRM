@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
     getMessage,
     getMessageDetails,
+    sendBulkMessage,
     sendMessage,
 } from "./act/actSendMessage";
 import { Message, MessageData } from "../../types/MessageData";
@@ -61,6 +62,18 @@ const messageSlice = createSlice({
                 state.loading = "succeeded";
             })
             .addCase(getMessageDetails.rejected, (state, action) => {
+                state.loading = "failed";
+                state.error = action.payload as string;
+            });
+        builder
+            .addCase(sendBulkMessage.pending, (state) => {
+                state.loading = "pending";
+            })
+            .addCase(sendBulkMessage.fulfilled, (state, action) => {
+                state.loading = "succeeded";
+                state.success = action.payload;
+            })
+            .addCase(sendBulkMessage.rejected, (state, action) => {
                 state.loading = "failed";
                 state.error = action.payload as string;
             });

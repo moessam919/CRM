@@ -7,7 +7,7 @@ const actGetSalesReport = createAsyncThunk(
     async (_, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
         try {
-            const res = await axiosInstance.get("crm/sales-report/");
+            const res = await axiosInstance.get("crm/sales-report");
             return res.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {

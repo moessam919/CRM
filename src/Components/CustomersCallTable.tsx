@@ -36,6 +36,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const { currentFilters, currentPage } = useAppSelector(
         (state) => state.Customers
     );
+
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [filterText, setFilterText] = useState("");
@@ -361,6 +362,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
             },
         },
     };
+
     return (
         <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="col-span-1 xl:col-span-2">
@@ -410,7 +412,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                                 onClick={() =>
                                     setBulkMessagesOpen(!BulkMessagesOpen)
                                 }
-                                className="flex items-center gap-2 border border-gray-600 hover:text-white py-2 px-4 rounded-lg hover:bg-gray-600 duration-150"
+                                className="flex items-center gap-3 border border-gray-600 hover:text-white p-2 rounded-lg hover:bg-gray-600 duration-150"
                                 title="ارسال رسالة للجميع"
                             >
                                 <span>ارسال لجميع العملاء</span>
@@ -564,7 +566,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     <BulkMessagePopup
                         isOpen={bulkMessageOpen}
                         onClose={() => setIsBulkMessageOpen(false)}
-                        customers={selectedRows}
+                        filter={currentFilters}
                     />
                 )}
 
@@ -572,7 +574,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     <BulkEmailPopup
                         isOpen={bulkEmailOpen}
                         onClose={() => setIsBulkEmailOpen(false)}
-                        customers={selectedRows}
+                        filter={currentFilters}
                     />
                 )}
 
@@ -580,7 +582,7 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
                     <BulkWhatsAppPopup
                         isOpen={bulkWhatsOpen}
                         onClose={() => setIsBulkWhatsOpen(false)}
-                        customers={selectedRows}
+                        filter={currentFilters}
                     />
                 )}
 

@@ -30,3 +30,17 @@ export interface ICustomer {
     ];
     purchased_categories: [];
 }
+export interface ICustomerMessage {
+    id: number;
+    url: string;
+    type: string;
+    title: string | null;
+    content: string;
+    sent_at: string;
+    status: string;
+    additional_data: string | null;
+    sent_by: {
+        username: string;
+        id: number;
+    };
+}

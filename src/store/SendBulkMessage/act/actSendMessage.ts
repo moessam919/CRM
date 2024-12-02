@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../../API/axiosInstance";
 import axios from "axios";
-import { MessageData } from "../../../types/MessageData";
+import { BulkMessageData, MessageData } from "../../../types/MessageData";
 
 export const sendMessage = createAsyncThunk(
     "messages/sendMessage",
@@ -10,8 +10,32 @@ export const sendMessage = createAsyncThunk(
         const { rejectWithValue } = thunkAPI;
         try {
             const response = await axiosInstance.post(
-                "/crm/messages/",
+                "/crm/messages",
                 messageData
+            );
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(
+                    error.response?.data || "Error sending message"
+                );
+            } else {
+                return rejectWithValue(
+                    "An error occurred while sending the message."
+                );
+            }
+        }
+    }
+);
+
+export const sendBulkMessage = createAsyncThunk(
+    "messages/sendBulkMessage",
+    async (BulkmessageData: BulkMessageData, thunkAPI) => {
+        const { rejectWithValue } = thunkAPI;
+        try {
+            const response = await axiosInstance.post(
+                "/crm/messages/bulk",
+                BulkmessageData
             );
             return response.data;
         } catch (error) {
@@ -33,7 +57,7 @@ export const getMessage = createAsyncThunk(
     async (_, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
         try {
-            const response = await axiosInstance.get(`/crm/messages/`);
+            const response = await axiosInstance.get(`/crm/messages`);
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {

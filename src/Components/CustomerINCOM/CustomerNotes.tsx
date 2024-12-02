@@ -19,7 +19,7 @@ const CustomerNotes: React.FC<CustomerNotesProps> = ({ customer }) => {
             case "noteHistory":
                 return <NotesHistory customer={customer} />;
             case "messageHistory":
-                return <MessageHistory />;
+                return <MessageHistory customer={customer} />;
             case "other":
                 return <ProductTable customer={customer} />;
             default:

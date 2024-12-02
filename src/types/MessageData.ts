@@ -5,6 +5,13 @@ export interface MessageData {
     recipients: number[];
 }
 
+export interface BulkMessageData {
+    type: string;
+    title: string;
+    content: string;
+    filterparams: { [key: string]: string | number | boolean };
+}
+
 export interface Recipient {
     id: number;
     name: string;

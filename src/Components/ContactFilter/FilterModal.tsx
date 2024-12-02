@@ -42,9 +42,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
         max_invoice_count_within_period:
             initialFilters.max_invoice_count_within_period || undefined,
     });
-    console.log(filters);
-    
-    
     const [timeModalOpen, setTimeMoldalOpen] = useState(false);
 
     const handleInputChange = (

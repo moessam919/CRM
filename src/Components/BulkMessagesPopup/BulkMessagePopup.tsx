@@ -1,26 +1,27 @@
 import { useState } from "react";
 import { useAppDispatch } from "../../store/hooks";
-import { sendMessage } from "../../store/SendBulkMessage/act/actSendMessage";
+import { sendBulkMessage } from "../../store/SendBulkMessage/act/actSendMessage";
 import ReactQuill from "react-quill";
-import { ICustomers } from "../../types/customers";
 import toast from "react-hot-toast";
 import ReactHtmlParser from "html-react-parser";
+import { BulkMessageData } from "../../types/MessageData";
+import { CustomerFilters } from "../../types/customers";
 interface MessagePopupProps {
     isOpen: boolean;
     onClose: () => void;
-    customers: ICustomers[];
+    filter: CustomerFilters;
 }
 
 const BulkMessagePopup: React.FC<MessagePopupProps> = ({
     isOpen,
     onClose,
-    customers,
+    filter,
 }) => {
     const dispatch = useAppDispatch();
     const [message, setMessage] = useState("");
     const [title, setTitle] = useState("");
     const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState({ title: "", message: "" }); // Validation errors
+    const [errors, setErrors] = useState({ title: "", message: "" }); 
 
     if (!isOpen) return null;
 
@@ -50,19 +51,28 @@ const BulkMessagePopup: React.FC<MessagePopupProps> = ({
         if (!validateFields()) return;
 
         setLoading(true);
-        const recipients = customers.map((customer) => customer.id);
+
+        const filterparams: { [key: string]: string } = Object.entries(
+            filter
+        ).reduce(
+            (acc, [key, value]) => {
+                if (value !== undefined && value !== null) {
+                    acc[key] = String(value); 
+                }
+                return acc;
+            },
+            {} as { [key: string]: string }
+        );
 
         const plainTextMessage = stripHtmlTags(message);
-
-        // Send the plain text message
-        const messageData = {
-            type: "text",
+        const messageData: BulkMessageData = {
+            type: "email",
             title: title,
             content: plainTextMessage,
-            recipients: recipients,
+            filterparams: filterparams,
         };
-
-        dispatch(sendMessage(messageData));
+        
+        dispatch(sendBulkMessage(messageData));
         setLoading(false);
         onClose();
         toast.success("!تم أرسال الرسالة بنجاح");

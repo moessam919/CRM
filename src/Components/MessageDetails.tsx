@@ -68,7 +68,7 @@ const MessageDetails = () => {
 
     return (
         <div className="bg-gray-200 rounded-md p-6">
-            <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-sm">
+            <div className="mx-auto p-6 bg-white rounded-lg shadow-sm">
                 <div className="mb-8">
                     <div className="flex items-center justify-between md:mb-2">
                         <h1 className="text-xl md:text-2xl font-semibold">
