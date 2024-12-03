@@ -50,7 +50,6 @@ const CustomersCallTable: React.FC<CustomersCallTableProps> = ({
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [totalRows, setTotalRows] = useState(0);
-
     const [BulkMessagesOpen, setBulkMessagesOpen] = useState(false);
     const [bulkMessageOpen, setIsBulkMessageOpen] = useState(false);
     const [bulkEmailOpen, setIsBulkEmailOpen] = useState(false);

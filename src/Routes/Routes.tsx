@@ -7,6 +7,7 @@ import Dashboard from "../Pages/Dashboard";
 import CustomerInfo from "../Pages/CustomerInfo";
 import Messages from "../Pages/Messages";
 import MessageDetails from "../Components/MessageDetails";
+import Campain from "../Pages/Campain";
 
 const Routers = createBrowserRouter([
     {
@@ -24,6 +25,10 @@ const Routers = createBrowserRouter([
             {
                 path: "/contacts",
                 element: <Contacts />,
+            },
+            {
+                path: "/campain",
+                element: <Campain />,
             },
             {
                 path: "/messages",

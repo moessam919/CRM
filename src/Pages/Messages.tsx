@@ -59,8 +59,7 @@ const Messages = () => {
                     <div className="flex gap-2">
                         <button
                             onClick={() => navigate("/contacts")}
-                            className="px-4 py-2 border border-gray-500 hover:text-white rounded-lg hover:bg-gray-700 transition"
-                        >
+                            className="px-4 py-2 border border-gray-500 hover:text-white rounded-lg hover:bg-gray-700 transition">
                             رسالة جديدة
                         </button>
                     </div>
@@ -84,8 +83,7 @@ const Messages = () => {
                     <div className="relative">
                         <button
                             className="flex items-center gap-2 px-10 py-3 border rounded-lg hover:bg-gray-50 w-full md:w-auto justify-center"
-                            onClick={() => setShowFilterMenu(!showFilterMenu)}
-                        >
+                            onClick={() => setShowFilterMenu(!showFilterMenu)}>
                             {selectedType
                                 ? messageTypes.find(
                                       (type) => type.value === selectedType
@@ -102,8 +100,7 @@ const Messages = () => {
                                         onClick={() => {
                                             setSelectedType(type.value);
                                             setShowFilterMenu(false);
-                                        }}
-                                    >
+                                        }}>
                                         {type.label}
                                     </button>
                                 ))}

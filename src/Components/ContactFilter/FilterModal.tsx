@@ -29,6 +29,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
         no_purchases_1_month: initialFilters.no_purchases_1_month,
         no_purchases_2_month: initialFilters.no_purchases_2_month,
         no_purchases_3_month: initialFilters.no_purchases_3_month,
+        no_purchases_whithin_period: initialFilters.no_purchases_whithin_period,
         purchases_within_period_after:
             initialFilters.purchases_within_period_after || "",
         purchases_within_period_before:
@@ -63,9 +64,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 name === "max_purchase_value_within_period" ||
                 name === "min_invoice_count_within_period" ||
                 name === "max_invoice_count_within_period" ||
-                name === "no_purchases_1_month" ||
-                name === "no_purchases_2_month" ||
-                name === "no_purchases_3_month"
+                name === "no_purchases_whithin_period"
             ) {
                 updatedFilters.min_sales_value = undefined;
                 updatedFilters.max_sales_value = undefined;
@@ -113,15 +112,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-xl">
+            <div className="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-y-auto shadow-xl">
                 <div className="flex justify-between items-center p-4 border-b">
                     <h2 className="text-xl font-bold text-gray-700">
                         تصفية العملاء
                     </h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-500 hover:text-gray-700"
-                    >
+                        className="text-gray-500 hover:text-gray-700">
                         <X size={24} />
                     </button>
                 </div>
@@ -136,8 +134,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                             name="customer_type"
                             value={filters.customer_type || ""}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100"
-                        >
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 duration-100">
                             <option value="">جميع الأنواع</option>
                             <option value="b2b">شركات</option>
                             <option value="b2c">أفراد</option>
@@ -261,27 +258,82 @@ const FilterModal: React.FC<FilterModalProps> = ({
                         />
                     </div>
 
-                    {/* No Purchases */}
-                    <div>
-                        <label className="flex items-center">
-                            <input
-                                type="checkbox"
-                                name="no_purchases"
-                                checked={filters.no_purchases || false}
-                                onChange={handleInputChange}
-                                className="ml-2 rounded focus:outline-none"
-                            />
-                            <span className="text-sm text-gray-700">
-                                العملاء الذين لم يشتروا
-                            </span>
-                        </label>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    name="no_purchases"
+                                    checked={filters.no_purchases || false}
+                                    onChange={handleInputChange}
+                                    className="ml-2 rounded focus:outline-none"
+                                />
+                                <span className="text-sm text-gray-700">
+                                    العملاء الذين لم يشتروا
+                                </span>
+                            </label>
+                        </div>
+
+                        {/* No Purchases for 1 Month */}
+                        <div>
+                            <label className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    name="no_purchases_1_month"
+                                    checked={
+                                        filters.no_purchases_1_month || false
+                                    }
+                                    onChange={handleInputChange}
+                                    className="ml-2 rounded focus:outline-none"
+                                />
+                                <span className="text-sm text-gray-700">
+                                    العملاء الذين لم يشتروا منذ شهر
+                                </span>
+                            </label>
+                        </div>
+
+                        {/* No Purchases for 2 Month */}
+                        <div>
+                            <label className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    name="no_purchases_2_month"
+                                    checked={
+                                        filters.no_purchases_2_month || false
+                                    }
+                                    onChange={handleInputChange}
+                                    className="ml-2 rounded focus:outline-none"
+                                />
+                                <span className="text-sm text-gray-700">
+                                    العملاء الذين لم يشتروا منذ شهرين
+                                </span>
+                            </label>
+                        </div>
+
+                        {/* No Purchases for 3 Month */}
+                        <div>
+                            <label className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    name="no_purchases_3_month"
+                                    checked={
+                                        filters.no_purchases_3_month || false
+                                    }
+                                    onChange={handleInputChange}
+                                    className="ml-2 rounded focus:outline-none"
+                                />
+                                <span className="text-sm text-gray-700">
+                                    العملاء الذين لم يشتروا منذ ثلاث اشهر
+                                </span>
+                            </label>
+                        </div>
                     </div>
+                    {/* No Purchases */}
 
                     <div>
                         <div
                             className="flex items-center gap-2 cursor-pointer w-fit font-bold text-gray-500 mb-4"
-                            onClick={() => setTimeMoldalOpen(!timeModalOpen)}
-                        >
+                            onClick={() => setTimeMoldalOpen(!timeModalOpen)}>
                             <h2 className="text-xl">تصفية عن طريق مدة معينة</h2>
                             <ChevronDown
                                 size={25}
@@ -401,60 +453,22 @@ const FilterModal: React.FC<FilterModalProps> = ({
                                     </div>
                                 </div>
 
-                                {/* No Purchases for 1 Month */}
+                                {/* no purchases whithin period */}
                                 <div>
                                     <label className="flex items-center">
                                         <input
                                             type="checkbox"
-                                            name="no_purchases_1_month"
+                                            name="no_purchases_whithin_period"
                                             checked={
-                                                filters.no_purchases_1_month ||
+                                                filters.no_purchases_whithin_period ||
                                                 false
                                             }
                                             onChange={handleInputChange}
                                             className="ml-2 rounded focus:outline-none"
                                         />
                                         <span className="text-sm text-gray-700">
-                                            العملاء الذين لم يشتروا منذ شهر
-                                        </span>
-                                    </label>
-                                </div>
-
-                                {/* No Purchases for 2 Month */}
-                                <div>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            name="no_purchases_2_month"
-                                            checked={
-                                                filters.no_purchases_2_month ||
-                                                false
-                                            }
-                                            onChange={handleInputChange}
-                                            className="ml-2 rounded focus:outline-none"
-                                        />
-                                        <span className="text-sm text-gray-700">
-                                            العملاء الذين لم يشتروا منذ شهرين
-                                        </span>
-                                    </label>
-                                </div>
-
-                                {/* No Purchases for 3 Month */}
-                                <div>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            name="no_purchases_3_month"
-                                            checked={
-                                                filters.no_purchases_3_month ||
-                                                false
-                                            }
-                                            onChange={handleInputChange}
-                                            className="ml-2 rounded focus:outline-none"
-                                        />
-                                        <span className="text-sm text-gray-700">
-                                            العملاء الذين لم يشتروا منذ ثلاث
-                                            اشهر
+                                            العملاء الذين لم يشتروا في هذه
+                                            الفترة
                                         </span>
                                     </label>
                                 </div>
@@ -466,14 +480,12 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     <div className="flex justify-end gap-4 ">
                         <button
                             onClick={handleSubmit}
-                            className="px-4 py-2 border hover:bg-gray-500 hover:text-white rounded-md duration-150"
-                        >
+                            className="px-4 py-2 border hover:bg-gray-500 hover:text-white rounded-md duration-150">
                             تطبيق التصفية
                         </button>
                         <button
                             onClick={resetFilters}
-                            className="px-4 py-2 border hover:bg-gray-300 rounded-md duration-150"
-                        >
+                            className="px-4 py-2 border hover:bg-gray-300 rounded-md duration-150">
                             إعادة ضبط التصفية
                         </button>
                     </div>

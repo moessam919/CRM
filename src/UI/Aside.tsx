@@ -1,8 +1,7 @@
 import {
-    ChartPie,
-    Handshake,
     LayoutDashboard,
     Mails,
+    Megaphone,
     SquareUserRound,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
@@ -28,8 +27,7 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 ${isMobile ? "fixed right-0" : "fixed"}
                 ${isVisible ? "translate-x-0" : "translate-x-full"}
                 top-0 bottom-0 z-50
-            `}
-        >
+            `}>
             <div className="mt-4 border-b-2 border-gray-300 w-full flex flex-col items-center">
                 <div className="my-4 text-xl md:text-4xl font-bold">CRM</div>
             </div>
@@ -43,8 +41,7 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 <NavLink
                     to="/contacts"
                     onClick={onNavClick}
-                    className={linkClasses}
-                >
+                    className={linkClasses}>
                     <SquareUserRound />
                     <span>الاتصال</span>
                 </NavLink>
@@ -52,13 +49,20 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 <NavLink
                     to="/messages"
                     onClick={onNavClick}
-                    className={linkClasses}
-                >
+                    className={linkClasses}>
                     <Mails />
                     <span>الرسائل</span>
                 </NavLink>
 
                 <NavLink
+                    to="/campain"
+                    onClick={onNavClick}
+                    className={linkClasses}>
+                    <Megaphone />
+                    <span>الحملات</span>
+                </NavLink>
+
+                {/* <NavLink
                     to="/customers"
                     onClick={onNavClick}
                     className={linkClasses}
@@ -74,7 +78,7 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 >
                     <Handshake />
                     <span>Lead</span>
-                </NavLink>
+                </NavLink> */}
             </nav>
         </aside>
     );

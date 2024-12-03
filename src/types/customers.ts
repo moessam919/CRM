@@ -40,6 +40,7 @@ export interface CustomerFilters {
     no_purchases_1_month?: boolean;
     no_purchases_2_month?: boolean;
     no_purchases_3_month?: boolean;
+    no_purchases_whithin_period?: boolean;
     purchases_within_period_after?: string;
     purchases_within_period_before?: string;
     min_purchase_value_within_period?: number;
