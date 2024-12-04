@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Plus, Trash, ArrowDown } from "lucide-react";
 import MultiSelectProducts from "./MultiSelectProductProps";
+import MultiSelectProductCategories from "./MultiSelectProductCategories";
+import { ProductCategory } from "../../store/MatricsProducts/ProductCategorySlice";
+import { useDispatch } from "react-redux";
+import { createCampaign } from "../../store/MatricsProducts/act/CampaignActions";
+import { AppDispatch } from "../../store/store";
+import toast from "react-hot-toast";
 
 interface Metric {
     id: number;
@@ -10,7 +16,7 @@ interface Metric {
     selectedProducts?: number[];
     isOpen: boolean;
     isOpenType: boolean;
-    selectedCategory?: string;
+    selectedCategories?: number[];
     isOpenProduct?: boolean;
     isOpenCategory?: boolean;
 }
@@ -20,16 +26,22 @@ interface CreateCampaignModalProps {
 }
 
 const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
+    const dispatch = useDispatch<AppDispatch>();
+    const [campaignName, setCampaignName] = useState("");
+    const [campaignDescription, setCampaignDescription] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
     const [metrics, setMetrics] = useState<Metric[]>([
         {
             id: Date.now(),
             name: "",
-            type: "Integer",
+            type: "integer",
             targetValue: "",
             selectedProducts: [],
             isOpen: false,
             isOpenType: false,
-            selectedCategory: undefined,
+            selectedCategories: [],
             isOpenProduct: false,
             isOpenCategory: false,
         },
@@ -41,23 +53,17 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
             {
                 id: Date.now(),
                 name: "",
-                type: "Integer",
+                type: "integer",
                 targetValue: "",
                 selectedProducts: [],
                 isOpen: false,
                 isOpenType: false,
-                selectedCategory: undefined,
+                selectedCategories: [],
                 isOpenProduct: false,
                 isOpenCategory: false,
             },
         ]);
     };
-
-    const categories = [
-        { value: "category_1", label: "الفئة 1" },
-        { value: "category_2", label: "الفئة 2" },
-        { value: "category_3", label: "الفئة 3" },
-    ];
 
     const metricOptions = [
         { value: "total_sales_value", label: "إجمالي قيمة المبيعات" },
@@ -85,10 +91,166 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
         );
     };
 
+    const handleTargetValueChange = (
+        metricId: number,
+        value: string,
+        type: string
+    ) => {
+        // Remove any non-numeric characters except decimal point
+        const numericValue = value.replace(/[^\d.]/g, "");
+
+        // For percentage, ensure value is between 0 and 100
+        if (type === "percentage") {
+            const number = parseFloat(numericValue);
+            if (!isNaN(number)) {
+                if (number > 100) {
+                    updateMetric(metricId, "targetValue", "100");
+                    return;
+                }
+            }
+        }
+
+        // Ensure only one decimal point
+        const parts = numericValue.split(".");
+        if (parts.length > 2) {
+            return;
+        }
+
+        // Update the value
+        updateMetric(metricId, "targetValue", numericValue);
+    };
+
+    // periods
+    const [periods, setPeriods] = useState<
+        { startDate: string; endDate: string }[]
+    >([{ startDate: "", endDate: "" }]);
+
+    const handleAddPeriod = () => {
+        setPeriods([...periods, { startDate: "", endDate: "" }]);
+    };
+
+    const handleRemovePeriod = (index: number) => {
+        setPeriods(periods.filter((_, i) => i !== index));
+    };
+
+    const handlePeriodChange = (
+        index: number,
+        field: "startDate" | "endDate",
+        value: string
+    ) => {
+        const newPeriods = [...periods];
+        const currentPeriod = newPeriods[index];
+
+        if (field === "startDate") {
+            // If setting start date, clear end date if it's before the new start date
+            if (currentPeriod.endDate && currentPeriod.endDate < value) {
+                currentPeriod.endDate = "";
+            }
+            currentPeriod.startDate = value;
+        } else {
+            // If setting end date, ensure it's after start date
+            if (!currentPeriod.startDate || value >= currentPeriod.startDate) {
+                currentPeriod.endDate = value;
+            }
+        }
+
+        setPeriods(newPeriods);
+    };
+
+    const isMetricsValid = () => {
+        return metrics.every((metric) => {
+            // Check if name is selected
+            if (!metric.name) return false;
+
+            // Check if target value is provided and valid
+            if (!metric.targetValue) return false;
+
+            // For products metric, check if products are selected
+            if (
+                metric.name === "sales_of_specific_products" &&
+                (!metric.selectedProducts ||
+                    metric.selectedProducts.length === 0)
+            ) {
+                return false;
+            }
+
+            // For category metric, check if categories are selected
+            if (
+                metric.name === "sales_of_category" &&
+                (!metric.selectedCategories ||
+                    metric.selectedCategories.length === 0)
+            ) {
+                return false;
+            }
+
+            return true;
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Additional validation check
+        if (!isMetricsValid()) {
+            toast.error("الرجاء ملء اهداف الحملة");
+            return;
+        }
+
+        // Transform metrics to required format
+        const transformedMetrics = metrics.map((metric) => ({
+            name: metric.name,
+            type: metric.type.toLowerCase(),
+            value: metric.targetValue,
+            additional_fields: {
+                ...(metric.selectedProducts &&
+                    metric.selectedProducts.length > 0 && {
+                        products: metric.selectedProducts,
+                    }),
+                ...(metric.selectedCategories &&
+                    metric.selectedCategories.length > 0 && {
+                        categories: metric.selectedCategories,
+                    }),
+            },
+        }));
+
+        // Transform periods to match the API format
+        const transformedPeriods = periods
+            .filter((period) => period.startDate && period.endDate)
+            .map((period) => ({
+                start_date: `${period.startDate} 00:00:00`,
+                end_date: `${period.endDate} 23:59:59`,
+            }));
+
+        // Prepare the payload
+        const payload = {
+            name: campaignName,
+            description: campaignDescription,
+            start_date: `${startDate} 00:00:00`,
+            end_date: `${endDate} 23:59:59`,
+            metrics: transformedMetrics,
+            ...(transformedPeriods.length > 0 && {
+                comparison_periods: transformedPeriods,
+            }),
+        };
+
+        console.log(payload);
+
+        try {
+            const result = await dispatch(createCampaign(payload)).unwrap();
+            if (result) {
+                onClose();
+                toast.success("تم اضافة الحملة بنجاح!");
+            }
+        } catch (error) {
+            console.error("Error creating campaign:", error);
+            toast.error(`حدث خطأ في انشاء الحملة: ${error}`);
+        }
+    };
+
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start overflow-y-auto py-4 z-50">
             {/* The modal container */}
-            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl relative">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl mx-4">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold">إنشاء حملة جديدة</h2>
                     {/* Close button */}
@@ -99,7 +261,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                     </button>
                 </div>
 
-                <form>
+                <form onSubmit={handleSubmit}>
                     {/* Campaign Name */}
                     <div className="mb-4">
                         <label className="block text-gray-700 mb-2">
@@ -107,7 +269,10 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                         </label>
                         <input
                             type="text"
+                            value={campaignName}
+                            onChange={(e) => setCampaignName(e.target.value)}
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            required
                         />
                     </div>
 
@@ -117,28 +282,40 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                             الوصف
                         </label>
                         <textarea
+                            value={campaignDescription}
+                            onChange={(e) =>
+                                setCampaignDescription(e.target.value)
+                            }
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-                            rows={4}></textarea>
+                            required
+                        />
                     </div>
 
-                    {/* Start and End Dates */}
-                    <div className="mb-6 flex gap-4">
-                        <div className="flex-1">
+                    {/* Campaign Dates */}
+                    <div className="mb-4 grid grid-cols-2 gap-4">
+                        <div>
                             <label className="block text-gray-700 mb-2">
                                 تاريخ البداية
                             </label>
                             <input
                                 type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                required
                             />
                         </div>
-                        <div className="flex-1">
+                        <div>
                             <label className="block text-gray-700 mb-2">
                                 تاريخ النهاية
                             </label>
                             <input
                                 type="date"
+                                value={endDate}
+                                min={startDate}
+                                onChange={(e) => setEndDate(e.target.value)}
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                required
                             />
                         </div>
                     </div>
@@ -260,62 +437,19 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                                         <label className="block text-gray-700 mb-2">
                                             اختر الفئة
                                         </label>
-                                        <div className="relative">
-                                            <button
-                                                type="button"
-                                                className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-50 w-full justify-between"
-                                                onClick={() =>
-                                                    updateMetric(
-                                                        metric.id,
-                                                        "isOpenCategory",
-                                                        !metric.isOpenCategory
+                                        <MultiSelectProductCategories
+                                            onCategoriesSelect={(
+                                                categories: ProductCategory[]
+                                            ) => {
+                                                updateMetric(
+                                                    metric.id,
+                                                    "selectedCategories",
+                                                    categories.map(
+                                                        (cat) => cat.id
                                                     )
-                                                }>
-                                                <span>
-                                                    {metric.selectedCategory
-                                                        ? categories.find(
-                                                              (category) =>
-                                                                  category.value ===
-                                                                  metric.selectedCategory
-                                                          )?.label
-                                                        : "اختر الفئة"}
-                                                </span>
-                                                <ArrowDown
-                                                    className={`w-4 h-4 transform transition-transform ${
-                                                        metric.isOpenCategory
-                                                            ? "rotate-180"
-                                                            : ""
-                                                    }`}
-                                                />
-                                            </button>
-                                            {metric.isOpenCategory && (
-                                                <div className="absolute left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
-                                                    {categories.map(
-                                                        (category) => (
-                                                            <div
-                                                                key={
-                                                                    category.value
-                                                                }
-                                                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                                                onClick={() => {
-                                                                    updateMetric(
-                                                                        metric.id,
-                                                                        "selectedCategory",
-                                                                        category.value
-                                                                    );
-                                                                    updateMetric(
-                                                                        metric.id,
-                                                                        "isOpenCategory",
-                                                                        false
-                                                                    );
-                                                                }}>
-                                                                {category.label}
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
+                                                );
+                                            }}
+                                        />
                                     </div>
                                 )}
 
@@ -336,7 +470,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                                                     )
                                                 }>
                                                 <span>
-                                                    {metric.type === "Integer"
+                                                    {metric.type === "integer"
                                                         ? "رقم"
                                                         : "نسبة مئوية"}
                                                 </span>
@@ -352,11 +486,11 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                                                 <div className="absolute left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
                                                     {[
                                                         {
-                                                            value: "Integer",
+                                                            value: "integer",
                                                             label: "رقم",
                                                         },
                                                         {
-                                                            value: "Decimal",
+                                                            value: "percentage",
                                                             label: "نسبة مئوية",
                                                         },
                                                     ].map((option) => (
@@ -390,11 +524,22 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                                             type="text"
                                             value={metric.targetValue}
                                             onChange={(e) =>
-                                                updateMetric(
+                                                handleTargetValueChange(
                                                     metric.id,
-                                                    "targetValue",
-                                                    e.target.value
+                                                    e.target.value,
+                                                    metric.type
                                                 )
+                                            }
+                                            step={
+                                                metric.type === "percentage"
+                                                    ? "0.01"
+                                                    : "1"
+                                            }
+                                            min="0"
+                                            max={
+                                                metric.type === "percentage"
+                                                    ? "100"
+                                                    : undefined
                                             }
                                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                                         />
@@ -402,6 +547,86 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                                 </div>
                             </div>
                         ))}
+                    </div>
+
+                    {/* data  */}
+                    <div className="mb-4">
+                        <div className="flex justify-between items-center">
+                            <label className="block text-gray-700 text-xl">
+                                فترات للمقارنة
+                            </label>
+                            <button
+                                type="button"
+                                onClick={handleAddPeriod}
+                                className="px-2 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 duration-150 flex items-center gap-1">
+                                إضافة فترة
+                                <Plus size={20} />
+                            </button>
+                        </div>
+                        <div className="mt-4 space-y-4">
+                            {periods.map((period, index) => (
+                                <div
+                                    key={index}
+                                    className="flex items-center gap-4">
+                                    <div className="flex-1">
+                                        <label className="block text-sm text-gray-600 mb-1">
+                                            تاريخ البداية
+                                        </label>
+                                        <input
+                                            type="date"
+                                            value={period.startDate}
+                                            min={
+                                                new Date()
+                                                    .toISOString()
+                                                    .split("T")[0]
+                                            }
+                                            onChange={(e) =>
+                                                handlePeriodChange(
+                                                    index,
+                                                    "startDate",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="w-full p-2 border rounded-md"
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className="block text-sm text-gray-600 mb-1">
+                                            تاريخ النهاية
+                                        </label>
+                                        <input
+                                            type="date"
+                                            value={period.endDate}
+                                            min={
+                                                period.startDate ||
+                                                new Date()
+                                                    .toISOString()
+                                                    .split("T")[0]
+                                            }
+                                            onChange={(e) =>
+                                                handlePeriodChange(
+                                                    index,
+                                                    "endDate",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="w-full p-2 border rounded-md"
+                                        />
+                                    </div>
+
+                                    {index > 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleRemovePeriod(index)
+                                            }
+                                            className="mt-6 p-2 text-red-500 hover:bg-red-50 rounded-md">
+                                            <Trash size={20} />
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Buttons */}

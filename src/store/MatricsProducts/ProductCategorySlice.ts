@@ -12,14 +12,14 @@ export interface ProductCategory {
 interface ProductCategoryState {
     categories: ProductCategory[];
     selectedCategories: ProductCategory[];
-    loading: boolean;
+    loading: "idle" | "pending" | "succeeded" | "failed";
     error: null | string;
 }
 
 const initialState: ProductCategoryState = {
     categories: [],
     selectedCategories: [],
-    loading: false,
+    loading: "idle",
     error: null,
 };
 
@@ -38,28 +38,26 @@ const ProductCategorySlice = createSlice({
                 (category) => category.id !== action.payload
             );
         },
-        clearSelectedCategories: (state) => {
-            state.selectedCategories = [];
-        },
     },
     extraReducers: (builder) => {
         builder
             .addCase(actGetProductCategories.pending, (state) => {
-                state.loading = true;
+                state.loading = "pending";
                 state.error = null;
             })
             .addCase(actGetProductCategories.fulfilled, (state, action) => {
-                state.loading = false;
-                state.categories = action.payload.data;
+                state.loading = "succeeded";
+                state.categories = action.payload;
             })
             .addCase(actGetProductCategories.rejected, (state, action) => {
-                state.loading = false;
+                state.loading = "failed";
                 state.error = action.payload as string;
+                state.categories = [];
             });
     },
 });
 
-export const { addSelectedCategory, removeSelectedCategory, clearSelectedCategories } =
+export const { addSelectedCategory, removeSelectedCategory } =
     ProductCategorySlice.actions;
 
 export default ProductCategorySlice.reducer;

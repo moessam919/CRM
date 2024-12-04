@@ -10,6 +10,8 @@ import SalesChart from "./SalesChartData/SalesChartSlice";
 import searchCustomer from "./Customers/searchCustomemrSlice";
 import Message from "./SendBulkMessage/messageSlice";
 import products from "./MatricsProducts/ProductsSlice";
+import productCategories from "./MatricsProducts/ProductCategorySlice";
+import campaign from "./MatricsProducts/CampaignSlice";
 
 export const store = configureStore({
     reducer: {
@@ -24,6 +26,8 @@ export const store = configureStore({
         searchCustomer,
         Message,
         products,
+        productCategories,
+        campaign,
     },
 });
 
