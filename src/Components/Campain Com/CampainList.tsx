@@ -82,7 +82,6 @@ const CampainList = () => {
                     <CampaignOverview />
                 </div>
 
-                {/* Open modal when button is clicked */}
                 {isModalOpen && (
                     <CreateCampaignModal onClose={handleCloseModal} />
                 )}

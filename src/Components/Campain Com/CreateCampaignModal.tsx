@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { Plus, Trash, ArrowDown } from "lucide-react";
+import MultiSelectProducts from "./MultiSelectProductProps";
 
 interface Metric {
     id: number;
     name: string;
     type: string;
     targetValue: string;
+    selectedProducts?: number[];
     isOpen: boolean;
+    isOpenType: boolean;
+    selectedCategory?: string;
+    isOpenProduct?: boolean;
+    isOpenCategory?: boolean;
 }
 
 interface CreateCampaignModalProps {
@@ -20,7 +26,12 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
             name: "",
             type: "Integer",
             targetValue: "",
+            selectedProducts: [],
             isOpen: false,
+            isOpenType: false,
+            selectedCategory: undefined,
+            isOpenProduct: false,
+            isOpenCategory: false,
         },
     ]);
 
@@ -32,10 +43,21 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                 name: "",
                 type: "Integer",
                 targetValue: "",
+                selectedProducts: [],
                 isOpen: false,
+                isOpenType: false,
+                selectedCategory: undefined,
+                isOpenProduct: false,
+                isOpenCategory: false,
             },
         ]);
     };
+
+    const categories = [
+        { value: "category_1", label: "الفئة 1" },
+        { value: "category_2", label: "الفئة 2" },
+        { value: "category_3", label: "الفئة 3" },
+    ];
 
     const metricOptions = [
         { value: "total_sales_value", label: "إجمالي قيمة المبيعات" },
@@ -54,10 +76,10 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
     const updateMetric = <K extends keyof Metric>(
         id: number,
         field: K,
-        value: Metric[K]
+        value: K extends "selectedProducts" ? number[] : Metric[K]
     ) => {
-        setMetrics(
-            metrics.map((metric) =>
+        setMetrics((prevMetrics) =>
+            prevMetrics.map((metric) =>
                 metric.id === id ? { ...metric, [field]: value } : metric
             )
         );
@@ -153,7 +175,6 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                                             <Trash size={20} />
                                         </button>
                                     </div>
-                                    {/* Replace select with custom dropdown */}
                                     <div className="relative">
                                         <button
                                             type="button"
@@ -207,26 +228,159 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                                         )}
                                     </div>
                                 </div>
+
+                                {/* Conditionally Render Product or Category Select */}
+                                {metric.name ===
+                                    "sales_of_specific_products" && (
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 mb-2">
+                                            اختر المنتج
+                                        </label>
+                                        <MultiSelectProducts
+                                            onProductsSelect={(
+                                                selectedProducts
+                                            ) => {
+                                                // Update the metric with the selected product IDs
+                                                const productIds =
+                                                    selectedProducts.map(
+                                                        (product) => product.id
+                                                    );
+                                                updateMetric(
+                                                    metric.id,
+                                                    "selectedProducts",
+                                                    productIds
+                                                );
+                                            }}
+                                        />
+                                    </div>
+                                )}
+
+                                {metric.name === "sales_of_category" && (
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 mb-2">
+                                            اختر الفئة
+                                        </label>
+                                        <div className="relative">
+                                            <button
+                                                type="button"
+                                                className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-50 w-full justify-between"
+                                                onClick={() =>
+                                                    updateMetric(
+                                                        metric.id,
+                                                        "isOpenCategory",
+                                                        !metric.isOpenCategory
+                                                    )
+                                                }>
+                                                <span>
+                                                    {metric.selectedCategory
+                                                        ? categories.find(
+                                                              (category) =>
+                                                                  category.value ===
+                                                                  metric.selectedCategory
+                                                          )?.label
+                                                        : "اختر الفئة"}
+                                                </span>
+                                                <ArrowDown
+                                                    className={`w-4 h-4 transform transition-transform ${
+                                                        metric.isOpenCategory
+                                                            ? "rotate-180"
+                                                            : ""
+                                                    }`}
+                                                />
+                                            </button>
+                                            {metric.isOpenCategory && (
+                                                <div className="absolute left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
+                                                    {categories.map(
+                                                        (category) => (
+                                                            <div
+                                                                key={
+                                                                    category.value
+                                                                }
+                                                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                                onClick={() => {
+                                                                    updateMetric(
+                                                                        metric.id,
+                                                                        "selectedCategory",
+                                                                        category.value
+                                                                    );
+                                                                    updateMetric(
+                                                                        metric.id,
+                                                                        "isOpenCategory",
+                                                                        false
+                                                                    );
+                                                                }}>
+                                                                {category.label}
+                                                            </div>
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="flex gap-4">
                                     <div className="flex-1">
                                         <label className="block text-gray-700 mb-2">
                                             النوع
                                         </label>
-                                        <select
-                                            value={metric.type}
-                                            onChange={(e) =>
-                                                updateMetric(
-                                                    metric.id,
-                                                    "type",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500">
-                                            <option value="Integer">رقم</option>
-                                            <option value="Decimal">
-                                                نسبة مئوية
-                                            </option>
-                                        </select>
+                                        <div className="relative">
+                                            <button
+                                                type="button"
+                                                className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-50 w-full justify-between"
+                                                onClick={() =>
+                                                    updateMetric(
+                                                        metric.id,
+                                                        "isOpenType",
+                                                        !metric.isOpenType
+                                                    )
+                                                }>
+                                                <span>
+                                                    {metric.type === "Integer"
+                                                        ? "رقم"
+                                                        : "نسبة مئوية"}
+                                                </span>
+                                                <ArrowDown
+                                                    className={`w-4 h-4 transform transition-transform ${
+                                                        metric.isOpenType
+                                                            ? "rotate-180"
+                                                            : ""
+                                                    }`}
+                                                />
+                                            </button>
+                                            {metric.isOpenType && (
+                                                <div className="absolute left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
+                                                    {[
+                                                        {
+                                                            value: "Integer",
+                                                            label: "رقم",
+                                                        },
+                                                        {
+                                                            value: "Decimal",
+                                                            label: "نسبة مئوية",
+                                                        },
+                                                    ].map((option) => (
+                                                        <div
+                                                            key={option.value}
+                                                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                            onClick={() => {
+                                                                updateMetric(
+                                                                    metric.id,
+                                                                    "type",
+                                                                    option.value
+                                                                );
+                                                                updateMetric(
+                                                                    metric.id,
+                                                                    "isOpenType",
+                                                                    false
+                                                                );
+                                                            }}>
+                                                            {option.label}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="flex-1">
                                         <label className="block text-gray-700 mb-2">
