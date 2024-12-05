@@ -623,7 +623,7 @@ const CreateCampaignModal = () => {
                     <div className="flex justify-end gap-2">
                         <button
                             type="submit"
-                            className="px-4 py-2 border hover:text-white rounded-md hover:bg-gray-600 duration-150">
+                            className="px-6 py-2 border hover:text-white rounded-md hover:bg-gray-600 duration-150">
                             إنشاء
                         </button>
                     </div>
