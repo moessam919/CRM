@@ -1,12 +1,12 @@
 import { ArrowDown, Plus, Search } from "lucide-react";
 import { useState } from "react";
 import CampaignOverview from "./CampaignOverview";
-import CreateCampaignModal from "./CreateCampaignModal";
+import { useNavigate } from "react-router-dom";
 
 const CampainList = () => {
+    const navigate = useNavigate();
     const [selectedStatus, setSelectedStatus] = useState("جميع الحالات");
     const [isOpen, setIsOpen] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const statusOptions = ["جميع الحالات", "نشط", "مسودة", "مكتمل"];
 
@@ -17,14 +17,6 @@ const CampainList = () => {
     const handleStatusSelect = (status: string) => {
         setSelectedStatus(status);
         setIsOpen(false);
-    };
-
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
     };
 
     return (
@@ -70,7 +62,7 @@ const CampainList = () => {
 
                     <div>
                         <button
-                            onClick={handleOpenModal}
+                            onClick={() => navigate("/create-campaign")}
                             className="px-4 py-3 border hover:text-white rounded-md hover:bg-gray-600 duration-150 flex gap-2">
                             انشاء حملة
                             <Plus />
@@ -81,10 +73,6 @@ const CampainList = () => {
                 <div className="max-h-[270px] min-h-[270px] overflow-auto">
                     <CampaignOverview />
                 </div>
-
-                {isModalOpen && (
-                    <CreateCampaignModal onClose={handleCloseModal} />
-                )}
             </div>
         </>
     );

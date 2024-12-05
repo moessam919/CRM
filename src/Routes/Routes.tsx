@@ -8,6 +8,7 @@ import CustomerInfo from "../Pages/CustomerInfo";
 import Messages from "../Pages/Messages";
 import MessageDetails from "../Components/MessageDetails";
 import Campain from "../Pages/Campain";
+import CreateCampaignModal from "../Components/Campain Com/CreateCampaignModal";
 
 const Routers = createBrowserRouter([
     {
@@ -23,12 +24,20 @@ const Routers = createBrowserRouter([
                 element: <Customers />,
             },
             {
+                path: "/customer/:id",
+                element: <CustomerInfo />,
+            },
+            {
                 path: "/contacts",
                 element: <Contacts />,
             },
             {
-                path: "/campain",
+                path: "/campaign",
                 element: <Campain />,
+            },
+            {
+                path: "/create-campaign",
+                element: <CreateCampaignModal />,
             },
             {
                 path: "/messages",
@@ -41,10 +50,6 @@ const Routers = createBrowserRouter([
             {
                 path: "/leads",
                 element: <Leads />,
-            },
-            {
-                path: "/customer/:id",
-                element: <CustomerInfo />,
             },
         ],
     },

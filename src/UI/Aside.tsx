@@ -55,7 +55,7 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 </NavLink>
 
                 <NavLink
-                    to="/campain"
+                    to="/campaign"
                     onClick={onNavClick}
                     className={linkClasses}>
                     <Megaphone />

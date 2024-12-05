@@ -21,11 +21,7 @@ interface Metric {
     isOpenCategory?: boolean;
 }
 
-interface CreateCampaignModalProps {
-    onClose: () => void;
-}
-
-const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
+const CreateCampaignModal = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [campaignName, setCampaignName] = useState("");
     const [campaignDescription, setCampaignDescription] = useState("");
@@ -238,7 +234,6 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
         try {
             const result = await dispatch(createCampaign(payload)).unwrap();
             if (result) {
-                onClose();
                 toast.success("تم اضافة الحملة بنجاح!");
             }
         } catch (error) {
@@ -248,21 +243,16 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start overflow-y-auto py-4 z-50">
+        <div className="bg-gray-200 min-h-[795px] rounded-md p-6">
             {/* The modal container */}
-            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl mx-4">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold">إنشاء حملة جديدة</h2>
-                    {/* Close button */}
-                    <button
-                        className="text-gray-60 hover:text-red-600 duration-150"
-                        onClick={onClose}>
-                        ✕
-                    </button>
                 </div>
 
                 <form onSubmit={handleSubmit}>
                     {/* Campaign Name */}
+
                     <div className="mb-4">
                         <label className="block text-gray-700 mb-2">
                             اسم الحملة
@@ -631,12 +621,6 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
 
                     {/* Buttons */}
                     <div className="flex justify-end gap-2">
-                        <button
-                            type="button"
-                            className="px-4 py-2 border rounded-md hover:bg-gray-400"
-                            onClick={onClose}>
-                            إلغاء
-                        </button>
                         <button
                             type="submit"
                             className="px-4 py-2 border hover:text-white rounded-md hover:bg-gray-600 duration-150">
