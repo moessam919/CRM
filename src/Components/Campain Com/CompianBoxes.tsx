@@ -1,54 +1,25 @@
-import { CalendarFold, Target, TrendingUp, Users } from "lucide-react";
+import { CalendarFold, FileText } from "lucide-react";
+import { CampaignSummary } from "../../store/Campaigns/type/CampaignType";
 
-const CompianBoxes = () => {
+interface CompianBoxesProps {
+    campaignSummary: CampaignSummary | null;
+}
+
+const CompianBoxes = ({ campaignSummary }: CompianBoxesProps) => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5">
             <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
                 <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xl text-gray-500 font-bold">
-                        الحملات النشطة
-                    </h3>
+                    <h3 className="text-xl text-gray-500 font-bold">إجمالي</h3>
                     <div className="text-gray-500">
-                        <TrendingUp />
+                        {" "}
+                        <FileText className="w-6 h-6" />
                     </div>
                 </div>
                 <div className="mt-3">
-                    <p className="text-3xl font-bold mb-1">5</p>
-                    {/* <span className="text-green-500 text-xs font-bold">
-                +20% من الشهر السابق
-            </span> */}
-                </div>
-            </div>
-            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
-                <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xl text-gray-500 font-bold">
-                        إجمالي الإيرادات
-                    </h3>
-                    <div className="text-gray-500">
-                        <Target />
-                    </div>
-                </div>
-                <div className="mt-3">
-                    <p className="text-3xl font-bold mb-1">2500 ريال </p>
-                    {/* <span className="text-green-500 text-xs font-bold">
-                +20% من الشهر السابق
-            </span> */}
-                </div>
-            </div>
-            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
-                <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xl text-gray-500 font-bold">
-                        العملاء الجدد
-                    </h3>
-                    <div className="text-gray-500">
-                        <Users />
-                    </div>
-                </div>
-                <div className="mt-3">
-                    <p className="text-3xl font-bold mb-1">265</p>
-                    {/* <span className="text-green-500 text-xs font-bold">
-                +20% من الشهر السابق
-            </span> */}
+                    <p className="text-3xl font-bold mb-1">
+                        {campaignSummary?.total_campaigns || 0}
+                    </p>
                 </div>
             </div>
             <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
@@ -57,14 +28,13 @@ const CompianBoxes = () => {
                         حملات هذا الشهر
                     </h3>
                     <div className="text-gray-500">
-                        <CalendarFold />
+                        <CalendarFold className="w-6 h-6" />
                     </div>
                 </div>
                 <div className="mt-3">
-                    <p className="text-3xl font-bold mb-1">9</p>
-                    {/* <span className="text-green-500 text-xs font-bold">
-                +20% من الشهر السابق
-            </span> */}
+                    <p className="text-3xl font-bold mb-1">
+                        {campaignSummary?.this_month_campaigns_count || 0}
+                    </p>
                 </div>
             </div>
         </div>

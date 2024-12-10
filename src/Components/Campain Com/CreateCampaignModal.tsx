@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { createCampaign } from "../../store/MatricsProducts/act/CampaignActions";
 import { AppDispatch } from "../../store/store";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface Metric {
     id: number;
@@ -22,6 +23,7 @@ interface Metric {
 }
 
 const CreateCampaignModal = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [campaignName, setCampaignName] = useState("");
     const [campaignDescription, setCampaignDescription] = useState("");
@@ -161,24 +163,6 @@ const CreateCampaignModal = () => {
             // Check if target value is provided and valid
             if (!metric.targetValue) return false;
 
-            // For products metric, check if products are selected
-            if (
-                metric.name === "sales_of_specific_products" &&
-                (!metric.selectedProducts ||
-                    metric.selectedProducts.length === 0)
-            ) {
-                return false;
-            }
-
-            // For category metric, check if categories are selected
-            if (
-                metric.name === "sales_of_category" &&
-                (!metric.selectedCategories ||
-                    metric.selectedCategories.length === 0)
-            ) {
-                return false;
-            }
-
             return true;
         });
     };
@@ -229,12 +213,31 @@ const CreateCampaignModal = () => {
             }),
         };
 
-        console.log(payload);
-
         try {
             const result = await dispatch(createCampaign(payload)).unwrap();
             if (result) {
                 toast.success("تم اضافة الحملة بنجاح!");
+                // Reset all form data
+                setCampaignName("");
+                setCampaignDescription("");
+                setStartDate("");
+                setEndDate("");
+                setMetrics([
+                    {
+                        id: Date.now(),
+                        name: "",
+                        type: "integer",
+                        targetValue: "",
+                        selectedProducts: [],
+                        isOpen: false,
+                        isOpenType: false,
+                        selectedCategories: [],
+                        isOpenProduct: false,
+                        isOpenCategory: false,
+                    },
+                ]);
+                setPeriods([{ startDate: "", endDate: "" }]);
+                navigate("/campaigns");
             }
         } catch (error) {
             console.error("Error creating campaign:", error);

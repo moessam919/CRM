@@ -1,14 +1,37 @@
 import { ArrowDown, Plus, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CampaignOverview from "./CampaignOverview";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { actgetCampaigns } from "../../store/Campaigns/act/CampaignActions";
+import { AppDispatch } from "../../store/store";
+import debounce from "lodash/debounce";
 
 const CampainList = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
     const [selectedStatus, setSelectedStatus] = useState("جميع الحالات");
+    const [searchQuery, setSearchQuery] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
     const statusOptions = ["جميع الحالات", "نشط", "مسودة", "مكتمل"];
+
+    const debouncedSearch = debounce((term: string) => {
+        dispatch(actgetCampaigns(term));
+    }, 300);
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+        debouncedSearch(value);
+    };
+
+    useEffect(() => {
+        dispatch(actgetCampaigns(""));
+        return () => {
+            debouncedSearch.cancel();
+        };
+    }, [dispatch, debouncedSearch]);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -28,6 +51,8 @@ const CampainList = () => {
                         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <input
                             type="text"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
                             placeholder="البحث في الحملات..."
                             className="w-full pr-10 pl-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 duration-150"
                         />
@@ -70,7 +95,7 @@ const CampainList = () => {
                     </div>
                 </div>
 
-                <div className="max-h-[270px] min-h-[270px] overflow-auto">
+                <div className="max-h-[299px] min-h-[299px] overflow-auto">
                     <CampaignOverview />
                 </div>
             </div>

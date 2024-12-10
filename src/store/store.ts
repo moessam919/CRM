@@ -12,6 +12,8 @@ import Message from "./SendBulkMessage/messageSlice";
 import products from "./MatricsProducts/ProductsSlice";
 import productCategories from "./MatricsProducts/ProductCategorySlice";
 import campaign from "./MatricsProducts/CampaignSlice";
+import campaigns from "./Campaigns/CampaignsSlice";
+import campaignSummary from "./Campaigns/CampaignsSummarySlice";
 
 export const store = configureStore({
     reducer: {
@@ -28,6 +30,8 @@ export const store = configureStore({
         products,
         productCategories,
         campaign,
+        campaigns,
+        campaignSummary,
     },
 });
 

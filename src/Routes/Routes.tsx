@@ -9,6 +9,7 @@ import Messages from "../Pages/Messages";
 import MessageDetails from "../Components/MessageDetails";
 import Campain from "../Pages/Campain";
 import CreateCampaignModal from "../Components/Campain Com/CreateCampaignModal";
+import CampaignInfo from "../Components/Campain Com/CampaignInfo";
 
 const Routers = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const Routers = createBrowserRouter([
             {
                 path: "/campaign",
                 element: <Campain />,
+            },
+            {
+                path: "/campaign/:id/",
+                element: <CampaignInfo />,
             },
             {
                 path: "/create-campaign",

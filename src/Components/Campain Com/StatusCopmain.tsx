@@ -1,10 +1,70 @@
-import { ChartColumn, ChartPie, TrendingUp } from "lucide-react";
+import { ChartPie, ChevronLeft, ChevronRight } from "lucide-react";
+import { CampaignSummary } from "../../store/Campaigns/type/CampaignType";
+import { useState, useEffect } from "react";
 
-const StatusCopmain = () => {
+interface CompianBoxesProps {
+    campaignSummary: CampaignSummary | null;
+}
+
+const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
+
+    const activeCampaigns = campaignSummary?.active_campaigns || [];
+    const totalCampaigns = activeCampaigns.length;
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            if (totalCampaigns > 1) {
+                setCurrentIndex((prev) =>
+                    prev === totalCampaigns - 1 ? 0 : prev + 1
+                );
+            }
+        }, 5000);
+
+        return () => clearInterval(timer);
+    }, [totalCampaigns]);
+
+    const handleNext = () => {
+        setCurrentIndex((prev) => (prev === totalCampaigns - 1 ? 0 : prev + 1));
+    };
+
+    const handlePrev = () => {
+        setCurrentIndex((prev) => (prev === 0 ? totalCampaigns - 1 : prev - 1));
+    };
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setTouchStart(e.touches[0].clientX);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.touches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+
+        const distance = touchStart - touchEnd;
+        const minSwipeDistance = 50;
+
+        if (Math.abs(distance) < minSwipeDistance) return;
+
+        if (distance > 0) {
+            handleNext();
+        } else {
+            handlePrev();
+        }
+
+        setTouchStart(0);
+        setTouchEnd(0);
+    };
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {/* Campaign Status Box */}
             <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-2 mb-4">
                     <h3 className="text-xl text-gray-500 font-bold">
                         حالة الحملات
                     </h3>
@@ -18,8 +78,9 @@ const StatusCopmain = () => {
                         <span className="w-4 h-4 rounded-full bg-green-500"></span>
                         <h2 className="font-bold text-gray-500">نشط</h2>
                     </div>
-
-                    <p className="font-bold p-2">2</p>
+                    <p className="font-bold p-2">
+                        {campaignSummary?.active_campaigns_count || 0}
+                    </p>
                 </div>
 
                 <div className="mt-2 flex items-center justify-between">
@@ -27,81 +88,108 @@ const StatusCopmain = () => {
                         <span className="w-4 h-4 rounded-full bg-gray-500"></span>
                         <h2 className="font-bold text-gray-500">مسودة</h2>
                     </div>
-
-                    <p className="font-bold p-2">2</p>
-                </div>
-
-                <div className="mt-1 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full bg-yellow-500"></span>
-                        <h2 className="font-bold text-gray-500">
-                            قيد الانتظار
-                        </h2>
-                    </div>
-
-                    <p className="font-bold p-2">4</p>
+                    <p className="font-bold p-2">
+                        {campaignSummary?.draft_campaigns_count || 0}
+                    </p>
                 </div>
             </div>
 
-            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
-                <div className="flex items-center justify-between gap-2">
+            {/* Active Campaigns Display */}
+            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200 col-span-2 relative">
+                <div className="flex items-center justify-between gap-2 mb-4">
                     <h3 className="text-xl text-gray-500 font-bold">
-                        نظرة عامة على التقدم
+                        الحملات النشطة
                     </h3>
-                    <div className="text-gray-500">
-                        <ChartColumn />
-                    </div>
                 </div>
 
-                <div className="mt-4">
-                    <p className="text-4xl font-bold ">25.0%</p>
-                    <p className=" text-gray-500 mt-1">متوسط تقدم الحملة</p>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-4">
-                        <div
-                            className="bg-gray-600 h-2.5 rounded-full"
-                            style={{ width: "25%" }}></div>
-                    </div>
-                </div>
-            </div>
-            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
-                <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xl text-gray-500 font-bold">
-                        نظرة عامة على الحملات
-                    </h3>
-                    <div className="text-gray-500">
-                        <TrendingUp size={24} />
-                    </div>
-                </div>
-
-                <div className="mt-4">
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-gray-500 font-bold">
-                                حملات قادمة
-                            </h2>
-                            <p className="text-gray-500 font-bold">0</p>
+                <div
+                    className="h-[200px] relative"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}>
+                    {totalCampaigns > 0 ? (
+                        <>
+                            <div className="h-full">
+                                <div className="bg-gray-50 p-6 rounded-lg h-full flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex justify-between items-start mb-3">
+                                            <h4 className="text-lg font-semibold text-gray-800">
+                                                {
+                                                    activeCampaigns[
+                                                        currentIndex
+                                                    ].name
+                                                }
+                                            </h4>
+                                        </div>
+                                        <p className="text-gray-600 mb-4 line-clamp-2">
+                                            {
+                                                activeCampaigns[currentIndex]
+                                                    .description
+                                            }
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between items-center text-sm text-gray-500 mb-2">
+                                            <div className="w-[60%]">
+                                                معدل النجاح:{" "}
+                                                {activeCampaigns[currentIndex]
+                                                    .success_rate || 0}
+                                                %
+                                            </div>
+                                            <div>
+                                                عدد المقاييس:{" "}
+                                                {activeCampaigns[currentIndex]
+                                                    .metrics_count || 0}
+                                            </div>
+                                        </div>
+                                        <div className="text-sm text-gray-500">
+                                            {new Date(
+                                                activeCampaigns[
+                                                    currentIndex
+                                                ].start_date
+                                            ).toLocaleDateString("ar-EG")}{" "}
+                                            -{" "}
+                                            {new Date(
+                                                activeCampaigns[
+                                                    currentIndex
+                                                ].end_date
+                                            ).toLocaleDateString("ar-EG")}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {totalCampaigns > 1 && (
+                                <>
+                                    <button
+                                        onClick={handlePrev}
+                                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100 transition-colors">
+                                        <ChevronLeft className="w-5 h-5 text-gray-600" />
+                                    </button>
+                                    <button
+                                        onClick={handleNext}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100 transition-colors">
+                                        <ChevronRight className="w-5 h-5 text-gray-600" />
+                                    </button>
+                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                                        {activeCampaigns.map((_, index) => (
+                                            <div
+                                                key={index}
+                                                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                                    index === currentIndex
+                                                        ? "w-4 bg-gray-600"
+                                                        : "bg-gray-300"
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                        </>
+                    ) : (
+                        <div className="text-center text-gray-500 py-8">
+                            لا توجد حملات نشطة حالياً
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                            <div
-                                className="bg-gray-600 h-2.5 rounded-full"
-                                style={{ width: "55%" }}></div>
-                        </div>
-                    </div>
-
-                    <div className="mt-4">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-gray-500 font-bold">
-                                حملات نشطة
-                            </h2>
-                            <p className="text-gray-500 font-bold">0</p>
-                        </div>
-
-                        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                            <div
-                                className="bg-gray-600 h-2.5 rounded-full"
-                                style={{ width: "33%" }}></div>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
