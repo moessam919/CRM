@@ -111,7 +111,6 @@ export const actUpdateCampaignStatus = createAsyncThunk(
                 `/marketing/campaigns/${id}/`,
                 { status }
             );
-            console.log(response.data);
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {

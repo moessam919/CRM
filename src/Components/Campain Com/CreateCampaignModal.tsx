@@ -281,9 +281,12 @@ const CreateCampaignModal = () => {
                             }
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                             required
+                            maxLength={250}
                         />
+                        <div className="text-right text-sm text-gray-500">
+                            {250 - campaignDescription.length} حرف متبقي
+                        </div>
                     </div>
-
                     {/* Campaign Dates */}
                     <div className="mb-4 grid grid-cols-2 gap-4">
                         <div>

@@ -100,18 +100,14 @@ export interface CampaignSummary {
 
 // Campaigns Chart
 
-interface ChartMetrics {
-    total_sales: string;
-    sales_of_category: string;
-    sales_of_specific_products: string;
-    customer_registration: string;
+export interface Metrics {
+    total_sales?: string;
+    sales_of_category?: string;
+    sales_of_specific_products?: string;
+    customer_registration?: string;
 }
 
-interface ChartDataPoint {
+export interface ChartDataPoint {
     date: string;
-    metrics: ChartMetrics;
-}
-
-export interface ICampaignsChartData {
-    chart_data?: ChartDataPoint[];
+    metrics: Metrics;
 }

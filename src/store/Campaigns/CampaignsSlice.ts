@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
     Campaign,
-    ICampaignsChartData,
+    ChartDataPoint,
     selectedCampaign,
 } from "./type/CampaignType";
 import {
@@ -15,7 +15,7 @@ import {
 interface CampaignsState {
     campaigns: Campaign[];
     selectedCampaign: selectedCampaign | null;
-    data: ICampaignsChartData | null;
+    data: ChartDataPoint | null;
     loading: "idle" | "pending" | "succeeded" | "failed";
     error: string | null;
 }

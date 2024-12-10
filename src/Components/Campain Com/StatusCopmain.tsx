@@ -1,12 +1,15 @@
 import { ChartPie, ChevronLeft, ChevronRight } from "lucide-react";
 import { CampaignSummary } from "../../store/Campaigns/type/CampaignType";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface CompianBoxesProps {
     campaignSummary: CampaignSummary | null;
 }
 
 const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
+    const navigate = useNavigate();
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [touchStart, setTouchStart] = useState(0);
     const [touchEnd, setTouchEnd] = useState(0);
@@ -63,7 +66,7 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {/* Campaign Status Box */}
-            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
+            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200 col-span-2 xl:col-span-1">
                 <div className="flex items-center justify-between gap-2 mb-4">
                     <h3 className="text-xl text-gray-500 font-bold">
                         حالة الحملات
@@ -92,6 +95,16 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
                         {campaignSummary?.draft_campaigns_count || 0}
                     </p>
                 </div>
+
+                <div className="mt-2 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <span className="w-4 h-4 rounded-full bg-gray-500"></span>
+                        <h2 className="font-bold text-gray-500">اكتملت</h2>
+                    </div>
+                    <p className="font-bold p-2">
+                        {campaignSummary?.draft_campaigns_count || 0}
+                    </p>
+                </div>
             </div>
 
             {/* Active Campaigns Display */}
@@ -110,50 +123,75 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
                     {totalCampaigns > 0 ? (
                         <>
                             <div className="h-full">
-                                <div className="bg-gray-50 p-6 rounded-lg h-full flex flex-col justify-between">
+                                <div className="bg-gray-100 p-6 rounded-lg h-full grid grid-cols-1 md:grid-cols-2 text-center md:text-start items-center md:gap-96">
                                     <div>
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h4 className="text-lg font-semibold text-gray-800">
+                                        <div>
+                                            <div className=" mb-3">
+                                                <h4 className="text-xl md:text-2xl font-semibold text-gray-800">
+                                                    {
+                                                        activeCampaigns[
+                                                            currentIndex
+                                                        ].name
+                                                    }
+                                                </h4>
+                                            </div>
+                                            <p className="text-gray-600 mb-4 line-clamp-2 text-lg">
                                                 {
                                                     activeCampaigns[
                                                         currentIndex
-                                                    ].name
+                                                    ].description
                                                 }
-                                            </h4>
+                                            </p>
                                         </div>
-                                        <p className="text-gray-600 mb-4 line-clamp-2">
-                                            {
-                                                activeCampaigns[currentIndex]
-                                                    .description
-                                            }
-                                        </p>
+                                        <div>
+                                            <div className="text-xl text-gray-500">
+                                                من:{" "}
+                                                {new Date(
+                                                    activeCampaigns[
+                                                        currentIndex
+                                                    ].start_date
+                                                ).toLocaleDateString(
+                                                    "ar-EG"
+                                                )}{" "}
+                                                - الي:{" "}
+                                                {new Date(
+                                                    activeCampaigns[
+                                                        currentIndex
+                                                    ].end_date
+                                                ).toLocaleDateString("ar-EG")}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className="flex justify-between items-center text-sm text-gray-500 mb-2">
-                                            <div className="w-[60%]">
-                                                معدل النجاح:{" "}
+                                    <div className="flex flex-col justify-center md:justify-start items-center md:items-start text-sm gap-2 text-gray-500 mb-2">
+                                        <div className="text-lg flex items-center flex-col ">
+                                            <p
+                                                className={`mb-1 text-lg md:text-2xl  font-bold ${
+                                                    activeCampaigns[
+                                                        currentIndex
+                                                    ].success_rate < 50
+                                                        ? "text-red-500"
+                                                        : activeCampaigns[
+                                                                currentIndex
+                                                            ].success_rate < 80
+                                                          ? "text-yellow-500"
+                                                          : "text-green-500"
+                                                }`}>
                                                 {activeCampaigns[currentIndex]
                                                     .success_rate || 0}
                                                 %
-                                            </div>
-                                            <div>
-                                                عدد المقاييس:{" "}
-                                                {activeCampaigns[currentIndex]
-                                                    .metrics_count || 0}
-                                            </div>
-                                        </div>
-                                        <div className="text-sm text-gray-500">
-                                            {new Date(
-                                                activeCampaigns[
-                                                    currentIndex
-                                                ].start_date
-                                            ).toLocaleDateString("ar-EG")}{" "}
-                                            -{" "}
-                                            {new Date(
-                                                activeCampaigns[
-                                                    currentIndex
-                                                ].end_date
-                                            ).toLocaleDateString("ar-EG")}
+                                            </p>
+                                            <span className="font-bold">
+                                                نسبة تحقيق الهدف
+                                            </span>
+                                            <p
+                                                className=" mt-2 cursor-pointer  hover:text-gray-600"
+                                                onClick={() => {
+                                                    navigate(
+                                                        `/campaign/${activeCampaigns[currentIndex].id}`
+                                                    );
+                                                }}>
+                                                عرض التفاصيل
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

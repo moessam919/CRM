@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash2, ToggleRight, ToggleLeft } from "lucide-react";
+import { Trash2, ToggleRight, ToggleLeft, MoreHorizontal } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
     actDeleteCampaign,
@@ -17,6 +17,7 @@ const CampaignsActionsBtn: React.FC = () => {
     );
 
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false); // State to toggle the dropdown menu
 
     // Handle campaign deletion
     const handleDelete = async () => {
@@ -27,6 +28,11 @@ const CampaignsActionsBtn: React.FC = () => {
         } catch (error) {
             console.error("Failed to delete campaign", error);
         }
+    };
+
+    const handleopendelete = () => {
+        setIsDeleteDialogOpen(true);
+        setIsMenuOpen(!isMenuOpen);
     };
 
     // Handle status toggle
@@ -49,32 +55,45 @@ const CampaignsActionsBtn: React.FC = () => {
     if (!selectedCampaign) return null;
 
     return (
-        <div className="flex items-center gap-4">
-            {/* Status Toggle Button */}
+        <div className="flex items-center gap-4 relative">
+            {/* More Options Button */}
             <button
-                onClick={handleToggleStatus}
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900  "
-                title={`${selectedCampaign.status === "active" ? "تعطيل" : "تفعيل"} الحملة`}>
-                {selectedCampaign.status === "active" ? (
-                    <ToggleRight className="w-6 h-6 text-green-500" />
-                ) : (
-                    <ToggleLeft className="w-6 h-6 text-gray-500" />
-                )}
-                <span>
-                    {selectedCampaign.status === "active"
-                        ? "إيقاف الحملة"
-                        : "تفعيل الحملة"}
-                </span>
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-gray-600 hover:text-gray-900"
+                title="المزيد">
+                <MoreHorizontal className="w-6 h-6" />
             </button>
 
-            {/* Delete Button */}
-            <button
-                onClick={() => setIsDeleteDialogOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 text-red-600 hover:bg-red-50 hover:text-red-700"
-                title="حذف الحملة">
-                <Trash2 className="w-5 h-5" />
-                <span className="font-medium">حذف</span>
-            </button>
+            {/* Dropdown Menu */}
+            {isMenuOpen && (
+                <div className="absolute top-4 left-0 bg-white shadow-lg rounded-lg mt-2 p-4 w-48 z-10 flex flex-col gap-2">
+                    {/* Status Toggle Button */}
+                    <button
+                        onClick={handleToggleStatus}
+                        className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 w-full"
+                        title={`${selectedCampaign.status === "active" ? "تعطيل" : "تفعيل"} الحملة`}>
+                        {selectedCampaign.status === "active" ? (
+                            <ToggleRight className="w-6 h-6 text-green-500" />
+                        ) : (
+                            <ToggleLeft className="w-6 h-6 text-gray-500" />
+                        )}
+                        <span>
+                            {selectedCampaign.status === "active"
+                                ? "إيقاف الحملة"
+                                : "تفعيل الحملة"}
+                        </span>
+                    </button>
+
+                    {/* Delete Button */}
+                    <button
+                        onClick={() => handleopendelete()}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 w-full"
+                        title="حذف الحملة">
+                        <Trash2 className="w-5 h-5" />
+                        <span className="font-medium">حذف</span>
+                    </button>
+                </div>
+            )}
 
             {/* Delete Confirmation Dialog */}
             {isDeleteDialogOpen && (

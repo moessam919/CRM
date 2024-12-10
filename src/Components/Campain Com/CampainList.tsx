@@ -114,7 +114,7 @@ const CampainList = () => {
                     <div>
                         <button
                             onClick={() => navigate("/create-campaign")}
-                            className="px-4 py-3 border hover:text-white rounded-md hover:bg-gray-600 duration-150 flex gap-2">
+                            className="px-4 py-3 border bg-gray-600 text-white rounded-md hover:bg-gray-700 duration-150 flex gap-2">
                             انشاء حملة
                             <Plus />
                         </button>

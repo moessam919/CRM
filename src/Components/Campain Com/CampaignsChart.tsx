@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import {
-    AreaChart,
-    Area,
     XAxis,
     YAxis,
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
+    LineChart,
+    Line,
 } from "recharts";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { actGetCampaignChartData } from "../../store/Campaigns/act/CampaignActions";
+import { ChartDataPoint } from "../../store/Campaigns/type/CampaignType";
 
 // Define types
 type TimeRange = "day" | "week" | "month" | "year";
 
+// Assuming ICampaignsChartData is the interface for the response
 const CampaignsChart = ({ id }: { id: string | undefined }) => {
     const [sortType, setSortType] = useState<TimeRange>("week");
 
@@ -40,31 +42,60 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
     };
 
     // Get period label based on sortType
-    const getPeriodLabel = () => {
-        switch (sortType) {
-            case "day":
-                return "اليوم";
-            case "week":
-                return "الأسبوع";
-            case "month":
-                return "الشهر";
-            case "year":
-                return "السنة";
-            default:
-                return "";
-        }
-    };
+    // const getPeriodLabel = () => {
+    //     switch (sortType) {
+    //         case "day":
+    //             return "اليوم";
+    //         case "week":
+    //             return "الأسبوع";
+    //         case "month":
+    //             return "الشهر";
+    //         case "year":
+    //             return "السنة";
+    //         default:
+    //             return "";
+    //     }
+    // };
+
+    // Format data for the chart
+    const formattedData =
+        Array.isArray(data) && data.length > 0
+            ? data.map((point: ChartDataPoint) => ({
+                  date: point.date,
+                  total_sales: parseFloat(point.metrics.total_sales || "NaN"),
+                  sales_of_category: parseFloat(
+                      point.metrics.sales_of_category || "NaN"
+                  ),
+                  sales_of_specific_products: parseFloat(
+                      point.metrics.sales_of_specific_products || "NaN"
+                  ),
+                  customer_registration: parseFloat(
+                      point.metrics.customer_registration || "NaN"
+                  ),
+              }))
+            : []; // Fallback to an empty array if 'data' is not an array
+
+    // Determine which metrics are present in the data
+    const renderTotalSalesLine = formattedData.some(
+        (point) => !isNaN(point.total_sales)
+    );
+    const renderSalesOfCategoryLine = formattedData.some(
+        (point) => !isNaN(point.sales_of_category)
+    );
+    const renderSalesOfSpecificProductsLine = formattedData.some(
+        (point) => !isNaN(point.sales_of_specific_products)
+    );
+    const renderCustomerRegistrationLine = formattedData.some(
+        (point) => !isNaN(point.customer_registration)
+    );
 
     return (
         <div className="p-5 bg-white rounded-md shadow-md overflow-auto min-h-[495px] max-h-[495px]">
-            <p className="font-bold md:text-lg text-gray-500 mb-2">
-                نظرة عامة على المبيعات
-            </p>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
                 <div className="">
-                    <span className="text-green-500 font-bold text-sm">
+                    {/* <span className="text-green-500 font-bold text-sm">
                         مبيعات {getPeriodLabel()}
-                    </span>
+                    </span> */}
                 </div>
                 <div className="flex gap-2 items-center justify-end mb-4">
                     <button
@@ -91,10 +122,8 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
             </div>
             <div className="h-[344px]">
                 <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                        width={500}
-                        height={400}
-                        data={data?.chart_data ?? []}
+                    <LineChart
+                        data={formattedData}
                         margin={{
                             top: 10,
                             right: 30,
@@ -102,18 +131,49 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                             bottom: 0,
                         }}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="date" />
                         <YAxis />
                         <Tooltip />
-                        <Area
-                            type="monotone"
-                            dataKey="value"
-                            stroke="#8884d8"
-                            fill="#8884d8"
-                            fillOpacity={0.3}
-                        />
-                    </AreaChart>
-                </ResponsiveContainer>
+
+                        {/* Line chart lines with their respective styles */}
+                        {renderTotalSalesLine && (
+                            <Line
+                                type="monotone"
+                                dataKey="total_sales"
+                                stroke="#8884d8"
+                                name="مبيعات الكل"
+                                dot={false} // Optionally, remove dots if not needed
+                            />
+                        )}
+                        {renderSalesOfCategoryLine && (
+                            <Line
+                                type="monotone"
+                                dataKey="sales_of_category"
+                                stroke="#82ca9d"
+                                name="مبيعات من الفئات"
+                                dot={false} // Optionally, remove dots if not needed
+                            />
+                        )}
+                        {renderSalesOfSpecificProductsLine && (
+                            <Line
+                                type="monotone"
+                                dataKey="sales_of_specific_products"
+                                stroke="#ffc658"
+                                name="مبيعات من المنتجات المحددة"
+                                dot={false} // Optionally, remove dots if not needed
+                            />
+                        )}
+                        {renderCustomerRegistrationLine && (
+                            <Line
+                                type="monotone"
+                                dataKey="customer_registration"
+                                stroke="#ff7300"
+                                name="تسجيل العملاء"
+                                dot={false} // Optionally, remove dots if not needed
+                            />
+                        )}
+                    </LineChart>
+                </ResponsiveContainer>{" "}
             </div>
         </div>
     );
