@@ -2,45 +2,70 @@ import { ArrowDown, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import CampaignOverview from "./CampaignOverview";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { actgetCampaigns } from "../../store/Campaigns/act/CampaignActions";
-import { AppDispatch } from "../../store/store";
 import debounce from "lodash/debounce";
+import { useAppDispatch } from "../../store/hooks";
+// import { useAppSelector } from "../../store/hooks";
+
+// Status translation mapping
+const STATUS_TRANSLATIONS = {
+    all: "جميع الحالات",
+    active: "نشط",
+    draft: "مسودة",
+    completed: "مكتمل",
+};
 
 const CampainList = () => {
+    // const { campaigns, loading } = useAppSelector((state) => state.campaigns);
+
     const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useAppDispatch();
     const [selectedStatus, setSelectedStatus] = useState("جميع الحالات");
     const [searchQuery, setSearchQuery] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
-    const statusOptions = ["جميع الحالات", "نشط", "مسودة", "مكتمل"];
+    // Use English keys for backend, but keep Arabic for UI
+    const statusOptions = Object.entries(STATUS_TRANSLATIONS).map(
+        ([key, value]) => ({
+            key,
+            value,
+        })
+    );
 
-    const debouncedSearch = debounce((term: string) => {
-        dispatch(actgetCampaigns(term));
+    const debouncedSearch = debounce((term: string, status: string) => {
+        dispatch(
+            actgetCampaigns({
+                searchTerm: term,
+                status:
+                    status !== "جميع الحالات"
+                        ? Object.entries(STATUS_TRANSLATIONS).find(
+                              ([, v]) => v === status
+                          )?.[0]
+                        : "",
+            })
+        );
     }, 300);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearchQuery(value);
-        debouncedSearch(value);
+        debouncedSearch(value, selectedStatus);
+    };
+
+    const handleStatusSelect = (statusValue: string) => {
+        setSelectedStatus(statusValue);
+        setIsOpen(false);
+        debouncedSearch(searchQuery, statusValue);
     };
 
     useEffect(() => {
-        dispatch(actgetCampaigns(""));
-        return () => {
-            debouncedSearch.cancel();
-        };
-    }, [dispatch, debouncedSearch]);
-
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const handleStatusSelect = (status: string) => {
-        setSelectedStatus(status);
-        setIsOpen(false);
-    };
+        dispatch(
+            actgetCampaigns({
+                searchTerm: "",
+                status: "",
+            })
+        );
+    }, [dispatch]);
 
     return (
         <>
@@ -58,10 +83,11 @@ const CampainList = () => {
                         />
                     </div>
 
+                    {/* Status Dropdown */}
                     <div className="relative">
                         <button
                             className="flex items-center gap-2 px-5 py-3 border rounded-lg hover:bg-gray-50 w-full md:w-auto justify-center"
-                            onClick={toggleDropdown}>
+                            onClick={() => setIsOpen(!isOpen)}>
                             <span>{selectedStatus}</span>
                             <ArrowDown
                                 className={`w-4 h-4 transform transition-transform ${
@@ -71,14 +97,14 @@ const CampainList = () => {
                         </button>
                         {isOpen && (
                             <div className="absolute left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
-                                {statusOptions.map((status, index) => (
+                                {statusOptions.map(({ key, value }) => (
                                     <div
-                                        key={index}
+                                        key={key}
                                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                                         onClick={() =>
-                                            handleStatusSelect(status)
+                                            handleStatusSelect(value)
                                         }>
-                                        {status}
+                                        {value}
                                     </div>
                                 ))}
                             </div>

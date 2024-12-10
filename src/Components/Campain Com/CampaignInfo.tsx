@@ -18,6 +18,7 @@ import {
     Activity,
 } from "lucide-react";
 import CampaignsChart from "./CampaignsChart";
+import CampaignsActionsBtn from "./CampaignsActionsBtn";
 
 const CampaignInfo = () => {
     const { id } = useParams();
@@ -26,7 +27,6 @@ const CampaignInfo = () => {
         (state) => state.campaigns
     );
     const navigate = useNavigate();
-
 
     useEffect(() => {
         if (id) {
@@ -59,9 +59,22 @@ const CampaignInfo = () => {
             <div className="grid grid-cols-1 gap-6">
                 <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row items-center justify-between">
                     <div className="flex flex-col items-center md:items-start">
-                        <h1 className="text-2xl font-bold">
-                            {selectedCampaign.name}
-                        </h1>
+                        <div className="flex items-center gap-5">
+                            <h1 className="text-2xl font-bold px-3 py-1" >
+                                {selectedCampaign.name}
+                            </h1>
+
+                            <span
+                                className={`px-3 py-1 rounded-md ${
+                                    selectedCampaign.status === "active"
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-gray-100 text-gray-800"
+                                }`}>
+                                {selectedCampaign.status === "active"
+                                    ? "نشط"
+                                    : "غير نشط"}
+                            </span>
+                        </div>
 
                         <p>{selectedCampaign?.description}</p>
                         <div className="flex items-center gap-2 text-gray-600 mt-2">
@@ -101,16 +114,7 @@ const CampaignInfo = () => {
                             <span className="">العودة إلى الحملات</span>
                             <ArrowLeft className="h-5 w-5" />
                         </div>
-                        <span
-                            className={`px-3 py-1 rounded-md ${
-                                selectedCampaign.status === "active"
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-gray-100 text-gray-800"
-                            }`}>
-                            {selectedCampaign.status === "active"
-                                ? "نشط"
-                                : "غير نشط"}
-                        </span>
+                        <CampaignsActionsBtn />
                     </div>
                 </div>
             </div>
@@ -401,7 +405,7 @@ const CampaignInfo = () => {
                     <h1 className="text-2xl font-bold mb-4">تحليلات الحملة</h1>
                     <div className="overflow-auto min-h-[200px] max-h-[250px]  space-y-4">
                         {/* Total Sales */}
-                        {selectedCampaign.analysis.total_sales && (
+                        {selectedCampaign?.analysis?.total_sales && (
                             <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
                                 <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
                                     <BarChart className="w-4 h-4" />
@@ -424,9 +428,8 @@ const CampaignInfo = () => {
                                 </div>
                             </div>
                         )}
-
                         {/* Category Sales */}
-                        {selectedCampaign.analysis.sales_of_category && (
+                        {selectedCampaign?.analysis?.sales_of_category && (
                             <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
                                 <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
                                     <PieChart className="w-4 h-4" />
@@ -453,8 +456,8 @@ const CampaignInfo = () => {
                         )}
 
                         {/* Product Sales */}
-                        {selectedCampaign.analysis
-                            .sales_of_specific_products && (
+                        {selectedCampaign?.analysis
+                            ?.sales_of_specific_products && (
                             <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
                                 <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
                                     <LineChart className="w-4 h-4" />
@@ -479,7 +482,7 @@ const CampaignInfo = () => {
                         )}
 
                         {/* Total Sales */}
-                        {selectedCampaign.analysis.customer_registration && (
+                        {selectedCampaign?.analysis?.customer_registration && (
                             <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
                                 <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
                                     <Users className="w-4 h-4 text-gray-600" />
@@ -511,7 +514,7 @@ const CampaignInfo = () => {
                 <div className="bg-white p-6 rounded-lg shadow">
                     <h1 className="text-2xl font-bold mb-4">مقارنات الفترات</h1>
                     <div className="overflow-auto min-h-[400px] max-h-[400px] space-y-4">
-                        {selectedCampaign.comparison_periods_analysis.map(
+                        {selectedCampaign?.comparison_periods_analysis?.map(
                             (period, index) => (
                                 <div key={index} className=" p-4 rounded-lg">
                                     <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">

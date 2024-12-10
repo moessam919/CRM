@@ -13,7 +13,7 @@ const CampaignOverview = () => {
     }
 
     if (campaigns.length === 0) {
-        return <div className="text-center py-4">لا توجد حملات</div>;
+        return <div className="text-center py-4 text-2xl">لا توجد حملات</div>;
     }
 
     const formatDate = (dateString: string): string => {

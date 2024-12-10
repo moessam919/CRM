@@ -237,7 +237,7 @@ const CreateCampaignModal = () => {
                     },
                 ]);
                 setPeriods([{ startDate: "", endDate: "" }]);
-                navigate("/campaigns");
+                navigate("/campaign");
             }
         } catch (error) {
             console.error("Error creating campaign:", error);

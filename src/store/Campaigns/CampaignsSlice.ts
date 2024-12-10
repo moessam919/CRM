@@ -1,16 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Campaign, ICampaignsChartData, selectedCampaign } from "./type/CampaignType";
+import {
+    Campaign,
+    ICampaignsChartData,
+    selectedCampaign,
+} from "./type/CampaignType";
 import {
     actgetCampaigns,
     actgetCampaignById,
     actGetCampaignChartData,
+    actDeleteCampaign,
+    actUpdateCampaignStatus,
 } from "./act/CampaignActions";
 
 interface CampaignsState {
     campaigns: Campaign[];
     selectedCampaign: selectedCampaign | null;
     data: ICampaignsChartData | null;
-
     loading: "idle" | "pending" | "succeeded" | "failed";
     error: string | null;
 }
@@ -64,6 +69,42 @@ const campaignsSlice = createSlice({
             .addCase(actGetCampaignChartData.rejected, (state, action) => {
                 state.loading = "failed";
                 state.error = action.error as string;
+            })
+            // Handle Delete Campaign
+            .addCase(actDeleteCampaign.fulfilled, (state, action) => {
+                state.campaigns = state.campaigns.filter(
+                    (campaign) =>
+                        campaign.id.toString() !== action.payload.toString()
+                );
+                state.selectedCampaign = null;
+            })
+            .addCase(actDeleteCampaign.rejected, (state, action) => {
+                state.error = action.payload as string;
+            })
+
+            // Handle Update Campaign Status
+            .addCase(actUpdateCampaignStatus.pending, (state) => {
+                state.loading = "pending";
+            })
+            .addCase(actUpdateCampaignStatus.fulfilled, (state, action) => {
+                state.loading = "succeeded";
+
+                // Update in campaigns list
+                const index = state.campaigns.findIndex(
+                    (campaign) => campaign.id === action.payload.id
+                );
+                if (index !== -1) {
+                    state.campaigns[index] = action.payload;
+                }
+
+                // Update selected campaign
+                if (state.selectedCampaign?.id === action.payload.id) {
+                    state.selectedCampaign = action.payload;
+                }
+            })
+            .addCase(actUpdateCampaignStatus.rejected, (state, action) => {
+                state.loading = "failed";
+                state.error = action.payload as string;
             });
     },
 });
