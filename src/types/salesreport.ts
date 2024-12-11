@@ -4,6 +4,7 @@ export interface ISalesReport {
     average_daily_sales: string;
     average_invoice_value: string;
     customers_count: number;
+    active_campaigns: number;
     top_selling_products: {
         product__arabic_name: string;
         quantity_sold: number;

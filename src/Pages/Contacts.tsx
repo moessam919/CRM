@@ -22,7 +22,7 @@ const Contacts = () => {
     }
 
     return (
-        <div className="bg-gray-200 rounded-md">
+        <div className="bg-gray-100 rounded-md">
             <div className="p-6">
                 <CustomersCallTable customers={customers} />
             </div>

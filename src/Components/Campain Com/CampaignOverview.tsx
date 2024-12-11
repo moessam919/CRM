@@ -73,7 +73,7 @@ const CampaignOverview = () => {
                         </p>
                     </div>
 
-                    <div className="mt-4 w-full bg-gray-200 rounded-full h-2.5">
+                    <div className="mt-4 w-full bg-gray-100 rounded-full h-2.5">
                         <div
                             className="bg-gray-600 h-2.5 rounded-full"
                             style={{

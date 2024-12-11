@@ -44,7 +44,7 @@ const Messages = () => {
     });
 
     return (
-        <div className="bg-gray-200 rounded-md p-6">
+        <div className="bg-gray-100 rounded-md p-6">
             <div className="w-full md:mx-auto p-3 md:p-6 bg-white rounded-lg shadow-sm">
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6">

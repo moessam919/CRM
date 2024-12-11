@@ -27,7 +27,7 @@ const CustomerInfo = () => {
     }
 
     return (
-        <div className="bg-gray-200 min-h-[795px] rounded-md">
+        <div className="bg-gray-100 min-h-[795px] rounded-md">
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-5">
                 <div className="col-span-1 md:col-span-2">
                     <div className="grid grid-cols-1 gap-5">

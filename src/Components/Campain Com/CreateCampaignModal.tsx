@@ -64,7 +64,7 @@ const CreateCampaignModal = () => {
     };
 
     const metricOptions = [
-        { value: "total_sales_value", label: "إجمالي قيمة المبيعات" },
+        { value: "total_sales", label: "إجمالي قيمة المبيعات" },
         { value: "sales_of_specific_products", label: "مبيعات منتجات محددة" },
         { value: "sales_of_category", label: "مبيعات الفئة" },
         { value: "customer_registration", label: "تسجيل العملاء" },
@@ -122,38 +122,6 @@ const CreateCampaignModal = () => {
     const [periods, setPeriods] = useState<
         { startDate: string; endDate: string }[]
     >([{ startDate: "", endDate: "" }]);
-
-    const handleAddPeriod = () => {
-        setPeriods([...periods, { startDate: "", endDate: "" }]);
-    };
-
-    const handleRemovePeriod = (index: number) => {
-        setPeriods(periods.filter((_, i) => i !== index));
-    };
-
-    const handlePeriodChange = (
-        index: number,
-        field: "startDate" | "endDate",
-        value: string
-    ) => {
-        const newPeriods = [...periods];
-        const currentPeriod = newPeriods[index];
-
-        if (field === "startDate") {
-            // If setting start date, clear end date if it's before the new start date
-            if (currentPeriod.endDate && currentPeriod.endDate < value) {
-                currentPeriod.endDate = "";
-            }
-            currentPeriod.startDate = value;
-        } else {
-            // If setting end date, ensure it's after start date
-            if (!currentPeriod.startDate || value >= currentPeriod.startDate) {
-                currentPeriod.endDate = value;
-            }
-        }
-
-        setPeriods(newPeriods);
-    };
 
     const isMetricsValid = () => {
         return metrics.every((metric) => {
@@ -246,7 +214,7 @@ const CreateCampaignModal = () => {
     };
 
     return (
-        <div className="bg-gray-200 min-h-[795px] rounded-md p-6">
+        <div className="bg-gray-100 min-h-[795px] rounded-md p-6">
             {/* The modal container */}
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-4">
@@ -546,84 +514,6 @@ const CreateCampaignModal = () => {
                     </div>
 
                     {/* data  */}
-                    <div className="mb-4">
-                        <div className="flex justify-between items-center">
-                            <label className="block text-gray-700 text-xl">
-                                فترات للمقارنة
-                            </label>
-                            <button
-                                type="button"
-                                onClick={handleAddPeriod}
-                                className="px-2 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 duration-150 flex items-center gap-1">
-                                إضافة فترة
-                                <Plus size={20} />
-                            </button>
-                        </div>
-                        <div className="mt-4 space-y-4">
-                            {periods.map((period, index) => (
-                                <div
-                                    key={index}
-                                    className="flex items-center gap-4">
-                                    <div className="flex-1">
-                                        <label className="block text-sm text-gray-600 mb-1">
-                                            تاريخ البداية
-                                        </label>
-                                        <input
-                                            type="date"
-                                            value={period.startDate}
-                                            min={
-                                                new Date()
-                                                    .toISOString()
-                                                    .split("T")[0]
-                                            }
-                                            onChange={(e) =>
-                                                handlePeriodChange(
-                                                    index,
-                                                    "startDate",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full p-2 border rounded-md"
-                                        />
-                                    </div>
-                                    <div className="flex-1">
-                                        <label className="block text-sm text-gray-600 mb-1">
-                                            تاريخ النهاية
-                                        </label>
-                                        <input
-                                            type="date"
-                                            value={period.endDate}
-                                            min={
-                                                period.startDate ||
-                                                new Date()
-                                                    .toISOString()
-                                                    .split("T")[0]
-                                            }
-                                            onChange={(e) =>
-                                                handlePeriodChange(
-                                                    index,
-                                                    "endDate",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full p-2 border rounded-md"
-                                        />
-                                    </div>
-
-                                    {index > 0 && (
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                handleRemovePeriod(index)
-                                            }
-                                            className="mt-6 p-2 text-red-500 hover:bg-red-50 rounded-md">
-                                            <Trash size={20} />
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
 
                     {/* Buttons */}
                     <div className="flex justify-end gap-2">

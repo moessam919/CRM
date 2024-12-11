@@ -41,7 +41,7 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                       point.metrics.customer_registration || "NaN"
                   ),
               }))
-            : []; // Fallback to an empty array if 'data' is not an array
+            : [];
 
     // Determine which metrics are present in the data
     const renderTotalSalesLine = formattedData.some(
@@ -74,14 +74,13 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                         <YAxis />
                         <Tooltip />
 
-                        {/* Line chart lines with their respective styles */}
                         {renderTotalSalesLine && (
                             <Line
                                 type="monotone"
                                 dataKey="total_sales"
                                 stroke="#8884d8"
                                 name="مبيعات الكل"
-                                dot={false} // Optionally, remove dots if not needed
+                                dot={false}
                             />
                         )}
                         {renderSalesOfCategoryLine && (
@@ -90,7 +89,7 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                                 dataKey="sales_of_category"
                                 stroke="#82ca9d"
                                 name="مبيعات من الفئات"
-                                dot={false} // Optionally, remove dots if not needed
+                                dot={false}
                             />
                         )}
                         {renderSalesOfSpecificProductsLine && (
@@ -99,7 +98,7 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                                 dataKey="sales_of_specific_products"
                                 stroke="#ffc658"
                                 name="مبيعات من المنتجات المحددة"
-                                dot={false} // Optionally, remove dots if not needed
+                                dot={false}
                             />
                         )}
                         {renderCustomerRegistrationLine && (
@@ -108,7 +107,7 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                                 dataKey="customer_registration"
                                 stroke="#ff7300"
                                 name="تسجيل العملاء"
-                                dot={false} // Optionally, remove dots if not needed
+                                dot={false}
                             />
                         )}
                     </LineChart>

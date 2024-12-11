@@ -67,7 +67,7 @@ const MessageDetails = () => {
     const iconAndBg = getIconAndBg(messageDetails?.type);
 
     return (
-        <div className="bg-gray-200 rounded-md p-6">
+        <div className="bg-gray-100 rounded-md p-6">
             <div className="mx-auto p-6 bg-white rounded-lg shadow-sm">
                 <div className="mb-8">
                     <div className="flex items-center justify-between md:mb-2">

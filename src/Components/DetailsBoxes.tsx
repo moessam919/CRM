@@ -1,4 +1,10 @@
-import { ChartLine, Database, HandCoins, PersonStanding } from "lucide-react";
+import {
+    ChartLine,
+    CheckCheck,
+    Database,
+    HandCoins,
+    PersonStanding,
+} from "lucide-react";
 import { ISalesReport } from "../types/salesreport";
 
 interface DetailsBoxesProps {
@@ -79,6 +85,24 @@ const DetailsBoxes = ({ salesreport }: DetailsBoxesProps) => {
                     <p className="text-2xl font-bold mb-1">
                         {salesreport?.sales_current_month
                             ? `${Number(salesreport.sales_current_month).toFixed(2).toLocaleString()} ريال`
+                            : "لا يوجد"}
+                    </p>
+                    {/* <span className="text-green-500 text-xs font-bold">
+                        +10% من الشهر السابق
+                    </span> */}
+                </div>
+            </div>
+            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
+                <div className="flex items-center justify-between gap-2 w-full ">
+                    <h3 className="text-gray-500 font-bold">الحملات النشطة</h3>
+                    <div className="text-gray-500">
+                        <CheckCheck size={20} />
+                    </div>
+                </div>
+                <div className="mt-3">
+                    <p className="text-2xl font-bold mb-1">
+                        {salesreport?.sales_current_month
+                            ? `${Number(salesreport.active_campaigns)}`
                             : "لا يوجد"}
                     </p>
                     {/* <span className="text-green-500 text-xs font-bold">

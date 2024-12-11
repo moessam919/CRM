@@ -1,4 +1,4 @@
-import { ChartPie, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChartPie } from "lucide-react";
 import { CampaignSummary } from "../../store/Campaigns/type/CampaignType";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -76,9 +76,9 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
                     </div>
                 </div>
 
-                <div className="mt-1 flex items-center justify-between">
+                <div className="mt-2 flex items-center justify-between text-xl">
                     <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full bg-teal-500"></span>
+                        <span className="w-4 h-4 rounded-full bg-green-500"></span>
                         <h2 className="font-bold text-gray-500">نشط</h2>
                     </div>
                     <p className="font-bold p-2">
@@ -86,9 +86,9 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
                     </p>
                 </div>
 
-                <div className="mt-2 flex items-center justify-between">
+                <div className="mt-2 flex items-center justify-between text-xl">
                     <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full bg-gray-500"></span>
+                        <span className="w-4 h-4 rounded-full bg-yellow-500"></span>
                         <h2 className="font-bold text-gray-500">مسودة</h2>
                     </div>
                     <p className="font-bold p-2">
@@ -96,9 +96,9 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
                     </p>
                 </div>
 
-                <div className="mt-2 flex items-center justify-between">
+                <div className="mt-2 flex items-center justify-between text-xl">
                     <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full bg-green-500"></span>
+                        <span className="w-4 h-4 rounded-full bg-gray-500"></span>
                         <h2 className="font-bold text-gray-500">اكتملت</h2>
                     </div>
                     <p className="font-bold p-2">
@@ -123,7 +123,13 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
                     {totalCampaigns > 0 ? (
                         <>
                             <div className="h-full">
-                                <div className="bg-gray-100 p-6 rounded-lg h-full grid grid-cols-1 md:grid-cols-2 text-center md:text-start items-center md:gap-96">
+                                <div
+                                    onClick={() =>
+                                        navigate(
+                                            `/campaign/${activeCampaigns[currentIndex].id}`
+                                        )
+                                    }
+                                    className="bg-gray-100 p-6 rounded-lg h-full grid grid-cols-1 md:grid-cols-2 text-center md:text-start items-center md:gap-96 cursor-pointer">
                                     <div>
                                         <div>
                                             <div className=" mb-3">
@@ -198,16 +204,6 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
                             </div>
                             {totalCampaigns > 1 && (
                                 <>
-                                    <button
-                                        onClick={handlePrev}
-                                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100 transition-colors">
-                                        <ChevronLeft className="w-5 h-5 text-gray-600" />
-                                    </button>
-                                    <button
-                                        onClick={handleNext}
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100 transition-colors">
-                                        <ChevronRight className="w-5 h-5 text-gray-600" />
-                                    </button>
                                     <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
                                         {activeCampaigns.map((_, index) => (
                                             <div

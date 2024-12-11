@@ -24,7 +24,7 @@ const Campain = () => {
     }
 
     return (
-        <div className="bg-gray-200 min-h-[795px] rounded-md p-6">
+        <div className="bg-gray-100 min-h-[795px] rounded-md p-6">
             <div className="mb-5">
                 <CompianBoxes campaignSummary={campaignSummary} />
             </div>

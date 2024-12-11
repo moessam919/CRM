@@ -32,7 +32,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="bg-gray-200 rounded-md">
+        <div className="bg-gray-100 rounded-md">
             <div className="p-6">
                 <div className="mb-5">
                     <DetailsBoxes salesreport={salesreport} />

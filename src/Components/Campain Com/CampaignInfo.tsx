@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import CampaignsChart from "./CampaignsChart";
 import CampaignsActionsBtn from "./CampaignsActionsBtn";
+import AnalysisChart from "./AnalysisChart";
 
 const CampaignInfo = () => {
     const { id } = useParams();
@@ -25,8 +26,6 @@ const CampaignInfo = () => {
     const { selectedCampaign, loading } = useAppSelector(
         (state) => state.campaigns
     );
-
-    console.log(selectedCampaign);
 
     useEffect(() => {
         if (id) {
@@ -54,12 +53,12 @@ const CampaignInfo = () => {
     if (!selectedCampaign) return null;
 
     return (
-        <div className="p-6 space-y-6 bg-gray-200 rounded-md">
+        <div className="p-6 space-y-6 bg-gray-100 rounded-md">
             {/* Campaign Header */}
             <div className="grid grid-cols-1 gap-6">
-                <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row items-center justify-between">
+                <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row items-start justify-between">
                     <div className="flex flex-col items-center md:items-start w-[80%]">
-                        <div className="flex items-center gap-5">
+                        <div className="flex items-center md:items-start gap-5">
                             <h1 className="text-2xl font-bold px-3 py-1">
                                 {selectedCampaign.name}
                             </h1>
@@ -98,8 +97,7 @@ const CampaignInfo = () => {
                             </span>
                         </div>
                     </div> */}
-                    <div className="flex flex-col justify-center items-end  gap-2 mt-5 md:mt-0">
-                        <CampaignsActionsBtn />
+                    <div className="flex justify-center items-center  gap-2 mt-5 md:mt-0">
                         <span
                             className={`px-3 py-1 rounded-md ${
                                 selectedCampaign.status === "active"
@@ -110,32 +108,42 @@ const CampaignInfo = () => {
                                 ? "نشط"
                                 : "غير نشط"}
                         </span>
+                        <CampaignsActionsBtn />
                     </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="col-span-2 md:col-span-1">
+                    <AnalysisChart analaysis={selectedCampaign} />
+                </div>
+                <div className="col-span-2">
+                    <CampaignsChart id={id} />
                 </div>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow ">
                 <h1 className="text-2xl font-bold mb-4">أهداف الحملة</h1>
-                <div className="grid grid-cols-1  md:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
                     {/* Total Sales */}
                     {selectedCampaign?.analysis?.total_sales && (
                         <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
-                            <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
+                            <div className="flex items-center gap-2 text-gray-600 mb-4 font-bold">
                                 <BarChart className="w-4 h-4" />
                                 <span>إجمالي المبيعات</span>
                             </div>
 
-                            <div className="text-xl font-bold mb-1">
+                            <div className="text-xl font-bold mb-2">
                                 <span className="text-gray-600">
                                     المستهدف:{" "}
                                 </span>
                                 {selectedCampaign.analysis.total_sales?.target}{" "}
                                 ريال
                             </div>
-                            <div>
+                            <div className="text-xl text-gray-600 font-bold">
                                 <span>نسبة التحقيق :</span>{" "}
                                 <span
-                                    className={`text-sm ${
+                                    className={` ${
                                         parseFloat(
                                             selectedCampaign.analysis
                                                 .total_sales
@@ -163,7 +171,7 @@ const CampaignInfo = () => {
                     {/* Category Sales */}
                     {selectedCampaign?.analysis?.sales_of_category && (
                         <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
-                            <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
+                            <div className="flex items-center gap-2 text-gray-600 mb-4 font-bold">
                                 <PieChart className="w-4 h-4" />
                                 <span>مبيعات الفئة</span>
                             </div>
@@ -178,10 +186,10 @@ const CampaignInfo = () => {
                                 ريال
                             </div>
 
-                            <div>
+                            <div className="text-xl text-gray-600 font-bold">
                                 <span>نسبة التحقيق :</span>{" "}
                                 <span
-                                    className={`text-sm ${
+                                    className={` ${
                                         parseFloat(
                                             selectedCampaign.analysis
                                                 .sales_of_category
@@ -211,7 +219,7 @@ const CampaignInfo = () => {
                     {/* Product Sales */}
                     {selectedCampaign?.analysis?.sales_of_specific_products && (
                         <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
-                            <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
+                            <div className="flex items-center gap-2 text-gray-600 mb-4 font-bold">
                                 <LineChart className="w-4 h-4" />
                                 <span>مبيعات المنتجات</span>
                             </div>
@@ -225,10 +233,10 @@ const CampaignInfo = () => {
                                 }{" "}
                                 ريال
                             </div>
-                            <div>
+                            <div className="text-xl text-gray-600 font-bold">
                                 <span>نسبة التحقيق :</span>{" "}
                                 <span
-                                    className={`text-sm ${
+                                    className={` ${
                                         parseFloat(
                                             selectedCampaign.analysis
                                                 .sales_of_specific_products
@@ -258,7 +266,7 @@ const CampaignInfo = () => {
                     {/* Total Sales */}
                     {selectedCampaign?.analysis?.customer_registration && (
                         <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
-                            <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
+                            <div className="flex items-center gap-2 text-gray-600 mb-4 font-bold">
                                 <Users className="w-4 h-4 text-gray-600" />
                                 <span>تسجيل العملاء</span>
                             </div>
@@ -272,10 +280,10 @@ const CampaignInfo = () => {
                                 }{" "}
                                 تسجيل
                             </div>
-                            <div>
+                            <div className="text-xl text-gray-600 font-bold">
                                 <span>نسبة التحقيق :</span>{" "}
                                 <span
-                                    className={`text-sm ${
+                                    className={` ${
                                         parseFloat(
                                             selectedCampaign.analysis
                                                 .customer_registration
@@ -304,17 +312,14 @@ const CampaignInfo = () => {
                 </div>
             </div>
 
-            <div>
-                <CampaignsChart id={id} />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1">
                 <div className=" ">
                     {/* Metrics Cards */}
                     <div className="bg-white p-6 rounded-lg shadow">
                         <h2 className="text-xl font-semibold mb-4">
                             مقاييس الحملة
                         </h2>
-                        <div className="space-y-4 min-h-[400px] max-h-[400px] overflow-auto">
+                        <div className="space-y-4">
                             {/* Number of Products Sold */}
                             {selectedCampaign.metrics.find(
                                 (m) => m.name === "number_of_products_sold"
@@ -571,7 +576,7 @@ const CampaignInfo = () => {
 
                             {/* Total Sales Value */}
                             {selectedCampaign.metrics.find(
-                                (m) => m.name === "total_sales_value"
+                                (m) => m.name === "total_sales"
                             ) && (
                                 <div className="bg-gray-100 p-4 rounded-lg">
                                     <div className="flex items-center gap-2 mb-1">
@@ -582,14 +587,11 @@ const CampaignInfo = () => {
                                     </div>
                                     <div className="text-2xl font-bold">
                                         {selectedCampaign.metrics.find(
-                                            (m) =>
-                                                m.name === "total_sales_value"
+                                            (m) => m.name === "total_sales"
                                         )?.value || 0}
                                         <span className="text-sm text-gray-600 mr-1">
                                             {selectedCampaign.metrics.find(
-                                                (m) =>
-                                                    m.name ===
-                                                    "total_sales_value"
+                                                (m) => m.name === "total_sales"
                                             )?.type === "integer"
                                                 ? "ريال"
                                                 : "%"}
@@ -601,208 +603,6 @@ const CampaignInfo = () => {
                     </div>
 
                     {/* Total Sales */}
-                </div>
-
-                <div className="">
-                    {/* comparison periods_ nalysis */}
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h1 className="text-2xl font-bold mb-4">
-                            مقارنات الفترات
-                        </h1>
-                        <div className="overflow-auto min-h-[400px] max-h-[400px] space-y-4">
-                            {selectedCampaign?.comparison_periods_analysis?.map(
-                                (period, index) => (
-                                    <div
-                                        key={index}
-                                        className=" p-4 rounded-lg">
-                                        <div className="flex items-center gap-2 text-gray-600 mb-2 font-bold">
-                                            <TrendingUp className="w-4 h-4" />
-                                            <span>{period.period_name}</span>
-                                        </div>
-
-                                        {/* Customer Registration Comparison */}
-                                        {period.comparison
-                                            .customer_registration && (
-                                            <div className="mb-2 bg-gray-100 p-4 rounded-lg">
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-600">
-                                                        عدد العملاء السابق
-                                                    </span>
-                                                    <div className="text-sm font-medium">
-                                                        {
-                                                            period.comparison
-                                                                .customer_registration
-                                                                .previous
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-600">
-                                                        عدد العملاء احالي
-                                                    </span>
-                                                    <div className="text-sm font-medium">
-                                                        {
-                                                            period.comparison
-                                                                .customer_registration
-                                                                .current
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-between items-center text-sm">
-                                                    <span className="text-gray-500">
-                                                        نسبة التغيير
-                                                    </span>
-                                                    <span
-                                                        className={`font-medium ${parseFloat(period.comparison.customer_registration.achievement_percentage) >= 0 ? "text-green-600" : "text-red-600"}`}>
-                                                        {
-                                                            period.comparison
-                                                                .customer_registration
-                                                                .achievement_percentage
-                                                        }
-                                                        %
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Sales of Category Comparison */}
-                                        {period.comparison
-                                            .sales_of_category && (
-                                            <div className="mb-2 bg-gray-100 p-4 rounded-lg">
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-600">
-                                                        مبيعات الفئة السابقة
-                                                    </span>
-                                                    <div className="text-sm font-medium">
-                                                        {
-                                                            period.comparison
-                                                                .sales_of_category
-                                                                .previous
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-600">
-                                                        مبيعات الفئة الحالية
-                                                    </span>
-                                                    <div className="text-sm font-medium">
-                                                        {
-                                                            period.comparison
-                                                                .sales_of_category
-                                                                .current
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-between items-center text-sm">
-                                                    <span className="text-gray-500">
-                                                        نسبة التغيير
-                                                    </span>
-                                                    <span
-                                                        className={`font-medium ${parseFloat(period.comparison.sales_of_category.achievement_percentage) >= 0 ? "text-green-600" : "text-red-600"}`}>
-                                                        {
-                                                            period.comparison
-                                                                .sales_of_category
-                                                                .achievement_percentage
-                                                        }
-                                                        %
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Sales of Specific Products Comparison */}
-                                        {period.comparison
-                                            .sales_of_specific_products && (
-                                            <div className="mb-2 bg-gray-100 p-4 rounded-lg">
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-600">
-                                                        مبيعات المنتجات السابقة
-                                                    </span>
-                                                    <div className="text-sm font-medium">
-                                                        {
-                                                            period.comparison
-                                                                .sales_of_specific_products
-                                                                .previous
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-600">
-                                                        مبيعات المنتجات الحالية
-                                                    </span>
-                                                    <div className="text-sm font-medium">
-                                                        {
-                                                            period.comparison
-                                                                .sales_of_specific_products
-                                                                .current
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-between items-center text-sm">
-                                                    <span className="text-gray-500">
-                                                        نسبة التغيير
-                                                    </span>
-                                                    <span
-                                                        className={`font-medium ${parseFloat(period.comparison.sales_of_specific_products.achievement_percentage) >= 0 ? "text-green-600" : "text-red-600"}`}>
-                                                        {
-                                                            period.comparison
-                                                                .sales_of_specific_products
-                                                                .achievement_percentage
-                                                        }
-                                                        %
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Total Sales Comparison */}
-                                        {period.comparison.total_sales && (
-                                            <div className="mb-2 bg-gray-100 p-4 rounded-lg">
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-600">
-                                                        المبيعات السابقة
-                                                    </span>
-                                                    <div className="text-sm font-medium">
-                                                        {
-                                                            period.comparison
-                                                                .total_sales
-                                                                .previous
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-600">
-                                                        المبيعات الحالية
-                                                    </span>
-                                                    <div className="text-sm font-medium">
-                                                        {
-                                                            period.comparison
-                                                                .total_sales
-                                                                .current
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-between items-center text-sm">
-                                                    <span className="text-gray-500">
-                                                        نسبة التغيير
-                                                    </span>
-                                                    <span
-                                                        className={`font-medium ${parseFloat(period.comparison.total_sales.achievement_percentage) >= 0 ? "text-green-600" : "text-red-600"}`}>
-                                                        {
-                                                            period.comparison
-                                                                .total_sales
-                                                                .achievement_percentage
-                                                        }
-                                                        %
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    </div>
                 </div>
             </div>
             {/* Period Comparisons */}
