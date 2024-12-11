@@ -26,6 +26,8 @@ const CampaignInfo = () => {
         (state) => state.campaigns
     );
 
+    console.log(selectedCampaign);
+
     useEffect(() => {
         if (id) {
             dispatch(actgetCampaignById(Number(id)));
@@ -76,7 +78,7 @@ const CampaignInfo = () => {
                         <div className="flex items-center gap-4 mt-2">
                             <TrendingUp className="w-4 h-4" />
                             <span>
-                                معدل النجاح:{" "}
+                                نسبة تحقيق الهدف:{" "}
                                 {selectedCampaign.average_success_rate}%
                             </span>
                         </div>
@@ -96,7 +98,8 @@ const CampaignInfo = () => {
                             </span>
                         </div>
                     </div> */}
-                    <div className="flex flex-col justify-center items-center  gap-2 mt-5 md:mt-0">
+                    <div className="flex flex-col justify-center items-end  gap-2 mt-5 md:mt-0">
+                        <CampaignsActionsBtn />
                         <span
                             className={`px-3 py-1 rounded-md ${
                                 selectedCampaign.status === "active"
@@ -107,7 +110,6 @@ const CampaignInfo = () => {
                                 ? "نشط"
                                 : "غير نشط"}
                         </span>
-                        <CampaignsActionsBtn />
                     </div>
                 </div>
             </div>
@@ -122,17 +124,39 @@ const CampaignInfo = () => {
                                 <BarChart className="w-4 h-4" />
                                 <span>إجمالي المبيعات</span>
                             </div>
-                            <div className="text-2xl font-bold">
-                                $
-                                {selectedCampaign.analysis.total_sales?.current}
+
+                            <div className="text-xl font-bold mb-1">
+                                <span className="text-gray-600">
+                                    المستهدف:{" "}
+                                </span>
+                                {selectedCampaign.analysis.total_sales?.target}{" "}
+                                ريال
                             </div>
-                            <div className="text-green-500 text-sm">
-                                ↑{" "}
-                                {
-                                    selectedCampaign.analysis.total_sales
-                                        ?.achievement_percentage
-                                }
-                                % نسبة التحقيق
+                            <div>
+                                <span>نسبة التحقيق :</span>{" "}
+                                <span
+                                    className={`text-sm ${
+                                        parseFloat(
+                                            selectedCampaign.analysis
+                                                .total_sales
+                                                ?.achievement_percentage || "0"
+                                        ) < 50
+                                            ? "text-red-500"
+                                            : parseFloat(
+                                                    selectedCampaign.analysis
+                                                        .total_sales
+                                                        ?.achievement_percentage ||
+                                                        "0"
+                                                ) < 80
+                                              ? "text-yellow-500"
+                                              : "text-green-500"
+                                    }`}>
+                                    {
+                                        selectedCampaign.analysis.total_sales
+                                            ?.achievement_percentage
+                                    }
+                                    %
+                                </span>
                             </div>
                         </div>
                     )}
@@ -143,35 +167,43 @@ const CampaignInfo = () => {
                                 <PieChart className="w-4 h-4" />
                                 <span>مبيعات الفئة</span>
                             </div>
-                            <div className="text-2xl font-bold">
+                            <div className="text-xl font-bold mb-1">
+                                <span className="text-gray-600">
+                                    المستهدف:{" "}
+                                </span>
                                 {
                                     selectedCampaign.analysis.sales_of_category
-                                        ?.achievement_percentage
-                                }
-                                %
+                                        ?.target
+                                }{" "}
+                                ريال
                             </div>
-                            <div
-                                className={`text-sm ${
-                                    parseFloat(
-                                        selectedCampaign.analysis.total_sales
-                                            ?.achievement_percentage || "0"
-                                    ) < 50
-                                        ? "text-red-500"
-                                        : parseFloat(
-                                                selectedCampaign.analysis
-                                                    .total_sales
-                                                    ?.achievement_percentage ||
-                                                    "0"
-                                            ) < 80
-                                          ? "text-yellow-500"
-                                          : "text-green-500"
-                                }`}>
-                                ↑{" "}
-                                {
-                                    selectedCampaign.analysis.total_sales
-                                        ?.achievement_percentage
-                                }
-                                % نسبة التحقيق
+
+                            <div>
+                                <span>نسبة التحقيق :</span>{" "}
+                                <span
+                                    className={`text-sm ${
+                                        parseFloat(
+                                            selectedCampaign.analysis
+                                                .sales_of_category
+                                                ?.achievement_percentage || "0"
+                                        ) < 50
+                                            ? "text-red-500"
+                                            : parseFloat(
+                                                    selectedCampaign.analysis
+                                                        .sales_of_category
+                                                        ?.achievement_percentage ||
+                                                        "0"
+                                                ) < 80
+                                              ? "text-yellow-500"
+                                              : "text-green-500"
+                                    }`}>
+                                    {
+                                        selectedCampaign.analysis
+                                            .sales_of_category
+                                            ?.achievement_percentage
+                                    }
+                                    %
+                                </span>
                             </div>
                         </div>
                     )}
@@ -183,36 +215,42 @@ const CampaignInfo = () => {
                                 <LineChart className="w-4 h-4" />
                                 <span>مبيعات المنتجات</span>
                             </div>
-                            <div className="text-2xl font-bold">
+                            <div className="text-xl font-bold mb-1">
+                                <span className="text-gray-600">
+                                    المستهدف:{" "}
+                                </span>
                                 {
                                     selectedCampaign.analysis
-                                        .sales_of_specific_products?.current
-                                }
+                                        .sales_of_specific_products?.target
+                                }{" "}
+                                ريال
                             </div>
-                            <div
-                                className={`text-sm ${
-                                    parseFloat(
+                            <div>
+                                <span>نسبة التحقيق :</span>{" "}
+                                <span
+                                    className={`text-sm ${
+                                        parseFloat(
+                                            selectedCampaign.analysis
+                                                .sales_of_specific_products
+                                                ?.achievement_percentage || "0"
+                                        ) < 50
+                                            ? "text-red-500"
+                                            : parseFloat(
+                                                    selectedCampaign.analysis
+                                                        .sales_of_specific_products
+                                                        ?.achievement_percentage ||
+                                                        "0"
+                                                ) < 80
+                                              ? "text-yellow-500"
+                                              : "text-green-500"
+                                    }`}>
+                                    {
                                         selectedCampaign.analysis
                                             .sales_of_specific_products
-                                            ?.achievement_percentage || "0"
-                                    ) < 50
-                                        ? "text-red-500"
-                                        : parseFloat(
-                                                selectedCampaign.analysis
-                                                    .sales_of_specific_products
-                                                    ?.achievement_percentage ||
-                                                    "0"
-                                            ) < 80
-                                          ? "text-yellow-500"
-                                          : "text-green-500"
-                                }`}>
-                                ↑{" "}
-                                {
-                                    selectedCampaign.analysis
-                                        .sales_of_specific_products
-                                        ?.achievement_percentage
-                                }
-                                % نسبة التحقيق
+                                            ?.achievement_percentage
+                                    }
+                                    %
+                                </span>
                             </div>
                         </div>
                     )}
@@ -224,36 +262,42 @@ const CampaignInfo = () => {
                                 <Users className="w-4 h-4 text-gray-600" />
                                 <span>تسجيل العملاء</span>
                             </div>
-                            <div className="text-2xl font-bold">
+                            <div className="text-xl font-bold mb-1">
+                                <span className="text-gray-600">
+                                    المستهدف:{" "}
+                                </span>
                                 {
                                     selectedCampaign.analysis
-                                        .customer_registration?.current
-                                }
+                                        .customer_registration?.target
+                                }{" "}
+                                تسجيل
                             </div>
-                            <div
-                                className={`text-sm ${
-                                    parseFloat(
+                            <div>
+                                <span>نسبة التحقيق :</span>{" "}
+                                <span
+                                    className={`text-sm ${
+                                        parseFloat(
+                                            selectedCampaign.analysis
+                                                .customer_registration
+                                                ?.achievement_percentage || "0"
+                                        ) < 50
+                                            ? "text-red-500"
+                                            : parseFloat(
+                                                    selectedCampaign.analysis
+                                                        .customer_registration
+                                                        ?.achievement_percentage ||
+                                                        "0"
+                                                ) < 80
+                                              ? "text-yellow-500"
+                                              : "text-green-500"
+                                    }`}>
+                                    {
                                         selectedCampaign.analysis
                                             .customer_registration
-                                            ?.achievement_percentage || "0"
-                                    ) < 50
-                                        ? "text-red-500" 
-                                        : parseFloat(
-                                                selectedCampaign.analysis
-                                                    .customer_registration
-                                                    ?.achievement_percentage ||
-                                                    "0"
-                                            ) < 80
-                                          ? "text-yellow-500" 
-                                          : "text-green-500" 
-                                }`}>
-                                ↑{" "}
-                                {
-                                    selectedCampaign.analysis
-                                        .customer_registration
-                                        ?.achievement_percentage
-                                }
-                                % نسبة التحقيق
+                                            ?.achievement_percentage
+                                    }
+                                    %
+                                </span>
                             </div>
                         </div>
                     )}

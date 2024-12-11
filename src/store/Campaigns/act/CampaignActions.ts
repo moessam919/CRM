@@ -61,14 +61,11 @@ export const actgetCampaignById = createAsyncThunk(
 
 export const actGetCampaignChartData = createAsyncThunk(
     "campaigns/actGetCampaignChartData",
-    async (
-        { period, id }: { period: string; id: string | undefined },
-        thunkAPI
-    ) => {
+    async ({ id }: { id: string | undefined }, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
         try {
             const res = await axiosInstance.get(
-                `/marketing/campaigns/${id}/daily-performance/?${new URLSearchParams({ period: `${period}` })}`
+                `/marketing/campaigns/${id}/daily-performance/`
             );
             return res.data;
         } catch (error) {

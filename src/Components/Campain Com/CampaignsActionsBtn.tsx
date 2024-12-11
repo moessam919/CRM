@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash2, ToggleRight, ToggleLeft, MoreHorizontal } from "lucide-react";
+import {
+    Trash2,
+    ToggleRight,
+    ToggleLeft,
+    EllipsisVertical,
+} from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
     actDeleteCampaign,
@@ -61,7 +66,7 @@ const CampaignsActionsBtn: React.FC = () => {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="text-gray-600 hover:text-gray-900"
                 title="المزيد">
-                <MoreHorizontal className="w-6 h-6" />
+                <EllipsisVertical className="w-6 h-6" />
             </button>
 
             {/* Dropdown Menu */}

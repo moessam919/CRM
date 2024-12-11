@@ -5,9 +5,9 @@ import { useEffect } from "react";
 // component
 import DetailsBoxes from "../Components/DetailsBoxes";
 import LastDealTable from "../Components/LastDealTable";
-import SalesForecastChart from "../Components/SalesForecastChart";
 import SalesOverview from "../Components/SalesOverview";
 import TopBuyersTable from "../Components/TopBuyersTable";
+import ActiveCampaigns from "../Components/ActiveCampaigns";
 
 const Dashboard = () => {
     const { salesreport, loading } = useAppSelector(
@@ -32,7 +32,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="bg-gray-200 min-h-[795px] rounded-md">
+        <div className="bg-gray-200 rounded-md">
             <div className="p-6">
                 <div className="mb-5">
                     <DetailsBoxes salesreport={salesreport} />
@@ -45,11 +45,11 @@ const Dashboard = () => {
                         <LastDealTable />
                     </div>
                 </div>
-                <div className="grid grid-cols-1 xl:grid-cols-4 gap-5 ">
-                    <div className="col-span-1 md:col-span-2">
-                        <SalesForecastChart />
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 ">
+                    <div className="">
+                        <ActiveCampaigns />
                     </div>
-                    <div className="col-span-1 md:col-span-2">
+                    <div className="">
                         <TopBuyersTable />
                     </div>
                 </div>

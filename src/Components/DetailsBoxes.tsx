@@ -1,10 +1,4 @@
-import {
-    ChartLine,
-    Database,
-    HandCoins,
-    Handshake,
-    PersonStanding,
-} from "lucide-react";
+import { ChartLine, Database, HandCoins, PersonStanding } from "lucide-react";
 import { ISalesReport } from "../types/salesreport";
 
 interface DetailsBoxesProps {
@@ -89,24 +83,6 @@ const DetailsBoxes = ({ salesreport }: DetailsBoxesProps) => {
                     </p>
                     {/* <span className="text-green-500 text-xs font-bold">
                         +10% من الشهر السابق
-                    </span> */}
-                </div>
-            </div>
-            <div className="bg-white p-5 rounded-md shadow-md hover:translate-y-1 duration-200">
-                <div className="flex items-center justify-between gap-2 w-full ">
-                    <h3 className="text-gray-500 font-bold"> عدد الفواتير</h3>
-                    <div className="text-gray-500">
-                        <Handshake size={20} />
-                    </div>
-                </div>
-                <div className="mt-4">
-                    <p className="text-2xl font-bold mb-1">
-                        {salesreport?.total_invoices
-                            ? salesreport?.total_invoices
-                            : 0}
-                    </p>
-                    {/* <span className="text-green-500 text-xs font-bold">
-                        +20% من الشهر السابق
                     </span> */}
                 </div>
             </div>

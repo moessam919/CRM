@@ -70,8 +70,7 @@ const TopBuyersTable = () => {
             cell: (row) => (
                 <div
                     onClick={() => navigate(`/customer/${row.id}`)}
-                    className="border-gray-300 hover:bg-gray-200 duration-200 cursor-pointer text-xs py-3 text-center rounded font-semibold  p-1"
-                >
+                    className="border-gray-300 hover:bg-gray-200 duration-200 cursor-pointer text-xs py-3 text-center rounded font-semibold  p-1">
                     عرض التفاصيل
                 </div>
             ),
@@ -81,7 +80,7 @@ const TopBuyersTable = () => {
     const [rowsPerPage] = useState<number>(5);
 
     return (
-        <div className="p-4 bg-white rounded-md shadow-md min-h-[484px] overflow-auto">
+        <div className="p-4 bg-white rounded-md shadow-md min-h-[499px] overflow-auto">
             <h2 className="text-lg font-bold text-gray-500 mb-4">
                 العملاء ذو أعلى قيمة طلبات
             </h2>

@@ -78,7 +78,7 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
 
                 <div className="mt-1 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full bg-green-500"></span>
+                        <span className="w-4 h-4 rounded-full bg-teal-500"></span>
                         <h2 className="font-bold text-gray-500">نشط</h2>
                     </div>
                     <p className="font-bold p-2">
@@ -98,11 +98,11 @@ const StatusCopmain = ({ campaignSummary }: CompianBoxesProps) => {
 
                 <div className="mt-2 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full bg-gray-500"></span>
+                        <span className="w-4 h-4 rounded-full bg-green-500"></span>
                         <h2 className="font-bold text-gray-500">اكتملت</h2>
                     </div>
                     <p className="font-bold p-2">
-                        {campaignSummary?.draft_campaigns_count || 0}
+                        {campaignSummary?.completed_campaigns_count || 0}
                     </p>
                 </div>
             </div>

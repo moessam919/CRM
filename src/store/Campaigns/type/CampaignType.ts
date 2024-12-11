@@ -40,6 +40,7 @@ interface Metric {
 interface AnalysisData {
     current: string;
     previous: string;
+    target: string;
     change: string;
     percentage_change: string;
     achievement_percentage: string;
@@ -94,6 +95,7 @@ export interface CampaignSummary {
     total_campaigns: number;
     active_campaigns_count: number;
     this_month_campaigns_count: number;
+    completed_campaigns_count: number;
     draft_campaigns_count: number;
     active_campaigns: ActiveCampaigns[];
 }

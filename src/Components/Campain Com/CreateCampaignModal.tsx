@@ -333,22 +333,12 @@ const CreateCampaignModal = () => {
                         {metrics.map((metric) => (
                             <div
                                 key={metric.id}
-                                className="mt-4 p-4 border rounded-lg bg-gray-50 relative">
-                                <div className="mb-4">
-                                    <div className="flex justify-between items-center mb-2">
+                                className="mt-4 p-4 border rounded-lg bg-gray-50 relative grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="">
+                                    <div className="relative">
                                         <label className="block text-gray-700 mb-2">
                                             اسم الهدف
                                         </label>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                removeMetric(metric.id)
-                                            }
-                                            className=" text-gray-600 hover:text-red-800">
-                                            <Trash size={20} />
-                                        </button>
-                                    </div>
-                                    <div className="relative">
                                         <button
                                             type="button"
                                             className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-50 w-full justify-between"
@@ -402,55 +392,8 @@ const CreateCampaignModal = () => {
                                     </div>
                                 </div>
 
-                                {/* Conditionally Render Product or Category Select */}
-                                {metric.name ===
-                                    "sales_of_specific_products" && (
-                                    <div className="mb-4">
-                                        <label className="block text-gray-700 mb-2">
-                                            اختر المنتج
-                                        </label>
-                                        <MultiSelectProducts
-                                            onProductsSelect={(
-                                                selectedProducts
-                                            ) => {
-                                                // Update the metric with the selected product IDs
-                                                const productIds =
-                                                    selectedProducts.map(
-                                                        (product) => product.id
-                                                    );
-                                                updateMetric(
-                                                    metric.id,
-                                                    "selectedProducts",
-                                                    productIds
-                                                );
-                                            }}
-                                        />
-                                    </div>
-                                )}
-
-                                {metric.name === "sales_of_category" && (
-                                    <div className="mb-4">
-                                        <label className="block text-gray-700 mb-2">
-                                            اختر الفئة
-                                        </label>
-                                        <MultiSelectProductCategories
-                                            onCategoriesSelect={(
-                                                categories: ProductCategory[]
-                                            ) => {
-                                                updateMetric(
-                                                    metric.id,
-                                                    "selectedCategories",
-                                                    categories.map(
-                                                        (cat) => cat.id
-                                                    )
-                                                );
-                                            }}
-                                        />
-                                    </div>
-                                )}
-
                                 <div className="flex gap-4">
-                                    <div className="flex-1">
+                                    <div className="hidden">
                                         <label className="block text-gray-700 mb-2">
                                             النوع
                                         </label>
@@ -540,7 +483,64 @@ const CreateCampaignModal = () => {
                                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                                         />
                                     </div>
+                                    <div className="flex justify-between items-center absolute left-4 top-4">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                removeMetric(metric.id)
+                                            }
+                                            className=" text-gray-600 hover:text-red-800">
+                                            <Trash size={20} />
+                                        </button>
+                                    </div>
                                 </div>
+
+                                {/* Conditionally Render Product or Category Select */}
+                                {metric.name ===
+                                    "sales_of_specific_products" && (
+                                    <div className="mb-4 col-span-2">
+                                        <label className="block text-gray-700 mb-2">
+                                            اختر المنتج
+                                        </label>
+                                        <MultiSelectProducts
+                                            onProductsSelect={(
+                                                selectedProducts
+                                            ) => {
+                                                // Update the metric with the selected product IDs
+                                                const productIds =
+                                                    selectedProducts.map(
+                                                        (product) => product.id
+                                                    );
+                                                updateMetric(
+                                                    metric.id,
+                                                    "selectedProducts",
+                                                    productIds
+                                                );
+                                            }}
+                                        />
+                                    </div>
+                                )}
+
+                                {metric.name === "sales_of_category" && (
+                                    <div className="mb-4 col-span-2">
+                                        <label className="block text-gray-700 mb-2">
+                                            اختر الفئة
+                                        </label>
+                                        <MultiSelectProductCategories
+                                            onCategoriesSelect={(
+                                                categories: ProductCategory[]
+                                            ) => {
+                                                updateMetric(
+                                                    metric.id,
+                                                    "selectedCategories",
+                                                    categories.map(
+                                                        (cat) => cat.id
+                                                    )
+                                                );
+                                            }}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
