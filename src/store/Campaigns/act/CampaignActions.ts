@@ -63,7 +63,6 @@ export const actgetCampaignById = createAsyncThunk(
                     endDate.toISOString().split("T")[0]
                 );
 
-            console.log(queryParams.toString());
 
             const response = await axiosInstance.get<selectedCampaign[]>(
                 `/marketing/campaigns/${id}/?${queryParams.toString()}`
