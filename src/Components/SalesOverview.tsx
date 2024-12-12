@@ -71,26 +71,22 @@ const SalesOverview = () => {
                 <div className="flex gap-2 items-center justify-end mb-4">
                     <button
                         onClick={() => handleSort("day")}
-                        className={getButtonStyle("day")}
-                    >
+                        className={getButtonStyle("day")}>
                         يوم
                     </button>
                     <button
                         onClick={() => handleSort("week")}
-                        className={getButtonStyle("week")}
-                    >
+                        className={getButtonStyle("week")}>
                         أسبوع
                     </button>
                     <button
                         onClick={() => handleSort("month")}
-                        className={getButtonStyle("month")}
-                    >
+                        className={getButtonStyle("month")}>
                         شهر
                     </button>
                     <button
                         onClick={() => handleSort("year")}
-                        className={getButtonStyle("year")}
-                    >
+                        className={getButtonStyle("year")}>
                         سنة
                     </button>
                 </div>
@@ -106,8 +102,7 @@ const SalesOverview = () => {
                             right: 30,
                             left: 0,
                             bottom: 0,
-                        }}
-                    >
+                        }}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
                         <YAxis />

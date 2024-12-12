@@ -5,6 +5,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 interface CampaignPayload {
     name: string;
     description: string;
+    status: string;
     start_date: string;
     end_date: string;
     metrics: {

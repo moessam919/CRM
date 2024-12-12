@@ -71,7 +71,7 @@ const AnalysisChart = (analaysis: IAnalysisChart) => {
 
     return (
         <div className="p-5 bg-white rounded-md shadow-md">
-            <h3 className="text-center mb-4">نسب الإنجاز</h3>
+            <h3 className="text-center mb-4 text-2xl font-bold">نسب الإنجاز</h3>
             <ResponsiveContainer width="100%" height={300}>
                 <RadialBarChart
                     cx="50%"

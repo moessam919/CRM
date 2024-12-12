@@ -42,11 +42,33 @@ export const actgetCampaigns = createAsyncThunk(
 
 export const actgetCampaignById = createAsyncThunk(
     "campaigns/actgetCampaignById",
-    async (id: number, { rejectWithValue }) => {
+    async (
+        {
+            id,
+            startDate,
+            endDate,
+        }: { id: number; startDate?: Date; endDate?: Date },
+        { rejectWithValue }
+    ) => {
         try {
+            const queryParams = new URLSearchParams();
+            if (startDate)
+                queryParams.append(
+                    "start_date",
+                    startDate.toISOString().split("T")[0]
+                );
+            if (endDate)
+                queryParams.append(
+                    "end_date",
+                    endDate.toISOString().split("T")[0]
+                );
+
+            console.log(queryParams.toString());
+
             const response = await axiosInstance.get<selectedCampaign[]>(
-                `/marketing/campaigns/${id}/`
+                `/marketing/campaigns/${id}/?${queryParams.toString()}`
             );
+
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {

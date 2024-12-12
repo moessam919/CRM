@@ -29,6 +29,9 @@ const CreateCampaignModal = () => {
     const [campaignDescription, setCampaignDescription] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const [submissionType, setSubmissionType] = useState<"active" | "draft">(
+        "active"
+    );
 
     const [metrics, setMetrics] = useState<Metric[]>([
         {
@@ -69,8 +72,8 @@ const CreateCampaignModal = () => {
         { value: "sales_of_category", label: "مبيعات الفئة" },
         { value: "customer_registration", label: "تسجيل العملاء" },
         { value: "average_transaction_value", label: "متوسط قيمة المعاملة" },
-        { value: "invoices_count", label: "عدد الفواتير" },
-        { value: "number_of_products_sold", label: "عدد المنتجات المباعة" },
+        // { value: "invoices_count", label: "عدد الفواتير" },
+        // { value: "number_of_products_sold", label: "عدد المنتجات المباعة" },
     ];
 
     const removeMetric = (id: number) => {
@@ -135,7 +138,7 @@ const CreateCampaignModal = () => {
         });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // Additional validation check
@@ -169,12 +172,13 @@ const CreateCampaignModal = () => {
                 end_date: `${period.endDate} 23:59:59`,
             }));
 
-        // Prepare the payload
+        // Prepare the payload with dynamic status
         const payload = {
             name: campaignName,
             description: campaignDescription,
             start_date: `${startDate} 00:00:00`,
             end_date: `${endDate} 23:59:59`,
+            status: submissionType, // Use the state to determine status
             metrics: transformedMetrics,
             ...(transformedPeriods.length > 0 && {
                 comparison_periods: transformedPeriods,
@@ -184,7 +188,12 @@ const CreateCampaignModal = () => {
         try {
             const result = await dispatch(createCampaign(payload)).unwrap();
             if (result) {
-                toast.success("تم اضافة الحملة بنجاح!");
+                toast.success(
+                    submissionType === "active"
+                        ? "تم اضافة الحملة بنجاح!"
+                        : "تم حفظ المسودة بنجاح!"
+                );
+
                 // Reset all form data
                 setCampaignName("");
                 setCampaignDescription("");
@@ -209,7 +218,7 @@ const CreateCampaignModal = () => {
             }
         } catch (error) {
             console.error("Error creating campaign:", error);
-            toast.error(`حدث خطأ في انشاء الحملة: ${error}`);
+            toast.error(`حدث خطأ في انشاء الحملة: ${error}`);
         }
     };
 
@@ -519,6 +528,15 @@ const CreateCampaignModal = () => {
                     <div className="flex justify-end gap-2">
                         <button
                             type="submit"
+                            title="حفظ كمسودة"
+                            onClick={() => setSubmissionType("draft")}
+                            className="px-6 py-2 border hover:text-white rounded-md hover:bg-gray-600 duration-150">
+                            حفظ كمسودة
+                        </button>
+                        <button
+                            type="submit"
+                            title="حفظ كنشطة"
+                            onClick={() => setSubmissionType("active")}
                             className="px-6 py-2 border hover:text-white rounded-md hover:bg-gray-600 duration-150">
                             إنشاء
                         </button>

@@ -51,6 +51,7 @@ interface Analysis {
     sales_of_category: AnalysisData;
     sales_of_specific_products: AnalysisData;
     total_sales: AnalysisData;
+    average_transaction_value: AnalysisData;
 }
 
 interface ComparisonPeriod {

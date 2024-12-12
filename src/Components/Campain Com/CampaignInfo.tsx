@@ -1,24 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { actgetCampaignById } from "../../store/Campaigns/act/CampaignActions";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-    Calendar,
-    BarChart,
-    LineChart,
-    PieChart,
-    TrendingUp,
-    Package2,
-    FileText,
-    DollarSign,
-    Users,
-    Boxes,
-    BarChart3,
-    Activity,
-} from "lucide-react";
+import { Calendar, TrendingUp } from "lucide-react";
 import CampaignsChart from "./CampaignsChart";
 import CampaignsActionsBtn from "./CampaignsActionsBtn";
 import AnalysisChart from "./AnalysisChart";
+import AnalysisTotalSales from "./MetricsComp/AnalysisTotalSales";
+import AnalysisCategorySales from "./MetricsComp/AnalysisCategorySales";
+import AnalysisProductSales from "./MetricsComp/AnalysisProductSales";
+import AnalysisCustomerRegistration from "./MetricsComp/AnalysisCustomerRegistration";
+import MetricsInvoicesCount from "./MetricsComp/MetricsInvoicesCount";
+import MetricsNumberofProductsSold from "./MetricsComp/MetricsNumberofProductsSold";
+import MetricsAverageTransactionValue from "./MetricsComp/MetricsAverageTransactionValue";
+import MetricsCustomerRegistration from "./MetricsComp/MetricsCustomerRegistration";
+import MetricsSalesofCategory from "./MetricsComp/MetricsSalesofCategory";
+import MetricsSalesofSpecificProducts from "./MetricsComp/MetricsSalesofSpecificProducts";
+import MetricsTotalSalesValue from "./MetricsComp/MetricsTotalSalesValue";
+import DateFilter from "./DateFilter";
+import AnalysisAverageTransactionValue from "./MetricsComp/AnalysisAverageTransactionValue";
 
 const CampaignInfo = () => {
     const { id } = useParams();
@@ -27,11 +27,21 @@ const CampaignInfo = () => {
         (state) => state.campaigns
     );
 
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+
+
     useEffect(() => {
         if (id) {
-            dispatch(actgetCampaignById(Number(id)));
+            dispatch(
+                actgetCampaignById({
+                    id: Number(id),
+                    startDate: startDate || undefined,
+                    endDate: endDate || undefined,
+                })
+            );
         }
-    }, [dispatch, id]);
+    }, [dispatch, id, startDate, endDate]);
 
     const formatDate = (dateString: string): string => {
         const date = new Date(dateString);
@@ -40,6 +50,11 @@ const CampaignInfo = () => {
             month: "long",
             day: "numeric",
         });
+    };
+
+    const handleDateRangeChange = (start: Date, end: Date) => {
+        setStartDate(start);
+        setEndDate(end);
     };
 
     if (loading === "pending") {
@@ -74,12 +89,23 @@ const CampaignInfo = () => {
                                 {formatDate(selectedCampaign.end_date)}
                             </span>
                         </div>
-                        <div className="flex items-center gap-4 mt-2">
+                        <div className="flex items-center gap-2 mt-2">
                             <TrendingUp className="w-4 h-4" />
-                            <span>
-                                نسبة تحقيق الهدف:{" "}
-                                {selectedCampaign.average_success_rate}%
-                            </span>
+                            <div>
+                                <span>نسبة التحقيق :</span>{" "}
+                                <span
+                                    className={`${
+                                        selectedCampaign?.average_success_rate <
+                                        50
+                                            ? "text-red-500"
+                                            : selectedCampaign?.average_success_rate <
+                                                80
+                                              ? "text-yellow-500"
+                                              : "text-green-500"
+                                    }`}>
+                                    {selectedCampaign.average_success_rate}%
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -114,201 +140,38 @@ const CampaignInfo = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="col-span-2 md:col-span-1">
+                <div className="col-span-2 md:col-span-3 xl:col-span-1">
                     <AnalysisChart analaysis={selectedCampaign} />
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-2 md:col-span-3 xl:col-span-2">
                     <CampaignsChart id={id} />
                 </div>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow ">
                 <h1 className="text-2xl font-bold mb-4">أهداف الحملة</h1>
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
                     {/* Total Sales */}
-                    {selectedCampaign?.analysis?.total_sales && (
-                        <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
-                            <div className="flex items-center gap-2 text-gray-600 mb-4 font-bold">
-                                <BarChart className="w-4 h-4" />
-                                <span>إجمالي المبيعات</span>
-                            </div>
+                    <AnalysisTotalSales selectedCampaign={selectedCampaign} />
 
-                            <div className="text-xl font-bold mb-2">
-                                <span className="text-gray-600">
-                                    المستهدف:{" "}
-                                </span>
-                                {selectedCampaign.analysis.total_sales?.target}{" "}
-                                ريال
-                            </div>
-                            <div className="text-xl text-gray-600 font-bold">
-                                <span>نسبة التحقيق :</span>{" "}
-                                <span
-                                    className={` ${
-                                        parseFloat(
-                                            selectedCampaign.analysis
-                                                .total_sales
-                                                ?.achievement_percentage || "0"
-                                        ) < 50
-                                            ? "text-red-500"
-                                            : parseFloat(
-                                                    selectedCampaign.analysis
-                                                        .total_sales
-                                                        ?.achievement_percentage ||
-                                                        "0"
-                                                ) < 80
-                                              ? "text-yellow-500"
-                                              : "text-green-500"
-                                    }`}>
-                                    {
-                                        selectedCampaign.analysis.total_sales
-                                            ?.achievement_percentage
-                                    }
-                                    %
-                                </span>
-                            </div>
-                        </div>
-                    )}
                     {/* Category Sales */}
-                    {selectedCampaign?.analysis?.sales_of_category && (
-                        <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
-                            <div className="flex items-center gap-2 text-gray-600 mb-4 font-bold">
-                                <PieChart className="w-4 h-4" />
-                                <span>مبيعات الفئة</span>
-                            </div>
-                            <div className="text-xl font-bold mb-1">
-                                <span className="text-gray-600">
-                                    المستهدف:{" "}
-                                </span>
-                                {
-                                    selectedCampaign.analysis.sales_of_category
-                                        ?.target
-                                }{" "}
-                                ريال
-                            </div>
 
-                            <div className="text-xl text-gray-600 font-bold">
-                                <span>نسبة التحقيق :</span>{" "}
-                                <span
-                                    className={` ${
-                                        parseFloat(
-                                            selectedCampaign.analysis
-                                                .sales_of_category
-                                                ?.achievement_percentage || "0"
-                                        ) < 50
-                                            ? "text-red-500"
-                                            : parseFloat(
-                                                    selectedCampaign.analysis
-                                                        .sales_of_category
-                                                        ?.achievement_percentage ||
-                                                        "0"
-                                                ) < 80
-                                              ? "text-yellow-500"
-                                              : "text-green-500"
-                                    }`}>
-                                    {
-                                        selectedCampaign.analysis
-                                            .sales_of_category
-                                            ?.achievement_percentage
-                                    }
-                                    %
-                                </span>
-                            </div>
-                        </div>
-                    )}
+                    <AnalysisCategorySales
+                        selectedCampaign={selectedCampaign}
+                    />
 
                     {/* Product Sales */}
-                    {selectedCampaign?.analysis?.sales_of_specific_products && (
-                        <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
-                            <div className="flex items-center gap-2 text-gray-600 mb-4 font-bold">
-                                <LineChart className="w-4 h-4" />
-                                <span>مبيعات المنتجات</span>
-                            </div>
-                            <div className="text-xl font-bold mb-1">
-                                <span className="text-gray-600">
-                                    المستهدف:{" "}
-                                </span>
-                                {
-                                    selectedCampaign.analysis
-                                        .sales_of_specific_products?.target
-                                }{" "}
-                                ريال
-                            </div>
-                            <div className="text-xl text-gray-600 font-bold">
-                                <span>نسبة التحقيق :</span>{" "}
-                                <span
-                                    className={` ${
-                                        parseFloat(
-                                            selectedCampaign.analysis
-                                                .sales_of_specific_products
-                                                ?.achievement_percentage || "0"
-                                        ) < 50
-                                            ? "text-red-500"
-                                            : parseFloat(
-                                                    selectedCampaign.analysis
-                                                        .sales_of_specific_products
-                                                        ?.achievement_percentage ||
-                                                        "0"
-                                                ) < 80
-                                              ? "text-yellow-500"
-                                              : "text-green-500"
-                                    }`}>
-                                    {
-                                        selectedCampaign.analysis
-                                            .sales_of_specific_products
-                                            ?.achievement_percentage
-                                    }
-                                    %
-                                </span>
-                            </div>
-                        </div>
-                    )}
+                    <AnalysisProductSales selectedCampaign={selectedCampaign} />
 
-                    {/* Total Sales */}
-                    {selectedCampaign?.analysis?.customer_registration && (
-                        <div className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
-                            <div className="flex items-center gap-2 text-gray-600 mb-4 font-bold">
-                                <Users className="w-4 h-4 text-gray-600" />
-                                <span>تسجيل العملاء</span>
-                            </div>
-                            <div className="text-xl font-bold mb-1">
-                                <span className="text-gray-600">
-                                    المستهدف:{" "}
-                                </span>
-                                {
-                                    selectedCampaign.analysis
-                                        .customer_registration?.target
-                                }{" "}
-                                تسجيل
-                            </div>
-                            <div className="text-xl text-gray-600 font-bold">
-                                <span>نسبة التحقيق :</span>{" "}
-                                <span
-                                    className={` ${
-                                        parseFloat(
-                                            selectedCampaign.analysis
-                                                .customer_registration
-                                                ?.achievement_percentage || "0"
-                                        ) < 50
-                                            ? "text-red-500"
-                                            : parseFloat(
-                                                    selectedCampaign.analysis
-                                                        .customer_registration
-                                                        ?.achievement_percentage ||
-                                                        "0"
-                                                ) < 80
-                                              ? "text-yellow-500"
-                                              : "text-green-500"
-                                    }`}>
-                                    {
-                                        selectedCampaign.analysis
-                                            .customer_registration
-                                            ?.achievement_percentage
-                                    }
-                                    %
-                                </span>
-                            </div>
-                        </div>
-                    )}
+                    {/* average transaction value */}
+                    <AnalysisAverageTransactionValue
+                        selectedCampaign={selectedCampaign}
+                    />
+
+                    {/* Customer Registration  */}
+                    <AnalysisCustomerRegistration
+                        selectedCampaign={selectedCampaign}
+                    />
                 </div>
             </div>
 
@@ -316,296 +179,54 @@ const CampaignInfo = () => {
                 <div className=" ">
                     {/* Metrics Cards */}
                     <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-semibold mb-4">
-                            مقاييس الحملة
-                        </h2>
-                        <div className="space-y-4">
-                            {/* Number of Products Sold */}
-                            {selectedCampaign.metrics.find(
-                                (m) => m.name === "number_of_products_sold"
-                            ) && (
-                                <div className="bg-gray-100 p-4 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Package2 className="w-5 h-5 text-gray-600" />
-                                        <span className="font-medium">
-                                            عدد المنتجات المباعة
-                                        </span>
-                                    </div>
-                                    <div className="text-2xl font-bold">
-                                        {selectedCampaign.metrics.find(
-                                            (m) =>
-                                                m.name ===
-                                                "number_of_products_sold"
-                                        )?.value || 0}
-                                        <span className="text-sm text-gray-600 mr-1">
-                                            {selectedCampaign.metrics.find(
-                                                (m) =>
-                                                    m.name ===
-                                                    "number_of_products_sold"
-                                            )?.type === "integer"
-                                                ? "ريال"
-                                                : "%"}
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Invoices Count */}
-                            {selectedCampaign.metrics.find(
-                                (m) => m.name === "invoices_count"
-                            ) && (
-                                <div className="bg-gray-100 p-4 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <FileText className="w-5 h-5 text-gray-600" />
-                                        <span className="font-medium">
-                                            عدد الفواتير
-                                        </span>
-                                    </div>
-                                    <div className="text-2xl font-bold">
-                                        {selectedCampaign.metrics.find(
-                                            (m) => m.name === "invoices_count"
-                                        )?.value || 0}
-
-                                        <span className="text-sm text-gray-600 mr-1">
-                                            {selectedCampaign.metrics.find(
-                                                (m) =>
-                                                    m.name === "invoices_count"
-                                            )?.type === "integer"
-                                                ? "ريال"
-                                                : "%"}
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Average Transaction Value */}
-                            {selectedCampaign.metrics.find(
-                                (m) => m.name === "average_transaction_value"
-                            ) && (
-                                <div className="bg-gray-100 p-4 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <DollarSign className="w-5 h-5 text-gray-600" />
-                                        <span className="font-medium">
-                                            متوسط قيمة المعاملة
-                                        </span>
-                                    </div>
-                                    <div className="text-2xl font-bold">
-                                        {selectedCampaign.metrics.find(
-                                            (m) =>
-                                                m.name ===
-                                                "average_transaction_value"
-                                        )?.value || 0}
-                                        <span className="text-sm text-gray-600 mr-1">
-                                            {selectedCampaign.metrics.find(
-                                                (m) =>
-                                                    m.name ===
-                                                    "average_transaction_value"
-                                            )?.type === "integer"
-                                                ? "ريال"
-                                                : "%"}
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Customer Registration */}
-                            {selectedCampaign.metrics.find(
-                                (m) => m.name === "customer_registration"
-                            ) && (
-                                <div className="bg-gray-100 p-4 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Users className="w-4 h-4 text-gray-600" />
-                                        <span className="font-medium">
-                                            تسجيل العملاء
-                                        </span>
-                                    </div>
-                                    <div className="text-2xl font-bold">
-                                        {selectedCampaign.metrics.find(
-                                            (m) =>
-                                                m.name ===
-                                                "customer_registration"
-                                        )?.value || 0}
-                                        <span className="text-sm text-gray-600 mr-1">
-                                            {selectedCampaign.metrics.find(
-                                                (m) =>
-                                                    m.name ===
-                                                    "customer_registration"
-                                            )?.type === "integer"
-                                                ? "ريال"
-                                                : "%"}
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
+                        <div className="flex items-center justify-between mb-4 flex-col md:flex-row">
+                            <h2 className="text-xl font-semibold ">
+                                مقاييس الحملة
+                            </h2>
+                            <DateFilter
+                                onDateRangeChange={handleDateRangeChange}
+                                selectedCampaign={selectedCampaign}
+                            />
+                        </div>
+                        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(450px,1fr))] gap-6">
+                            {/* Total Sales Value */}
+                            <MetricsTotalSalesValue
+                                selectedCampaign={selectedCampaign}
+                            />
 
                             {/* Sales of Category */}
-                            {selectedCampaign.metrics.find(
-                                (m) => m.name === "sales_of_category"
-                            ) && (
-                                <div className="bg-gray-100 p-4 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Boxes className="w-5 h-5 text-gray-600" />
-                                        <span className="font-medium">
-                                            مبيعات الفئة
-                                        </span>
-                                    </div>
-                                    <div className="text-2xl font-bold">
-                                        {selectedCampaign.metrics.find(
-                                            (m) =>
-                                                m.name === "sales_of_category"
-                                        )?.value || 0}
-                                        <span className="text-sm text-gray-600 mr-1">
-                                            {selectedCampaign.metrics.find(
-                                                (m) =>
-                                                    m.name ===
-                                                    "sales_of_category"
-                                            )?.type === "integer"
-                                                ? "ريال"
-                                                : "%"}
-                                        </span>
-                                    </div>
-                                    {selectedCampaign.metrics.find(
-                                        (m) => m.name === "sales_of_category"
-                                    )?.additional_fields.categories && (
-                                        <div className="mt-2">
-                                            <div className="text-sm font-medium mb-1">
-                                                الفئات:
-                                            </div>
-                                            <div className="flex gap-2 flex-wrap">
-                                                {selectedCampaign.metrics
-                                                    .find(
-                                                        (m) =>
-                                                            m.name ===
-                                                            "sales_of_category"
-                                                    )
-                                                    ?.additional_fields.categories?.map(
-                                                        (category) => (
-                                                            <span
-                                                                key={
-                                                                    category.id
-                                                                }
-                                                                className="text-sm bg-white px-2 py-1 rounded">
-                                                                {
-                                                                    category.arabic_name
-                                                                }
-                                                            </span>
-                                                        )
-                                                    )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            <MetricsSalesofCategory
+                                selectedCampaign={selectedCampaign}
+                            />
 
                             {/* Sales of Specific Products */}
-                            {selectedCampaign.metrics.find(
-                                (m) => m.name === "sales_of_specific_products"
-                            ) && (
-                                <div className="bg-gray-100 p-4 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <BarChart3 className="w-5 h-5 text-gray-600" />
-                                        <span className="font-medium">
-                                            مبيعات منتجات محددة
-                                        </span>
-                                    </div>
-                                    <div className="text-2xl font-bold">
-                                        {selectedCampaign.metrics.find(
-                                            (m) =>
-                                                m.name ===
-                                                "sales_of_specific_products"
-                                        )?.value || 0}
+                            <MetricsSalesofSpecificProducts
+                                selectedCampaign={selectedCampaign}
+                            />
 
-                                        <span className="text-sm text-gray-600 mr-1">
-                                            {selectedCampaign.metrics.find(
-                                                (m) =>
-                                                    m.name ===
-                                                    "sales_of_specific_products"
-                                            )?.type === "integer"
-                                                ? "ريال"
-                                                : "%"}
-                                        </span>
-                                    </div>
-                                    {selectedCampaign.metrics.find(
-                                        (m) =>
-                                            m.name ===
-                                            "sales_of_specific_products"
-                                    )?.additional_fields.products && (
-                                        <div className="mt-2">
-                                            <div className="text-sm font-medium mb-1">
-                                                المنتجات:
-                                            </div>
-                                            <div className="space-y-2">
-                                                {selectedCampaign.metrics
-                                                    .find(
-                                                        (m) =>
-                                                            m.name ===
-                                                            "sales_of_specific_products"
-                                                    )
-                                                    ?.additional_fields.products?.map(
-                                                        (product) => (
-                                                            <div
-                                                                key={product.id}
-                                                                className="bg-white p-2 rounded text-sm">
-                                                                <div className="font-medium">
-                                                                    {
-                                                                        product.arabic_name
-                                                                    }
-                                                                </div>
-                                                                <div className="flex justify-between text-gray-600 mt-1">
-                                                                    <span>
-                                                                        SKU:{" "}
-                                                                        {
-                                                                            product.sku
-                                                                        }
-                                                                    </span>
-                                                                    <span>
-                                                                        السعر: $
-                                                                        {
-                                                                            product.selling_price
-                                                                        }
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            {/* Number of Products Sold */}
+                            <MetricsNumberofProductsSold
+                                selectedCampaign={selectedCampaign}
+                            />
 
-                            {/* Total Sales Value */}
-                            {selectedCampaign.metrics.find(
-                                (m) => m.name === "total_sales"
-                            ) && (
-                                <div className="bg-gray-100 p-4 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Activity className="w-5 h-5 text-gray-600" />
-                                        <span className="font-medium">
-                                            إجمالي قيمة المبيعات
-                                        </span>
-                                    </div>
-                                    <div className="text-2xl font-bold">
-                                        {selectedCampaign.metrics.find(
-                                            (m) => m.name === "total_sales"
-                                        )?.value || 0}
-                                        <span className="text-sm text-gray-600 mr-1">
-                                            {selectedCampaign.metrics.find(
-                                                (m) => m.name === "total_sales"
-                                            )?.type === "integer"
-                                                ? "ريال"
-                                                : "%"}
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
+                            {/* Invoices Count */}
+                            <MetricsInvoicesCount
+                                selectedCampaign={selectedCampaign}
+                            />
+
+                            {/* Average Transaction Value */}
+                            <MetricsAverageTransactionValue
+                                selectedCampaign={selectedCampaign}
+                            />
+
+                            {/* Customer Registration */}
+                            <MetricsCustomerRegistration
+                                selectedCampaign={selectedCampaign}
+                            />
                         </div>
                     </div>
-
-                    {/* Total Sales */}
                 </div>
             </div>
-            {/* Period Comparisons */}
         </div>
     );
 };
