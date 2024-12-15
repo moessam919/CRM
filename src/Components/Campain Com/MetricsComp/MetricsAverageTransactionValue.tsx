@@ -1,4 +1,4 @@
-import { DollarSign } from "lucide-react";
+import { DollarSign, ArrowUp, ArrowDown } from "lucide-react";
 import { selectedCampaign } from "../../../store/Campaigns/type/CampaignType";
 
 interface ISelectedCampaign {
@@ -45,53 +45,74 @@ const MetricsAverageTransactionValue = ({
                                 : "%"}
                         </span>
                     </div>
-                    <div className="flex items-center justify-around mt-4 bg-white p-2 md:px-4 rounded-md text-center">
-                        <div className="">
-                            <p className="font-medium">الحالي:</p>
-                            <span className="text-gray-600 font-bold">
-                                {analysisData.current.toLocaleString()} ريال
-                            </span>
+                    <div className="flex items-center justify-around mt-4 bg-white p-2 md:p-4 rounded-md">
+                        <div className="flex flex-col">
+                            <div className="p-2 md:px-8">
+                                <p className="font-medium">الحالي:</p>
+                                <span className="text-gray-600 font-bold text-xl">
+                                    {analysisData.current.toLocaleString()} ريال
+                                </span>
+                            </div>
+                            <div className="p-2 md:px-8">
+                                <p className="font-medium">السابق:</p>
+                                <span className="text-gray-600 font-bold text-xl">
+                                    {analysisData.previous.toLocaleString()} ريال
+                                </span>
+                            </div>
                         </div>
-                        <div className="border-l-2 border-r-2 p-2 md:px-8 border-gray-300">
-                            <p className="font-medium">السابق:</p>
-                            <span className="text-gray-600 font-bold">
-                                {analysisData.previous.toLocaleString()} ريال
-                            </span>
-                        </div>
-                        <div>
-                            <p className="font-medium">الهدف:</p>
-                            <span className="text-gray-600 font-bold">
-                                {analysisData.target.toLocaleString()} ريال
-                            </span>
+                        <div className="flex flex-col justify-center">
+                            <div className={`flex items-center ${
+                                parseFloat(analysisData.change) > 0
+                                    ? "text-green-500"
+                                    : "text-red-500"
+                            }`}>
+                                {parseFloat(analysisData.change) > 0 ? (
+                                    <ArrowUp className="w-5 h-5 ml-1" />
+                                ) : (
+                                    <ArrowDown className="w-5 h-5 ml-1" />
+                                )}
+                                <span className="text-xl font-semibold">
+                                    {parseFloat(analysisData.change).toLocaleString()} ريال  ( {analysisData.percentage_change} % )
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div className="flex items-center flex-col md:flex-row justify-between mt-2">
-                        <div className="mb-2 md:mb-0">
-                            <span className="font-medium">التغيير:</span>
-                            <span className="text-gray-600 mr-1">
-                                {analysisData.change.toLocaleString()} ريال (+
-                                {analysisData.percentage_change}
-                                %)
-                            </span>
+                    <div className="flex justify-between items-center">
+                        <div className="flex">
+                            <p className="text-xl font-semibold">المستهدف : </p>
+                            <p className="text-2xl font-bold">
+                                {selectedCampaign.metrics.find((m) => m.name === "average_transaction_value")?.value.toLocaleString()}
+                                <span className="text-sm text-gray-600 mr-1">
+                                    {selectedCampaign.metrics.find((m) => m.name === "average_transaction_value")?.type === "integer" ? "ريال" : "%"}
+                                </span>
+                            </p>
                         </div>
-                        <div>
-                            <span className="font-medium">نسبة التحقيق:</span>
-                            <span
-                                className={`mr-1 ${
-                                    parseFloat(
-                                        analysisData?.achievement_percentage ||
-                                            "0"
-                                    ) < 50
-                                        ? "text-red-500"
-                                        : parseFloat(
-                                                analysisData?.achievement_percentage ||
-                                                    "0"
-                                            ) < 80
-                                          ? "text-yellow-500"
-                                          : "text-green-500"
-                                }`}>
+                        <div className="flex flex-col items-center">
+                            <span className={`mr-1 text-3xl font-bold ${
+                                parseFloat(analysisData?.achievement_percentage || "0") < 50
+                                    ? "text-red-500"
+                                    : parseFloat(analysisData?.achievement_percentage || "0") < 80
+                                    ? "text-yellow-500"
+                                    : "text-green-500"
+                            }`}>
                                 {analysisData?.achievement_percentage}%
                             </span>
+                            <div className="relative w-full h-1 mt-1 bg-gray-200">
+                                <div className={`absolute top-0 left-0 h-full animate-pulse ${
+                                    parseFloat(analysisData?.achievement_percentage || "0") < 50
+                                        ? "bg-red-200"
+                                        : parseFloat(analysisData?.achievement_percentage || "0") < 80
+                                        ? "bg-yellow-200"
+                                        : "bg-green-200"
+                                    }`} style={{ width: `${analysisData?.achievement_percentage}%` }}></div>
+                                <div className={`absolute top-0 left-0 h-full ${
+                                    parseFloat(analysisData?.achievement_percentage || "0") < 50
+                                        ? "bg-red-500"
+                                        : parseFloat(analysisData?.achievement_percentage || "0") < 80
+                                        ? "bg-yellow-500"
+                                        : "bg-green-500"
+                                    }`} style={{ width: `${analysisData?.achievement_percentage}%` }}></div>
+                            </div>
                         </div>
                     </div>
                 </div>

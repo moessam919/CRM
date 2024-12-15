@@ -85,16 +85,19 @@ const CampaignInfo = () => {
                         <div className="flex items-center gap-2 text-gray-600 mt-2">
                             <Calendar className="w-4 h-4" />
                             <span>
-                                {formatDate(selectedCampaign.start_date)} -{" "}
+                                {formatDate(selectedCampaign.start_date)} - {" "}
                                 {formatDate(selectedCampaign.end_date)}
                             </span>
                         </div>
+                    </div>
+
+                    <div className="flex flex-col items-center md:items-start w-[20%]">
                         <div className="flex items-center gap-2 mt-2">
                             <TrendingUp className="w-4 h-4" />
                             <div>
                                 <span>نسبة التحقيق :</span>{" "}
                                 <span
-                                    className={`${
+                                    className={`text-4xl font-bold ${
                                         selectedCampaign?.average_success_rate <
                                         50
                                             ? "text-red-500"
@@ -105,34 +108,40 @@ const CampaignInfo = () => {
                                     }`}>
                                     {selectedCampaign.average_success_rate}%
                                 </span>
+                                <div className="relative w-full h-1 mt-1 bg-gray-200">
+                                    <div className={`absolute top-0 left-0 h-full animate-pulse ${
+                                        selectedCampaign?.average_success_rate < 50
+                                            ? "bg-red-200"
+                                            : selectedCampaign?.average_success_rate < 80
+                                            ? "bg-yellow-200"
+                                            : "bg-green-200"
+                                        }`} style={{ width: `${selectedCampaign.average_success_rate}%` }}></div>
+                                    <div className={`absolute top-0 left-0 h-full ${
+                                        selectedCampaign?.average_success_rate < 50
+                                            ? "bg-red-500"
+                                            : selectedCampaign?.average_success_rate < 80
+                                            ? "bg-yellow-500"
+                                            : "bg-green-500"
+                                        }`} style={{ width: `${selectedCampaign.average_success_rate}%` }}></div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* <div className="flex  ">
-                        <div className="flex items-center gap-2 text-gray-600 mt-2">
-                            <Clock className="w-4 h-4" />
-                            <span>
-                                {formatDate(selectedCampaign.created_at)}
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-4 mt-2">
-                            <User className="w-4 h-4" />
-                            <span>
-                                تم إنشاؤها بواسطة: {selectedCampaign.created_by}
-                            </span>
-                        </div>
-                    </div> */}
                     <div className="flex justify-center items-center  gap-2 mt-5 md:mt-0">
                         <span
                             className={`px-3 py-1 rounded-md ${
                                 selectedCampaign.status === "active"
                                     ? "bg-green-100 text-green-800"
+                                    : selectedCampaign.status === "pending"
+                                    ? "bg-yellow-100 text-yellow-800"
                                     : "bg-gray-100 text-gray-800"
                             }`}>
                             {selectedCampaign.status === "active"
-                                ? "نشط"
-                                : "غير نشط"}
+                                ? "نشـط"
+                                : selectedCampaign.status === "pending"
+                                ? "معلق"
+                                : "مكتمـل"}
                         </span>
                         <CampaignsActionsBtn />
                     </div>
@@ -180,15 +189,19 @@ const CampaignInfo = () => {
                     {/* Metrics Cards */}
                     <div className="bg-white p-6 rounded-lg shadow">
                         <div className="flex items-center justify-between mb-4 flex-col md:flex-row">
+                            <div>
+
                             <h2 className="text-xl font-semibold ">
-                                مقاييس الحملة
+                                مقارنة بفترات سابقة
                             </h2>
+                            <p className="text-gray-500">يتم مقارنة أداء الحملة بال30 يوم السابقة لبداية الحملة</p>
+                            </div>
                             <DateFilter
                                 onDateRangeChange={handleDateRangeChange}
                                 selectedCampaign={selectedCampaign}
                             />
                         </div>
-                        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(450px,1fr))] gap-6">
+                        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-6">
                             {/* Total Sales Value */}
                             <MetricsTotalSalesValue
                                 selectedCampaign={selectedCampaign}

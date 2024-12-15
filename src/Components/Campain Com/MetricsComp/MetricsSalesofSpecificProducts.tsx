@@ -1,4 +1,4 @@
-import { BarChart3 } from "lucide-react";
+import { BarChart3  , ArrowUp , ArrowDown} from "lucide-react";
 import { selectedCampaign } from "../../../store/Campaigns/type/CampaignType";
 
 interface ISelectedCampaign {
@@ -17,85 +17,80 @@ const MetricsSalesofSpecificProducts = ({
                         <BarChart3 className="w-5 h-5 text-gray-600" />
                         <span className="font-medium">مبيعات منتجات محددة</span>
                     </div>
-                    <div className="text-2xl font-bold">
-                        {
-                            selectedCampaign.metrics.find(
-                                (m) => m.name === "sales_of_specific_products"
-                            )?.value
-                        }
-                        <span className="text-sm text-gray-600 mr-1">
-                            {selectedCampaign.metrics.find(
-                                (m) => m.name === "sales_of_specific_products"
-                            )?.type === "integer"
-                                ? "ريال"
-                                : "%"}
-                        </span>
-                    </div>
-                    <div className="flex items-center justify-around mt-4 bg-white p-2 md:px-4 rounded-md text-center">
-                        <div className="">
-                            <p className="font-medium">الحالي:</p>
-                            <span className="text-gray-600 font-bold">
-                                {selectedCampaign.analysis.sales_of_specific_products.current.toLocaleString()}{" "}
-                                ريال
-                            </span>
+                    <div className="flex justify-between items-center">
+                        <div className="flex">
+                            <p className="text-xl font-semibold">المستهدف : </p>
+                            <p className="text-2xl font-bold">
+                                {selectedCampaign.metrics.find((m) => m.name === "sales_of_specific_products")?.value.toLocaleString()}
+                                <span className="text-sm text-gray-600 mr-1">
+                                    {selectedCampaign.metrics.find((m) => m.name === "sales_of_specific_products")?.type === "integer" ? "ريال" : "%"}
+                                </span>
+                            </p>
                         </div>
-                        <div className="border-l-2 border-r-2 p-2 md:px-8 border-gray-300">
-                            <p className="font-medium">السابق:</p>
-                            <span className="text-gray-600 font-bold">
-                                {selectedCampaign.analysis.sales_of_specific_products.previous.toLocaleString()}{" "}
-                                ريال
+                        <div className="flex flex-col items-center">
+                            <span className={`mr-1 text-3xl font-bold ${
+                                parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 50
+                                    ? "text-red-500"
+                                    : parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 80
+                                    ? "text-yellow-500"
+                                    : "text-green-500"
+                            }`}>
+                                {selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage}%
                             </span>
-                        </div>
-                        <div>
-                            <p className="font-medium">الهدف:</p>
-                            <span className="text-gray-600 font-bold">
-                                {selectedCampaign.analysis.sales_of_specific_products.target.toLocaleString()}{" "}
-                                ريال
-                            </span>
-                        </div>
-                    </div>
-                    <div className="flex items-center flex-col md:flex-row justify-between mt-2">
-                        <div className="mb-2 md:mb-0">
-                            <span className="font-medium">التغيير:</span>
-                            <span className="text-gray-600 mr-1">
-                                {selectedCampaign.analysis.sales_of_specific_products.change.toLocaleString()}{" "}
-                                ريال (+
-                                {
-                                    selectedCampaign.analysis
-                                        .sales_of_specific_products
-                                        .percentage_change
-                                }
-                                %)
-                            </span>
-                        </div>
-                        <div>
-                            <span className="font-medium">نسبة التحقيق:</span>
-                            <span
-                                className={`mr-1 ${
-                                    parseFloat(
-                                        selectedCampaign.analysis
-                                            .sales_of_specific_products
-                                            ?.achievement_percentage || "0"
-                                    ) < 50
-                                        ? "text-red-500"
-                                        : parseFloat(
-                                                selectedCampaign.analysis
-                                                    .sales_of_specific_products
-                                                    ?.achievement_percentage ||
-                                                    "0"
-                                            ) < 80
-                                          ? "text-yellow-500"
-                                          : "text-green-500"
-                                }`}>
-                                {
-                                    selectedCampaign.analysis
-                                        .sales_of_specific_products
-                                        ?.achievement_percentage
-                                }
-                                %
-                            </span>
+                            <div className="relative w-full h-1 mt-1 bg-gray-200">
+                                <div className={`absolute top-0 left-0 h-full animate-pulse ${
+                                    parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 50
+                                        ? "bg-red-200"
+                                        : parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 80
+                                        ? "bg-yellow-200"
+                                        : "bg-green-200"
+                                    }`} style={{ width: `${selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage}%` }}></div>
+                                <div className={`absolute top-0 left-0 h-full ${
+                                    parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 50
+                                        ? "bg-red-500"
+                                        : parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 80
+                                        ? "bg-yellow-500"
+                                        : "bg-green-500"
+                                    }`} style={{ width: `${selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage}%` }}></div>
+                            </div>
                         </div>
                     </div>
+                    <div className="flex  justify-between mt-4 bg-white p-2 md:p-4 rounded-md">
+                        <div className="flex flex-col">
+                            <div className="p-2 md:px-8">
+                                <p className="font-medium">الفترة السابقة:</p>
+                                <span className="text-gray-600 font-bold text-xl">
+                                    {selectedCampaign.analysis.sales_of_specific_products.previous.toLocaleString()}{" "}
+                                    ريال
+                                </span>
+                            </div>
+                            <div className="p-2 md:px-8">
+                                <p className="font-medium">الفترة الحالية:</p>
+                                <span className="text-gray-600 font-bold text-xl">
+                                    {selectedCampaign.analysis.sales_of_specific_products.current.toLocaleString()}{" "}
+                                    ريال
+                                </span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col justify-center">
+                            <div className={`flex items-center ${
+                                parseFloat(selectedCampaign.analysis.sales_of_specific_products.change) > 0
+                                    ? "text-green-500"
+                                    : "text-red-500"
+                            }`}>
+                                {parseFloat(selectedCampaign.analysis.sales_of_specific_products.change) > 0 ? (
+                                    <ArrowUp className="w-5 h-5 ml-1" />
+                                ) : (
+                                    <ArrowDown className="w-5 h-5 ml-1" />
+                                )}
+                                <span className="text-xl font-semibold">
+                                    {parseFloat(selectedCampaign.analysis.sales_of_specific_products.change).toLocaleString()}{" "}
+                                    ريال  ( {selectedCampaign.analysis.sales_of_specific_products.percentage_change} % )
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                 
                     {selectedCampaign.metrics.find(
                         (m) => m.name === "sales_of_specific_products"
                     )?.additional_fields.products && (

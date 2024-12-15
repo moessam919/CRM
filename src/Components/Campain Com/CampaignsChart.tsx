@@ -7,6 +7,7 @@ import {
     ResponsiveContainer,
     LineChart,
     Line,
+    Legend,
 } from "recharts";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { actGetCampaignChartData } from "../../store/Campaigns/act/CampaignActions";
@@ -71,16 +72,17 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                         }}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
-                        <YAxis />
+                        <YAxis textAnchor="start"/>
                         <Tooltip />
-
+                        <Legend />
                         {renderTotalSalesLine && (
                             <Line
                                 type="monotone"
                                 dataKey="total_sales"
                                 stroke="#8884d8"
-                                name="مبيعات الكل"
+                                name="إجمالي المبيعات"
                                 dot={false}
+                                strokeWidth={2}
                             />
                         )}
                         {renderSalesOfCategoryLine && (
@@ -90,6 +92,7 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                                 stroke="#82ca9d"
                                 name="مبيعات من الفئات"
                                 dot={false}
+                                strokeWidth={2}
                             />
                         )}
                         {renderSalesOfSpecificProductsLine && (
@@ -99,6 +102,7 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                                 stroke="#ffc658"
                                 name="مبيعات من المنتجات المحددة"
                                 dot={false}
+                                strokeWidth={2}
                             />
                         )}
                         {renderCustomerRegistrationLine && (
@@ -108,6 +112,7 @@ const CampaignsChart = ({ id }: { id: string | undefined }) => {
                                 stroke="#ff7300"
                                 name="تسجيل العملاء"
                                 dot={false}
+                                strokeWidth={2}
                             />
                         )}
                     </LineChart>
