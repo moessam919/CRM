@@ -62,13 +62,6 @@ const AnalysisChart = (analaysis: IAnalysisChart) => {
         },
     ].filter((data) => !isNaN(data.uv) && data.uv > 0);
 
-    const style = {
-        top: "50%",
-        right: -10,
-        transform: "translate(0, -50%)",
-        lineHeight: "24px",
-    };
-
     return (
         <div className="p-5 bg-white rounded-md shadow-md">
             <h3 className="text-center mb-4 text-2xl font-bold">نسب الإنجاز</h3>
@@ -86,10 +79,14 @@ const AnalysisChart = (analaysis: IAnalysisChart) => {
                         dataKey="uv"
                     />
                     <Legend
-                        iconSize={10}
-                        layout="vertical"
-                        verticalAlign="middle"
-                        wrapperStyle={style}
+                        iconSize={12}
+                        layout="horizontal"
+                        verticalAlign="bottom"
+                        wrapperStyle={{
+                            marginTop: "20px",
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
                     />
                 </RadialBarChart>
             </ResponsiveContainer>

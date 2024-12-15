@@ -30,7 +30,6 @@ const CampaignInfo = () => {
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
 
-
     useEffect(() => {
         if (id) {
             dispatch(
@@ -71,79 +70,94 @@ const CampaignInfo = () => {
         <div className="p-6 space-y-6 bg-gray-100 rounded-md">
             {/* Campaign Header */}
             <div className="grid grid-cols-1 gap-6">
-                <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row items-start justify-between">
-                    <div className="flex flex-col items-center md:items-start w-[80%]">
+                <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row items-center md:items-start justify-between">
+                    <div className="flex flex-col items-center md:items-start w-[60%]">
                         <div className="flex items-center md:items-start gap-5">
-                            <h1 className="text-2xl font-bold px-3 py-1">
+                            <h1 className="text-xl md:text-3xl font-bold px-3 py-1">
                                 {selectedCampaign.name}
                             </h1>
                         </div>
 
-                        <p className="w-[50%]">
+                        <p className="md:w-[50%] text-lg md:text-2xl">
                             {selectedCampaign?.description}
                         </p>
-                        <div className="flex items-center gap-2 text-gray-600 mt-2">
+                        <div className="flex flex-col md:flex-row items-center gap-2 text-gray-600 mt-2">
                             <Calendar className="w-4 h-4" />
                             <span>
-                                {formatDate(selectedCampaign.start_date)} - {" "}
+                                {formatDate(selectedCampaign.start_date)} -{" "}
                                 {formatDate(selectedCampaign.end_date)}
                             </span>
                         </div>
                     </div>
+                    <div className="flex items-center md:items-end flex-col gap-4 ">
+                        <div className="flex justify-end gap-2 mt-5 md:mt-0">
+                            <span
+                                className={`px-3 py-1 rounded-md ${
+                                    selectedCampaign.status === "active"
+                                        ? "bg-green-100 text-green-800"
+                                        : selectedCampaign.status === "pending"
+                                          ? "bg-yellow-100 text-yellow-800"
+                                          : "bg-gray-100 text-gray-800"
+                                }`}>
+                                {selectedCampaign.status === "active"
+                                    ? "نشـط"
+                                    : selectedCampaign.status === "pending"
+                                      ? "معلق"
+                                      : "مكتمـل"}
+                            </span>
+                            <CampaignsActionsBtn />
+                        </div>
 
-                    <div className="flex flex-col items-center md:items-start w-[20%]">
-                        <div className="flex items-center gap-2 mt-2">
-                            <TrendingUp className="w-4 h-4" />
-                            <div>
-                                <span>نسبة التحقيق :</span>{" "}
-                                <span
-                                    className={`text-4xl font-bold ${
-                                        selectedCampaign?.average_success_rate <
-                                        50
-                                            ? "text-red-500"
-                                            : selectedCampaign?.average_success_rate <
-                                                80
-                                              ? "text-yellow-500"
-                                              : "text-green-500"
-                                    }`}>
-                                    {selectedCampaign.average_success_rate}%
-                                </span>
-                                <div className="relative w-full h-1 mt-1 bg-gray-200">
-                                    <div className={`absolute top-0 left-0 h-full animate-pulse ${
-                                        selectedCampaign?.average_success_rate < 50
-                                            ? "bg-red-200"
-                                            : selectedCampaign?.average_success_rate < 80
-                                            ? "bg-yellow-200"
-                                            : "bg-green-200"
-                                        }`} style={{ width: `${selectedCampaign.average_success_rate}%` }}></div>
-                                    <div className={`absolute top-0 left-0 h-full ${
-                                        selectedCampaign?.average_success_rate < 50
-                                            ? "bg-red-500"
-                                            : selectedCampaign?.average_success_rate < 80
-                                            ? "bg-yellow-500"
-                                            : "bg-green-500"
-                                        }`} style={{ width: `${selectedCampaign.average_success_rate}%` }}></div>
+                        <div className="flex flex-col items-center md:items-start">
+                            <div className="flex items-center gap-2 mt-2">
+                                <TrendingUp className="w-4 h-4" />
+                                <div>
+                                    <span>نسبة التحقيق :</span>{" "}
+                                    <span
+                                        className={` md:text-4xl font-bold ${
+                                            selectedCampaign?.average_success_rate <
+                                            50
+                                                ? "text-red-500"
+                                                : selectedCampaign?.average_success_rate <
+                                                    80
+                                                  ? "text-yellow-500"
+                                                  : "text-green-500"
+                                        }`}>
+                                        {selectedCampaign.average_success_rate}%
+                                    </span>
+                                    <div className="relative w-full h-1 mt-1 bg-gray-200">
+                                        <div
+                                            className={`absolute top-0 left-0 h-full animate-pulse ${
+                                                selectedCampaign?.average_success_rate <
+                                                50
+                                                    ? "bg-red-200"
+                                                    : selectedCampaign?.average_success_rate <
+                                                        80
+                                                      ? "bg-yellow-200"
+                                                      : "bg-green-200"
+                                            }`}
+                                            style={{
+                                                width: `${selectedCampaign.average_success_rate}%`,
+                                                maxWidth: "100%",
+                                            }}></div>
+                                        <div
+                                            className={`absolute top-0 left-0 h-full ${
+                                                selectedCampaign?.average_success_rate <
+                                                50
+                                                    ? "bg-red-500"
+                                                    : selectedCampaign?.average_success_rate <
+                                                        80
+                                                      ? "bg-yellow-500"
+                                                      : "bg-green-500"
+                                            }`}
+                                            style={{
+                                                width: `${selectedCampaign.average_success_rate}% `,
+                                                maxWidth: "100%",
+                                            }}></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="flex justify-center items-center  gap-2 mt-5 md:mt-0">
-                        <span
-                            className={`px-3 py-1 rounded-md ${
-                                selectedCampaign.status === "active"
-                                    ? "bg-green-100 text-green-800"
-                                    : selectedCampaign.status === "pending"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : "bg-gray-100 text-gray-800"
-                            }`}>
-                            {selectedCampaign.status === "active"
-                                ? "نشـط"
-                                : selectedCampaign.status === "pending"
-                                ? "معلق"
-                                : "مكتمـل"}
-                        </span>
-                        <CampaignsActionsBtn />
                     </div>
                 </div>
             </div>
@@ -188,20 +202,22 @@ const CampaignInfo = () => {
                 <div className=" ">
                     {/* Metrics Cards */}
                     <div className="bg-white p-6 rounded-lg shadow">
-                        <div className="flex items-center justify-between mb-4 flex-col md:flex-row">
-                            <div>
-
-                            <h2 className="text-xl font-semibold ">
-                                مقارنة بفترات سابقة
-                            </h2>
-                            <p className="text-gray-500">يتم مقارنة أداء الحملة بال30 يوم السابقة لبداية الحملة</p>
+                        <div className="flex items-center justify-center 2xl:justify-between mb-4 flex-col 2xl:flex-row">
+                            <div className="text-center 2xl:text-right">
+                                <h2 className="text-xl font-semibold ">
+                                    مقارنة بفترات سابقة
+                                </h2>
+                                <p className="text-gray-500">
+                                    يتم مقارنة أداء الحملة بال30 يوم السابقة
+                                    لبداية الحملة
+                                </p>
                             </div>
                             <DateFilter
                                 onDateRangeChange={handleDateRangeChange}
                                 selectedCampaign={selectedCampaign}
                             />
                         </div>
-                        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-6">
+                        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-6">
                             {/* Total Sales Value */}
                             <MetricsTotalSalesValue
                                 selectedCampaign={selectedCampaign}
