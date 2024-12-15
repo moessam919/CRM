@@ -61,7 +61,8 @@ const MetricsTotalSalesValue = ({ selectedCampaign }: ISelectedCampaign) => {
                             : achievementPercentage < 80
                             ? "bg-yellow-500"
                             : "bg-green-500"
-                        }`} style={{ width: `${achievementPercentage}%` }}></div>
+                        }`} style={{ width: `${achievementPercentage}%`,
+                          maxWidth: "100%" }}></div>
                 </div>
             </div>
           </div>

@@ -44,14 +44,14 @@ const MetricsSalesofSpecificProducts = ({
                                         : parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 80
                                         ? "bg-yellow-200"
                                         : "bg-green-200"
-                                    }`} style={{ width: `${selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage}%` }}></div>
+                                    }`} style={{ width: `${selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage}%` , maxWidth:"100%" }}></div>
                                 <div className={`absolute top-0 left-0 h-full ${
                                     parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 50
                                         ? "bg-red-500"
                                         : parseFloat(selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage || "0") < 80
                                         ? "bg-yellow-500"
                                         : "bg-green-500"
-                                    }`} style={{ width: `${selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage}%` }}></div>
+                                    }`} style={{ width: `${selectedCampaign.analysis.sales_of_specific_products?.achievement_percentage}%` , maxWidth:"100%" }}></div>
                             </div>
                         </div>
                     </div>
