@@ -100,6 +100,11 @@ const TopSellingCustomers = ({ salesReport }: TopSellingProductsProps) => {
                 data={topCustomers}
                 customStyles={customStyles}
                 pagination
+                noDataComponent={
+                    <div className="text-gray-500 text-3xl py-4">
+                        لا يوجد بيانات
+                    </div>
+                }
                 paginationRowsPerPageOptions={[5]}
                 highlightOnHover
                 striped
