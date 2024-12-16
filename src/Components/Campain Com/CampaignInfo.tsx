@@ -19,6 +19,7 @@ import MetricsSalesofSpecificProducts from "./MetricsComp/MetricsSalesofSpecific
 import MetricsTotalSalesValue from "./MetricsComp/MetricsTotalSalesValue";
 import DateFilter from "./DateFilter";
 import AnalysisAverageTransactionValue from "./MetricsComp/AnalysisAverageTransactionValue";
+import Insights from "./Insights/Insights";
 
 const CampaignInfo = () => {
     const { id } = useParams();
@@ -255,6 +256,11 @@ const CampaignInfo = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {/* insights  */}
+            <div>
+                <Insights id={id} />
             </div>
         </div>
     );

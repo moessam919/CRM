@@ -13,7 +13,7 @@
   "dependencies": {
     "@mui/x-charts": "^7.22.0",
     "@reduxjs/toolkit": "^2.3.0",
-    "axios": "^1.7.7",
+    "axios": "^1.6.2",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.13.1",
     "html-react-parser": "^5.1.18",

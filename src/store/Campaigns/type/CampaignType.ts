@@ -114,3 +114,40 @@ export interface ChartDataPoint {
     date: string;
     metrics: Metrics;
 }
+
+// insights
+
+export interface SalesReport {
+    sales_performance: {
+        total_sales_value: string;
+        invoices_count: number;
+        average_transaction_value: string;
+        sales_volume: number;
+        products_sold: number;
+        top_selling_products: {
+            product__arabic_name: string;
+            total_quantity: number;
+        }[];
+    };
+    customers_behaviour: {
+        total_customers: number;
+        first_time_customers: number;
+        repeat_customers: number;
+        top_selling_locations: {
+            city: string;
+            total_sales: number;
+        }[];
+        customer_types: {
+            customer_type: string;
+            total_value: number;
+            count: number;
+        }[];
+        top_customers: {
+            id: number;
+            name: string;
+            phone_number: string;
+            city: string;
+            total_sales: string;
+        }[];
+    };
+}

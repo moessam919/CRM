@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
     Campaign,
     ChartDataPoint,
+    SalesReport,
     selectedCampaign,
 } from "./type/CampaignType";
 import {
@@ -10,11 +11,13 @@ import {
     actGetCampaignChartData,
     actDeleteCampaign,
     actUpdateCampaignStatus,
+    actgetSalesReport,
 } from "./act/CampaignActions";
 
 interface CampaignsState {
     campaigns: Campaign[];
     selectedCampaign: selectedCampaign | null;
+    salesReport: SalesReport | null;
     data: ChartDataPoint | null;
     loading: "idle" | "pending" | "succeeded" | "failed";
     error: string | null;
@@ -23,6 +26,7 @@ interface CampaignsState {
 const initialState: CampaignsState = {
     campaigns: [],
     selectedCampaign: null,
+    salesReport: null,
     data: null,
     loading: "idle",
     error: null,
@@ -105,6 +109,14 @@ const campaignsSlice = createSlice({
             .addCase(actUpdateCampaignStatus.rejected, (state, action) => {
                 state.loading = "failed";
                 state.error = action.payload as string;
+            })
+            // handle get sales report
+            .addCase(actgetSalesReport.fulfilled, (state, action) => {
+                state.salesReport = action.payload;
+            })
+            .addCase(actgetSalesReport.rejected, (state, action) => {
+                state.loading = "failed";
+                state.error = action.error as string;
             });
     },
 });

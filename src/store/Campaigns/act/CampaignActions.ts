@@ -63,7 +63,6 @@ export const actgetCampaignById = createAsyncThunk(
                     endDate.toISOString().split("T")[0]
                 );
 
-
             const response = await axiosInstance.get<selectedCampaign[]>(
                 `/marketing/campaigns/${id}/?${queryParams.toString()}`
             );
@@ -128,6 +127,25 @@ export const actUpdateCampaignStatus = createAsyncThunk(
             const response = await axiosInstance.patch(
                 `/marketing/campaigns/${id}/`,
                 { status }
+            );
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(error.response?.data);
+            }
+            return rejectWithValue(
+                "An error occurred while updating the campaign status."
+            );
+        }
+    }
+);
+
+export const actgetSalesReport = createAsyncThunk(
+    "campaigns/actgetSalesReport",
+    async ({ id }: { id: string | undefined }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.get(
+                `/marketing/campaigns/${id}/insights/`
             );
             return response.data;
         } catch (error) {
