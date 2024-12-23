@@ -4,17 +4,30 @@ const axiosInstance = axios.create({
     baseURL: "https://erp.rashodi.online",
     // baseURL: "http://localhost:8000",
 });
+axiosInstance.interceptors.request.use(async (config) => {
+    const token = localStorage.getItem("access_token");
 
-axiosInstance.interceptors.request.use((config) => {
-    // const token = localStorage.getItem("access_token");
-    const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1NTU2ODg1LCJpYXQiOjE3MzQ5NTIwODUsImp0aSI6ImQ1NjVkNDU1YjQ3YTRmMmNhZmIxYTA0ZmIwNjIyZDBkIiwidXNlcl9pZCI6MX0.HZxpPBY1VMNi4qSjudLtjWbNhgUE1OQhw-QVxKzNh2A";
+    if (!token) {
+        try {
+            const response = await axios.post("https://erp.rashodi.online/api/token", {
+                username: "admin",
+                password: "1234"
+            });
 
-    if (token) {
-        // Initialize headers if they are undefined
+            const { access } = response.data;
+            localStorage.setItem("access_token", access);
+
+            config.headers = config.headers || {};
+            config.headers.Authorization = `Bearer ${access}`;
+        } catch (error) {
+            console.error("Failed to get token", error);
+            return Promise.reject(error);
+        }
+    } else {
         config.headers = config.headers || {};
         config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
 });
 
