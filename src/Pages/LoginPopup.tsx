@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { login } from "../store/API/act/actGetCheckAuth";
 import toast from "react-hot-toast";
@@ -40,10 +40,33 @@ const LoginPopup = () => {
         return !errors.username && !errors.password;
     };
 
+    const [csrfToken, setCsrfToken] = useState('');
+    useEffect(() => {
+        // Get token from cookie
+        const getCsrfToken = () => {
+            const name = 'csrftoken=';
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const cookieArray = decodedCookie.split(';');
+            for(let i = 0; i < cookieArray.length; i++) {
+                let cookie = cookieArray[i];
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1);
+                }
+                if (cookie.indexOf(name) === 0) {
+                    return cookie.substring(name.length, cookie.length);
+                }
+            }
+            return '';
+        };
+        
+        setCsrfToken(getCsrfToken());
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validateForm()) return;
-        await dispatch(login(formData)).unwrap();
+        console.log("formData", formData);
+        await dispatch(login({formData , csrfToken})).unwrap();
         setIsOpen(false);
         toast.success("تم تسجيل الدخول بنجاح");
     };

@@ -7,6 +7,7 @@ export const checkAuth = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.get("/api/check_auth");
+            console.log("response.data", response.data);  
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -17,18 +18,28 @@ export const checkAuth = createAsyncThunk(
             }
         }
     }
-);
+);  
 
 interface LoginCredentials {
     username: string;
     password: string;
 }
 
+
 export const login = createAsyncThunk(
     "auth/login",
-    async (formData: LoginCredentials, { rejectWithValue }) => {
+    async ({formData , csrfToken} : {formData: LoginCredentials,  csrfToken: string},
+        
+        { rejectWithValue }) => {
+            console.log("formData", formData);
         try {
-            const response = await axiosInstance.post("/auth/login", formData);
+            const response = await axiosInstance.post("/auth/login", formData, {
+
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            }
+            );
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
