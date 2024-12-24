@@ -32,7 +32,6 @@ export const login = createAsyncThunk(
 
         { rejectWithValue }
     ) => {
-        console.log("formData", formData);
         try {
             const response = await axiosInstance.post("/auth/login", formData);
             return response.data;

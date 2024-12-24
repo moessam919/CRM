@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { checkAuth } from "../store/API/act/actGetCheckAuth";
-// import LoginPopup from "../Pages/LoginPopup";
 
 const ProtectedRoute = () => {
     const dispatch = useAppDispatch();
@@ -30,7 +29,6 @@ const ProtectedRoute = () => {
 
     if (!isAuthenticated) {
         // return <LoginPopup />;
-
         window.location.href = "https://erp.rashodi.online/auth/login";
         return null;
     }
