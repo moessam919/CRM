@@ -43,14 +43,17 @@ const LoginPopup = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validateForm()) return;
-
         try {
             await dispatch(login(formData)).unwrap();
             setIsOpen(false);
             toast.success("تم تسجيل الدخول بنجاح");
         } catch (error) {
             console.error("Login error:", error);
-            toast.error("حدث خطأ أثناء تسجيل الدخول");
+            const errorMessage =
+                typeof error === "string"
+                    ? error
+                    : "حدث خطأ أثناء تسجيل الدخول";
+            toast.error(errorMessage);
         }
     };
 

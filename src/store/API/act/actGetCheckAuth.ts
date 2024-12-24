@@ -7,6 +7,7 @@ export const checkAuth = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.get("/api/check_auth");
+            console.log("response.data", response.data);
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -26,7 +27,12 @@ interface LoginCredentials {
 
 export const login = createAsyncThunk(
     "auth/login",
-    async (formData: LoginCredentials, { rejectWithValue }) => {
+    async (
+        formData: LoginCredentials,
+
+        { rejectWithValue }
+    ) => {
+        console.log("formData", formData);
         try {
             const response = await axiosInstance.post("/auth/login", formData);
             return response.data;
