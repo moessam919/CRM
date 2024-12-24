@@ -14,7 +14,7 @@ import productCategories from "./MatricsProducts/ProductCategorySlice";
 import campaign from "./MatricsProducts/CampaignSlice";
 import campaigns from "./Campaigns/CampaignsSlice";
 import campaignSummary from "./Campaigns/CampaignsSummarySlice";
-
+import ApiSlice from "./API/ApiSlice";
 export const store = configureStore({
     reducer: {
         salesreport,
@@ -32,6 +32,7 @@ export const store = configureStore({
         campaign,
         campaigns,
         campaignSummary,
+        ApiSlice,
     },
 });
 

@@ -104,25 +104,6 @@ export const actGetSearchCustomers = createAsyncThunk(
     }
 );
 
-export const actGetTopCustomers = createAsyncThunk(
-    "TopCustomer/actGetTopCustomers",
-    async (_, thunkAPI) => {
-        const { rejectWithValue } = thunkAPI;
-        try {
-            const res = await axiosInstance.get("crm/customers/top");
-            return res.data;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                return rejectWithValue(error.response?.data);
-            } else {
-                return rejectWithValue(
-                    "An error occurred while fetching data."
-                );
-            }
-        }
-    }
-);
-
 export const actEditCustomers = createAsyncThunk(
     "Customer/actEditCustomers",
     async (
@@ -195,6 +176,25 @@ export const actExportCustomers = createAsyncThunk(
             } else {
                 return rejectWithValue(
                     "An error occurred while exporting data."
+                );
+            }
+        }
+    }
+);
+
+export const actGetTopCustomers = createAsyncThunk(
+    "TopCustomer/actGetTopCustomers",
+    async (_, thunkAPI) => {
+        const { rejectWithValue } = thunkAPI;
+        try {
+            const res = await axiosInstance.get("crm/customers/top");
+            return res.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(error.response?.data);
+            } else {
+                return rejectWithValue(
+                    "An error occurred while fetching data."
                 );
             }
         }

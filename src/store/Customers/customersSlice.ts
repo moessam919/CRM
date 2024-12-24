@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ICustomers, CustomerFilters } from "../../types/customers";
 import {
-    actEditCustomers,
     actGetCustomers,
     actGetFilteredCustomers,
+    actEditCustomers,
 } from "./act/actGetCustomers";
+import { ICustomers, CustomerFilters } from "../../types/customers";
 
 interface ICostomerState {
     customers: ICustomers[];
@@ -45,7 +45,7 @@ const customersSlice = createSlice({
                 state.loading = "succeeded";
                 state.customers = action.payload.results;
                 state.totalPages = action.payload.total_pages;
-                state.currentFilters = {}; // Reset filters
+                state.currentFilters = {};
             })
             .addCase(actGetCustomers.rejected, (state, action) => {
                 state.loading = "failed";

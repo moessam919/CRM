@@ -70,7 +70,8 @@ const TopBuyersTable = () => {
             cell: (row) => (
                 <div
                     onClick={() => navigate(`/customer/${row.id}`)}
-                    className="border-gray-300 hover:bg-gray-200 duration-200 cursor-pointer text-xs py-3 text-center rounded font-semibold  p-1">
+                    className="border-gray-300 hover:bg-gray-200 duration-200 cursor-pointer text-xs py-3 text-center rounded font-semibold  p-1"
+                >
                     عرض التفاصيل
                 </div>
             ),
