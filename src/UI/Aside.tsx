@@ -88,7 +88,7 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 <a
                     href="https://erp.rashodi.online/"
                     rel="noopener noreferrer"
-                    className="font-bold mb-4 text-gray-800 gap-2 hover:text-white hover:border-gray-800 hover:bg-gray-800 flex items-center p-2 rounded-md duration-150"
+                    className="font-bold mb-4 justify-center text-gray-800 gap-2 hover:text-white border border-gray-800 hover:border-gray-800 hover:bg-gray-800 flex items-center p-2 rounded-md duration-150"
                 >
                     <ArrowRight />
 

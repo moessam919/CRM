@@ -43,9 +43,15 @@ const LoginPopup = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validateForm()) return;
-        await dispatch(login(formData)).unwrap();
-        setIsOpen(false);
-        toast.success("تم تسجيل الدخول بنجاح");
+
+        try {
+            await dispatch(login(formData)).unwrap();
+            setIsOpen(false);
+            toast.success("تم تسجيل الدخول بنجاح");
+        } catch (error) {
+            console.error("Login error:", error);
+            toast.error("حدث خطأ أثناء تسجيل الدخول");
+        }
     };
 
     if (!isOpen) return null;
