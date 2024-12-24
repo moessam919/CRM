@@ -1,4 +1,5 @@
 import {
+    ArrowRight,
     LayoutDashboard,
     Mails,
     Megaphone,
@@ -27,11 +28,11 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 ${isMobile ? "fixed right-0" : "fixed"}
                 ${isVisible ? "translate-x-0" : "translate-x-full"}
                 top-0 bottom-0 z-50
-            `}>
+            `}
+        >
             <div className="mt-4 border-b-2 border-gray-300 w-full flex flex-col items-center">
                 <div className="my-4 text-xl md:text-4xl font-bold">CRM</div>
             </div>
-
             <nav className="p-2 w-full">
                 <NavLink to="/" onClick={onNavClick} className={linkClasses}>
                     <LayoutDashboard />
@@ -41,7 +42,8 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 <NavLink
                     to="/contacts"
                     onClick={onNavClick}
-                    className={linkClasses}>
+                    className={linkClasses}
+                >
                     <SquareUserRound />
                     <span>الاتصال</span>
                 </NavLink>
@@ -49,7 +51,8 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 <NavLink
                     to="/messages"
                     onClick={onNavClick}
-                    className={linkClasses}>
+                    className={linkClasses}
+                >
                     <Mails />
                     <span>الرسائل</span>
                 </NavLink>
@@ -57,7 +60,8 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                 <NavLink
                     to="/campaign"
                     onClick={onNavClick}
-                    className={linkClasses}>
+                    className={linkClasses}
+                >
                     <Megaphone />
                     <span>الحملات</span>
                 </NavLink>
@@ -80,6 +84,17 @@ const Aside = ({ isVisible, onNavClick, isMobile }: AsideProps) => {
                     <span>Lead</span>
                 </NavLink> */}
             </nav>
+            <div className="mt-auto w-full p-2">
+                <a
+                    href="https://erp.rashodi.online/"
+                    rel="noopener noreferrer"
+                    className="font-bold mb-4 text-gray-800 gap-2 hover:text-white hover:border-gray-800 hover:bg-gray-800 flex items-center p-2 rounded-md duration-150"
+                >
+                    <ArrowRight />
+
+                    <span>العودة إلى ERP</span>
+                </a>
+            </div>
         </aside>
     );
 };

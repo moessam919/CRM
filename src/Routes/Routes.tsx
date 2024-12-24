@@ -10,6 +10,7 @@ import MessageDetails from "../Components/MessageDetails";
 import Campain from "../Pages/Campain";
 import CreateCampaignModal from "../Components/Campain Com/CreateCampaignModal";
 import CampaignInfo from "../Components/Campain Com/CampaignInfo";
+import ProtectedRoute from "../API/ProtectedRoute";
 
 const Routers = createBrowserRouter([
     {
@@ -17,44 +18,49 @@ const Routers = createBrowserRouter([
         element: <App />,
         children: [
             {
-                path: "/",
-                element: <Dashboard />,
-            },
-            {
-                path: "/customers",
-                element: <Customers />,
-            },
-            {
-                path: "/customer/:id",
-                element: <CustomerInfo />,
-            },
-            {
-                path: "/contacts",
-                element: <Contacts />,
-            },
-            {
-                path: "/campaign",
-                element: <Campain />,
-            },
-            {
-                path: "/campaign/:id/",
-                element: <CampaignInfo />,
-            },
-            {
-                path: "/create-campaign",
-                element: <CreateCampaignModal />,
-            },
-            {
-                path: "/messages",
-                element: <Messages />,
-            },
-            {
-                path: "/message/:id",
-                element: <MessageDetails />,
-            },
-            {
-                path: "/leads",
-                element: <Leads />,
+                element: <ProtectedRoute />,
+                children: [
+                    {
+                        path: "/",
+                        element: <Dashboard />,
+                    },
+                    {
+                        path: "/customers",
+                        element: <Customers />,
+                    },
+                    {
+                        path: "/customer/:id",
+                        element: <CustomerInfo />,
+                    },
+                    {
+                        path: "/contacts",
+                        element: <Contacts />,
+                    },
+                    {
+                        path: "/campaign",
+                        element: <Campain />,
+                    },
+                    {
+                        path: "/campaign/:id/",
+                        element: <CampaignInfo />,
+                    },
+                    {
+                        path: "/create-campaign",
+                        element: <CreateCampaignModal />,
+                    },
+                    {
+                        path: "/messages",
+                        element: <Messages />,
+                    },
+                    {
+                        path: "/message/:id",
+                        element: <MessageDetails />,
+                    },
+                    {
+                        path: "/leads",
+                        element: <Leads />,
+                    },
+                ],
             },
         ],
     },

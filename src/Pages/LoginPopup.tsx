@@ -1,31 +1,51 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { login } from "../store/API/act/actGetCheckAuth";
+import toast from "react-hot-toast";
 
 const LoginPopup = () => {
+    const dispatch = useAppDispatch();
+    const { loading, error } = useAppSelector((state) => state.ApiSlice);
+
     const [isOpen, setIsOpen] = useState(true);
     const [formData, setFormData] = useState({
         username: "",
         password: "",
     });
 
-    useEffect(() => {
-        const handleLoginPopup = () => {
-            setIsOpen(true);
+    const [validationErrors, setValidationErrors] = useState({
+        username: "",
+        password: "",
+    });
+
+    const validateForm = () => {
+        const errors = {
+            username: "",
+            password: "",
         };
 
-        window.addEventListener("openLoginPopup", handleLoginPopup);
+        if (!formData.username.trim()) {
+            errors.username = "يرجي ادخال اسم المستخدم";
+        } else if (formData.username.length < 4) {
+            errors.username = "يجب أن يكون اسم المستخدم 4 أحرف على الأقل";
+        }
 
-        return () => {
-            window.removeEventListener("openLoginPopup", handleLoginPopup);
-        };
-    }, []);
+        if (!formData.password.trim()) {
+            errors.password = "يرجي ادخال كلمة المرور";
+        } else if (formData.password.length < 4) {
+            errors.password = "يجب أن تكون كلمة المرور 4 أحرف على الأقل";
+        }
+
+        setValidationErrors(errors);
+        return !errors.username && !errors.password;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Add your login logic here
-    };
-
-    const handleClose = () => {
+        if (!validateForm()) return;
+        await dispatch(login(formData)).unwrap();
         setIsOpen(false);
+        toast.success("تم تسجيل الدخول بنجاح");
     };
 
     if (!isOpen) return null;
@@ -34,29 +54,20 @@ const LoginPopup = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-8 w-full max-w-md relative">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold  text-gray-800">
+                    <h2 className="text-2xl font-bold text-gray-800">
                         تسجيل الدخول
                     </h2>
-                    <button
-                        onClick={handleClose}
-                        className=" text-gray-500 hover:text-red-700 duration-150"
-                    >
-                        <svg
-                            className="w-6 h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
-                    </button>
                 </div>
+
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    {error && (
+                        <div className="text-red-600 text-sm text-center">
+                            {error === "User not authenticated"
+                                ? "الرجاء تسجيل الدخول"
+                                : error}
+                        </div>
+                    )}
+
                     <div>
                         <label
                             htmlFor="username"
@@ -68,15 +79,28 @@ const LoginPopup = () => {
                             type="text"
                             id="username"
                             value={formData.username}
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setFormData({
                                     ...formData,
                                     username: e.target.value,
-                                })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-right"
-                            required
+                                });
+                                setValidationErrors({
+                                    ...validationErrors,
+                                    username: "",
+                                });
+                            }}
+                            className={`w-full px-3 py-2 border ${
+                                validationErrors.username
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-right`}
+                            minLength={4}
                         />
+                        {validationErrors.username && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {validationErrors.username}
+                            </p>
+                        )}
                     </div>
 
                     <div>
@@ -90,22 +114,38 @@ const LoginPopup = () => {
                             type="password"
                             id="password"
                             value={formData.password}
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setFormData({
                                     ...formData,
                                     password: e.target.value,
-                                })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-right"
-                            required
+                                });
+                                setValidationErrors({
+                                    ...validationErrors,
+                                    password: "",
+                                });
+                            }}
+                            className={`w-full px-3 py-2 border ${
+                                validationErrors.password
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-right`}
+                            minLength={4}
                         />
+                        {validationErrors.password && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {validationErrors.password}
+                            </p>
+                        )}
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 duration-150"
+                        disabled={loading === "pending"}
+                        className="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        تسجيل الدخول
+                        {loading === "pending"
+                            ? "جاري تسجيل الدخول..."
+                            : "تسجيل الدخول"}
                     </button>
                 </form>
             </div>
