@@ -7,7 +7,6 @@ export const checkAuth = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.get("/api/check_auth");
-            console.log("response.data", response.data);
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -42,6 +41,51 @@ export const login = createAsyncThunk(
             return rejectWithValue(
                 "An error occurred while fetching the campaigns."
             );
+        }
+    }
+);
+
+// Helper function to clear all cookies
+const clearAllCookies = () => {
+    const cookies = document.cookie.split(";");
+
+    for (const cookie of cookies) {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
+        document.cookie =
+            name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
+};
+
+export const logout = createAsyncThunk(
+    "auth/logout",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.post("/auth/logout", null, {
+                withCredentials: true,
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            });
+            document.cookie.split(";").forEach((c) => {
+                document.cookie = c
+                    .replace(/^ +/, "")
+                    .replace(
+                        /=.*/,
+                        "=;expires=" + new Date().toUTCString() + ";path=/"
+                    );
+            });
+
+            clearAllCookies();
+
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(error.response?.data);
+            }
+            return rejectWithValue("An error occurred during logout.");
         }
     }
 );

@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { checkAuth, login } from "./act/actGetCheckAuth";
+import { checkAuth, login, logout } from "./act/actGetCheckAuth";
 
 interface AuthState {
     isAuthenticated: boolean;
-    user: string | null;
+    user: {
+        user: string;
+    } | null;
     loading: "idle" | "pending" | "succeeded" | "failed";
     error: string | null;
 }
@@ -18,12 +20,7 @@ const initialState: AuthState = {
 const AuthSlice = createSlice({
     name: "auth",
     initialState,
-    reducers: {
-        logout: (state) => {
-            state.isAuthenticated = false;
-            state.user = null;
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(checkAuth.pending, (state) => {
@@ -57,9 +54,22 @@ const AuthSlice = createSlice({
                 state.isAuthenticated = false;
                 state.user = null;
                 state.error = action.payload as string;
+            })
+            .addCase(logout.pending, (state) => {
+                state.loading = "pending";
+                state.error = null;
+            })
+            .addCase(logout.fulfilled, (state) => {
+                state.loading = "succeeded";
+                state.isAuthenticated = false;
+                state.user = null;
+                state.error = null;
+            })
+            .addCase(logout.rejected, (state, action) => {
+                state.loading = "failed";
+                state.error = action.payload as string;
             });
     },
 });
 
-export const { logout } = AuthSlice.actions;
 export default AuthSlice.reducer;

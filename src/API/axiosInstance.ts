@@ -4,8 +4,11 @@ const axiosInstance = axios.create({
     baseURL: "https://erp.rashodi.online",
     // baseURL: "http://localhost:8000",
     withCredentials: true,
-    xsrfCookieName: "csrftoken",
-    xsrfHeaderName: "X-CSRFToken",
+    headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest", 
+    },
 });
 
 // axiosInstance.interceptors.request.use(async (config) => {

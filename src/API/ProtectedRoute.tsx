@@ -14,9 +14,6 @@ const ProtectedRoute = () => {
         dispatch(checkAuth()).then(() => {
             setInitialCheckDone(true);
         });
-        dispatch(checkAuth()).then(() => {
-            setInitialCheckDone(true);
-        });
     }, [dispatch]);
 
     if (!initialCheckDone || loading === "pending") {
